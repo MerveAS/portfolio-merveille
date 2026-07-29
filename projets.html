@@ -4,11 +4,13 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Merveille Aganze Sami | Projets</title>
-  <meta name="description" content="Projets et réalisations de Merveille AGANZE SAMI : applications de gestion, plateformes de suivi de données et développement web." />
+  <meta name="description" content="Projets et réalisations de Merveille AGANZE SAMI : systèmes MEL digitaux, tableaux de bord Power BI, applications terrain et développement web." />
   <meta property="og:title" content="Merveille Aganze Sami | Projets" />
-  <meta property="og:description" content="Projets et réalisations : applications de gestion, plateformes de suivi de données et développement web." />
+  <meta property="og:description" content="Systèmes MEL digitaux, tableaux de bord Power BI, applications terrain et développement web." />
   <meta property="og:image" content="Photomerveille.jpg?v=2" />
   <meta property="og:type" content="website" />
+  <link rel="alternate" hreflang="en" href="https://merveille.fitigroup.org/en/projects.html" />
+  <link rel="alternate" hreflang="fr" href="https://merveille.fitigroup.org/projets.html" />
   <link rel="icon" href="favicon.svg?v=2" type="image/svg+xml" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -36,15 +38,26 @@
     }
   </script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    html { scroll-behavior: smooth; }
+    .reveal { opacity: 0; transform: translateY(28px); transition: opacity .7s ease, transform .7s ease; }
+    .reveal.visible { opacity: 1; transform: none; }
+    .project-card { transition: opacity .4s ease, transform .4s ease, box-shadow .3s ease; }
+    .project-card.filtered-out { display: none; }
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      .reveal { opacity: 1; transform: none; transition: none; }
+    }
+  </style>
 </head>
 <body class="min-h-screen flex flex-col bg-gradient-to-b from-pale via-pale to-sky text-night font-sans antialiased">
 
   <header class="sticky top-0 z-50 bg-pale/95 backdrop-blur border-b border-navy/20">
-    <div class="max-w-6xl mx-auto px-5 sm:px-8 h-16 md:h-20 flex items-center justify-between gap-4">
+    <div class="max-w-6xl mx-auto px-5 sm:px-8 min-h-16 md:min-h-20 py-2 flex items-center justify-between gap-4">
       <a href="index.html" class="font-display font-bold text-night text-base sm:text-lg md:text-xl tracking-tight">
         Merveille <span class="text-navy hidden sm:inline">AGANZE SAMI</span>
       </a>
-      <nav class="flex items-center gap-4 sm:gap-6 md:gap-8 text-xs sm:text-sm md:text-[15px]">
+      <nav class="flex flex-wrap justify-end items-center gap-x-4 gap-y-1 sm:gap-x-6 md:gap-x-8 text-xs sm:text-sm md:text-[15px]">
         <a href="index.html" class="text-night/70 hover:text-navy transition">Accueil</a>
         <a href="blog.html" class="text-night/70 hover:text-navy transition">Blog</a>
         <a href="expertises.html" class="text-night/70 hover:text-navy transition">Expertises</a>
@@ -55,79 +68,205 @@
     </div>
   </header>
 
-  <main class="flex-1 max-w-6xl w-full mx-auto px-5 sm:px-8 py-12 md:py-16">
-    <p class="text-navy font-semibold uppercase tracking-[0.25em] text-xs mb-3">Réalisations</p>
-    <h1 class="font-display font-bold text-night text-3xl md:text-4xl mb-14">Projets &amp; réalisations</h1>
+  <main class="flex-1">
 
-    <h2 class="font-display font-semibold text-night text-2xl mb-3">Réalisations professionnelles</h2>
-    <p class="text-night/70 mb-8 max-w-3xl">Systèmes et outils conçus et déployés au sein d'organisations internationales (GIZ, Enabel).</p>
-    <div class="grid sm:grid-cols-2 gap-6 mb-16 md:mb-20">
-      <div class="bg-white/40 border border-navy/25 rounded-2xl p-6 md:p-7 hover:border-navy/50 transition">
-        <span class="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-gradient-to-br from-sky to-lagoon/40 text-navy text-xl mb-4"><i class="fas fa-sitemap"></i></span>
-        <h3 class="font-display font-semibold text-night text-lg mb-3">Digitalisation de systèmes MEL multisectoriels</h3>
-        <p class="leading-7 text-night/75 text-sm">
-          Conception et déploiement de systèmes de suivi-évaluation digitaux pour 4 programmes majeurs (GIZ, Enabel) : bases de données structurées, traçabilité automatisée et alignement sur les cadres logiques pour une redevabilité en temps réel envers bailleurs et partenaires.
-        </p>
-      </div>
-      <div class="bg-white/40 border border-navy/25 rounded-2xl p-6 md:p-7 hover:border-navy/50 transition">
-        <span class="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-gradient-to-br from-sky to-lagoon/40 text-navy text-xl mb-4"><i class="fas fa-chart-column"></i></span>
-        <h3 class="font-display font-semibold text-night text-lg mb-3">Tableaux de bord décisionnels Power BI</h3>
-        <p class="leading-7 text-night/75 text-sm">
-          Conception, automatisation et diffusion de tableaux de bord interactifs pour 4 programmes : visualisation dynamique des indicateurs clés, suivi des performances en temps réel et aide à la décision fondée sur les données.
-        </p>
-      </div>
-      <div class="bg-white/40 border border-navy/25 rounded-2xl p-6 md:p-7 hover:border-navy/50 transition">
-        <span class="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-gradient-to-br from-sky to-lagoon/40 text-navy text-xl mb-4"><i class="fas fa-database"></i></span>
-        <h3 class="font-display font-semibold text-night text-lg mb-3">Système intégré de gestion des données</h3>
-        <p class="leading-7 text-night/75 text-sm">
-          Développement d'une solution digitale sur mesure pour un cluster de plus de 8 programmes : flux de données multi-sources, indicateurs hiérarchiques, données géospatiales, consolidation automatisée et visualisation centralisée des performances.
-        </p>
-      </div>
-      <div class="bg-white/40 border border-navy/25 rounded-2xl p-6 md:p-7 hover:border-navy/50 transition">
-        <span class="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-gradient-to-br from-sky to-lagoon/40 text-navy text-xl mb-4"><i class="fas fa-cubes"></i></span>
-        <h3 class="font-display font-semibold text-night text-lg mb-3">Application métier Power Apps (no-code)</h3>
-        <p class="leading-7 text-night/75 text-sm">
-          Conception et déploiement d'une application no-code pour le suivi des partenaires de mise en œuvre : collecte, gestion et suivi des données opérationnelles en temps réel sur le terrain.
-        </p>
-      </div>
-    </div>
-
-    <h2 class="font-display font-semibold text-night text-2xl mb-8">Applications &amp; projets personnels</h2>
-    <div class="space-y-16 md:space-y-20">
-      <article class="grid md:grid-cols-2 gap-8 lg:gap-14 items-center">
-        <div>
-          <span class="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-gradient-to-br from-sky to-lagoon/40 text-navy text-xl mb-5"><i class="fas fa-mobile-screen-button"></i></span>
-          <h2 class="font-display font-semibold text-night text-2xl mb-4">AVEC+ — Gestion des groupes d'épargne</h2>
-          <p class="leading-8 text-night/80">
-            Application mobile de gestion des Associations Villageoises d'Épargne et de Crédit (AVEC) : suivi des membres, des réunions, de l'épargne et des crédits. Pensée mobile d'abord pour les animateurs de terrain, elle simplifie la tenue des registres et fiabilise les données des groupes.
+    <section class="max-w-6xl mx-auto px-5 sm:px-8 pt-10 md:pt-14">
+      <div class="bg-gradient-to-br from-petrol to-night rounded-[2rem] md:rounded-[2.5rem] px-6 sm:px-10 md:px-14 py-12 md:py-14 relative overflow-hidden">
+        <div class="absolute -top-24 -left-20 w-80 h-80 bg-navy/20 rounded-full blur-2xl"></div>
+        <div class="relative">
+          <p class="text-lagoon font-semibold uppercase tracking-[0.25em] text-xs mb-4">Réalisations</p>
+          <h1 class="font-display font-bold text-[#ffffff] text-3xl sm:text-4xl md:text-5xl leading-tight mb-5">
+            Des systèmes qui tournent,<br /><span class="bg-gradient-to-r from-navy to-lagoon bg-clip-text text-transparent">des données qui décident</span>
+          </h1>
+          <p class="text-[#ffffff]/70 leading-8 max-w-2xl mb-10">
+            Sept réalisations concrètes, des grands programmes internationaux aux applications de terrain — toutes construites pour un même objectif : rendre vos données utiles.
           </p>
+          <div class="grid grid-cols-3 gap-4 max-w-lg">
+            <div>
+              <p class="font-display font-bold text-3xl md:text-4xl text-[#ffffff]"><span class="counter" data-count="8">0</span>+</p>
+              <p class="text-[#ffffff]/60 text-xs md:text-sm mt-1">programmes connectés</p>
+            </div>
+            <div>
+              <p class="font-display font-bold text-3xl md:text-4xl text-[#ffffff]"><span class="counter" data-count="4">0</span></p>
+              <p class="text-[#ffffff]/60 text-xs md:text-sm mt-1">tableaux de bord</p>
+            </div>
+            <div>
+              <p class="font-display font-bold text-3xl md:text-4xl text-[#ffffff]"><span class="counter" data-count="3">0</span></p>
+              <p class="text-[#ffffff]/60 text-xs md:text-sm mt-1">applications terrain</p>
+            </div>
+          </div>
         </div>
-        <img src="data 2.avif?v=2" alt="Application AVEC+" class="w-full h-64 md:h-80 object-cover rounded-2xl shadow-xl ring-1 ring-navy/25" />
-      </article>
+      </div>
+    </section>
 
-      <article class="grid md:grid-cols-2 gap-8 lg:gap-14 items-center">
-        <div class="md:order-2">
-          <span class="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-gradient-to-br from-sky to-lagoon/40 text-navy text-xl mb-5"><i class="fas fa-clipboard-check"></i></span>
-          <h2 class="font-display font-semibold text-night text-2xl mb-4">Plateforme de suivi des activités</h2>
-          <p class="leading-8 text-night/80">
-            Application web progressive (PWA) de suivi des activités, des bénéficiaires et des partenaires pour les projets de terrain en RD Congo. Conçue pour fonctionner même sans connexion internet, elle permet la collecte et la consultation des données dans les zones à faible connectivité.
-          </p>
-        </div>
-        <img src="maps.avif?v=2" alt="Plateforme de suivi des activités" class="w-full h-64 md:h-80 object-cover rounded-2xl shadow-xl ring-1 ring-navy/25 md:order-1" />
-      </article>
+    <section class="max-w-6xl mx-auto px-5 sm:px-8 pt-12 md:pt-16">
+      <div class="flex flex-wrap items-center gap-2.5 mb-10" id="filters">
+        <button data-filter="all" class="filter-btn rounded-full px-5 py-2 text-sm font-semibold bg-gradient-to-r from-navy to-lagoon text-[#ffffff] shadow-md transition">Tous</button>
+        <button data-filter="systemes" class="filter-btn rounded-full px-5 py-2 text-sm font-medium border border-night/15 text-night/70 hover:border-navy/50 hover:text-navy transition">Systèmes &amp; données</button>
+        <button data-filter="dashboards" class="filter-btn rounded-full px-5 py-2 text-sm font-medium border border-night/15 text-night/70 hover:border-navy/50 hover:text-navy transition">Tableaux de bord</button>
+        <button data-filter="apps" class="filter-btn rounded-full px-5 py-2 text-sm font-medium border border-night/15 text-night/70 hover:border-navy/50 hover:text-navy transition">Applications</button>
+        <button data-filter="web" class="filter-btn rounded-full px-5 py-2 text-sm font-medium border border-night/15 text-night/70 hover:border-navy/50 hover:text-navy transition">Web</button>
+      </div>
 
-      <article class="grid md:grid-cols-2 gap-8 lg:gap-14 items-center">
-        <div>
-          <span class="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-gradient-to-br from-sky to-lagoon/40 text-navy text-xl mb-5"><i class="fab fa-github"></i></span>
-          <h2 class="font-display font-semibold text-night text-2xl mb-4">Ce portfolio</h2>
-          <p class="leading-8 text-night/80">
-            Site statique responsive développé en HTML et Tailwind CSS dans le cadre du bootcamp Kadea Academy, déployé sur Cloudflare Pages. Le code source est disponible sur
-            <a href="https://github.com/MerveAS/portfolio-merveille" target="_blank" class="text-navy underline underline-offset-4 hover:text-night transition">GitHub</a>.
-          </p>
-        </div>
-        <img src="Github2.jpeg?v=2" alt="Code source sur GitHub" class="w-full h-64 md:h-80 object-cover rounded-2xl shadow-xl ring-1 ring-navy/25" />
-      </article>
-    </div>
+      <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6" id="projects-grid">
+
+        <article data-cat="systemes" class="project-card reveal md:col-span-2 lg:col-span-3 bg-gradient-to-br from-petrol to-night rounded-3xl overflow-hidden">
+          <div class="grid md:grid-cols-[1.2fr_0.8fr] gap-8 p-7 md:p-10 items-center">
+            <div>
+              <div class="flex flex-wrap items-center gap-2 mb-4">
+                <span class="text-[11px] font-semibold uppercase tracking-wider bg-gradient-to-r from-navy to-lagoon text-[#ffffff] rounded-full px-3 py-1">Projet phare</span>
+                <span class="text-[11px] font-medium border border-[#ffffff]/25 text-[#ffffff]/70 rounded-full px-3 py-1">GIZ · Cluster Bleu-Vert</span>
+              </div>
+              <h2 class="font-display font-bold text-[#ffffff] text-2xl md:text-3xl mb-4">Système intégré de gestion des données</h2>
+              <p class="text-[#ffffff]/70 leading-8 mb-6">
+                Solution digitale sur mesure pour un cluster de plus de 8 programmes : flux de données multi-sources, indicateurs hiérarchiques, données géospatiales, consolidation automatisée et visualisation centralisée des performances — le tout en temps réel.
+              </p>
+              <div class="flex flex-wrap gap-2">
+                <span class="border border-[#ffffff]/25 rounded-full px-3 py-1 text-xs font-medium text-[#ffffff]/70">PostgreSQL / PostGIS</span>
+                <span class="border border-[#ffffff]/25 rounded-full px-3 py-1 text-xs font-medium text-[#ffffff]/70">APIs &amp; webhooks</span>
+                <span class="border border-[#ffffff]/25 rounded-full px-3 py-1 text-xs font-medium text-[#ffffff]/70">Power BI</span>
+                <span class="border border-[#ffffff]/25 rounded-full px-3 py-1 text-xs font-medium text-[#ffffff]/70">Microsoft Fabric</span>
+              </div>
+            </div>
+            <div class="relative h-52 md:h-64 rounded-2xl bg-[#ffffff]/5 overflow-hidden">
+              <div class="absolute inset-0" style="background-image: radial-gradient(rgba(255,255,255,0.09) 1.5px, transparent 1.5px); background-size: 24px 24px;"></div>
+              <div class="absolute inset-0 flex items-center justify-center">
+                <span class="inline-flex items-center justify-center w-24 h-24 md:w-28 md:h-28 rounded-full bg-gradient-to-br from-navy to-lagoon text-[#ffffff] text-4xl shadow-2xl"><i class="fas fa-database"></i></span>
+              </div>
+              <span class="absolute top-6 left-6 inline-flex items-center justify-center w-11 h-11 rounded-xl bg-[#ffffff]/10 text-lagoon shadow-md -rotate-6"><i class="fas fa-diagram-project"></i></span>
+              <span class="absolute bottom-6 right-6 inline-flex items-center justify-center w-11 h-11 rounded-full bg-[#ffffff] text-navy shadow-md rotate-6"><i class="fas fa-map-location-dot"></i></span>
+            </div>
+          </div>
+        </article>
+
+        <article data-cat="systemes" class="project-card reveal bg-white border border-night/10 shadow-sm rounded-2xl overflow-hidden hover:shadow-lg hover:-translate-y-1">
+          <div class="relative h-32 bg-gradient-to-br from-sky to-pale overflow-hidden">
+            <div class="absolute inset-0" style="background-image: radial-gradient(rgba(34,43,56,0.08) 1.5px, transparent 1.5px); background-size: 22px 22px;"></div>
+            <span class="absolute -bottom-5 -right-3 text-7xl text-navy/15"><i class="fas fa-sitemap"></i></span>
+            <span class="absolute top-4 left-4 text-[11px] font-medium bg-[#ffffff] text-night/70 rounded-full px-3 py-1 shadow-sm">GIZ · Enabel</span>
+          </div>
+          <div class="p-6">
+            <h3 class="font-display font-semibold text-night text-lg mb-2.5">Digitalisation de systèmes MEL</h3>
+            <p class="text-night/70 text-sm leading-6 mb-4">
+              Systèmes de suivi-évaluation digitaux pour 4 programmes majeurs : bases structurées, traçabilité automatisée et redevabilité en temps réel envers bailleurs et partenaires.
+            </p>
+            <div class="flex flex-wrap gap-1.5">
+              <span class="border border-night/15 rounded-full px-2.5 py-0.5 text-[11px] font-medium text-night/60">KoboToolbox</span>
+              <span class="border border-night/15 rounded-full px-2.5 py-0.5 text-[11px] font-medium text-night/60">PostgreSQL</span>
+              <span class="border border-night/15 rounded-full px-2.5 py-0.5 text-[11px] font-medium text-night/60">APIs</span>
+            </div>
+          </div>
+        </article>
+
+        <article data-cat="dashboards" class="project-card reveal bg-white border border-night/10 shadow-sm rounded-2xl overflow-hidden hover:shadow-lg hover:-translate-y-1">
+          <div class="relative h-32 bg-gradient-to-br from-petrol to-night overflow-hidden">
+            <div class="absolute inset-0" style="background-image: radial-gradient(rgba(255,255,255,0.09) 1.5px, transparent 1.5px); background-size: 22px 22px;"></div>
+            <span class="absolute -bottom-5 -right-3 text-7xl text-lagoon/25"><i class="fas fa-chart-column"></i></span>
+            <span class="absolute top-4 left-4 text-[11px] font-medium bg-[#ffffff]/15 text-[#ffffff]/85 rounded-full px-3 py-1">GIZ · Enabel</span>
+          </div>
+          <div class="p-6">
+            <h3 class="font-display font-semibold text-night text-lg mb-2.5">Tableaux de bord décisionnels Power BI</h3>
+            <p class="text-night/70 text-sm leading-6 mb-4">
+              Dashboards interactifs conçus, automatisés et diffusés pour 4 programmes : visualisation dynamique des indicateurs clés et aide à la décision en temps réel.
+            </p>
+            <div class="flex flex-wrap gap-1.5">
+              <span class="border border-night/15 rounded-full px-2.5 py-0.5 text-[11px] font-medium text-night/60">Power BI</span>
+              <span class="border border-night/15 rounded-full px-2.5 py-0.5 text-[11px] font-medium text-night/60">DAX</span>
+              <span class="border border-night/15 rounded-full px-2.5 py-0.5 text-[11px] font-medium text-night/60">Automatisation</span>
+            </div>
+          </div>
+        </article>
+
+        <article data-cat="apps" class="project-card reveal bg-white border border-night/10 shadow-sm rounded-2xl overflow-hidden hover:shadow-lg hover:-translate-y-1">
+          <div class="relative h-32 bg-gradient-to-br from-sky to-pale overflow-hidden">
+            <div class="absolute inset-0" style="background-image: radial-gradient(rgba(34,43,56,0.08) 1.5px, transparent 1.5px); background-size: 22px 22px;"></div>
+            <span class="absolute -bottom-5 -right-3 text-7xl text-navy/15"><i class="fas fa-cubes"></i></span>
+            <span class="absolute top-4 left-4 text-[11px] font-medium bg-[#ffffff] text-night/70 rounded-full px-3 py-1 shadow-sm">GIZ</span>
+          </div>
+          <div class="p-6">
+            <h3 class="font-display font-semibold text-night text-lg mb-2.5">Application Power Apps partenaires</h3>
+            <p class="text-night/70 text-sm leading-6 mb-4">
+              Application no-code pour le suivi des partenaires de mise en œuvre : collecte, gestion et suivi des données opérationnelles en temps réel sur le terrain.
+            </p>
+            <div class="flex flex-wrap gap-1.5">
+              <span class="border border-night/15 rounded-full px-2.5 py-0.5 text-[11px] font-medium text-night/60">Power Apps</span>
+              <span class="border border-night/15 rounded-full px-2.5 py-0.5 text-[11px] font-medium text-night/60">Power Automate</span>
+              <span class="border border-night/15 rounded-full px-2.5 py-0.5 text-[11px] font-medium text-night/60">No-code</span>
+            </div>
+          </div>
+        </article>
+
+        <article data-cat="apps" class="project-card reveal bg-white border border-night/10 shadow-sm rounded-2xl overflow-hidden hover:shadow-lg hover:-translate-y-1">
+          <div class="relative h-32 bg-gradient-to-br from-petrol to-night overflow-hidden">
+            <div class="absolute inset-0" style="background-image: radial-gradient(rgba(255,255,255,0.09) 1.5px, transparent 1.5px); background-size: 22px 22px;"></div>
+            <span class="absolute -bottom-5 -right-3 text-7xl text-lagoon/25"><i class="fas fa-mobile-screen-button"></i></span>
+            <span class="absolute top-4 left-4 text-[11px] font-medium bg-[#ffffff]/15 text-[#ffffff]/85 rounded-full px-3 py-1">Projet personnel</span>
+          </div>
+          <div class="p-6">
+            <h3 class="font-display font-semibold text-night text-lg mb-2.5">AVEC+ — Gestion des groupes d'épargne</h3>
+            <p class="text-night/70 text-sm leading-6 mb-4">
+              Application mobile de gestion des Associations Villageoises d'Épargne et de Crédit : membres, réunions, épargne et crédits — pensée mobile d'abord pour les animateurs de terrain.
+            </p>
+            <div class="flex flex-wrap gap-1.5">
+              <span class="border border-night/15 rounded-full px-2.5 py-0.5 text-[11px] font-medium text-night/60">Mobile-first</span>
+              <span class="border border-night/15 rounded-full px-2.5 py-0.5 text-[11px] font-medium text-night/60">Épargne &amp; crédit</span>
+              <span class="border border-night/15 rounded-full px-2.5 py-0.5 text-[11px] font-medium text-night/60">Terrain</span>
+            </div>
+          </div>
+        </article>
+
+        <article data-cat="apps web" class="project-card reveal bg-white border border-night/10 shadow-sm rounded-2xl overflow-hidden hover:shadow-lg hover:-translate-y-1">
+          <div class="relative h-32 bg-gradient-to-br from-sky to-pale overflow-hidden">
+            <div class="absolute inset-0" style="background-image: radial-gradient(rgba(34,43,56,0.08) 1.5px, transparent 1.5px); background-size: 22px 22px;"></div>
+            <span class="absolute -bottom-5 -right-3 text-7xl text-navy/15"><i class="fas fa-clipboard-check"></i></span>
+            <span class="absolute top-4 left-4 text-[11px] font-medium bg-[#ffffff] text-night/70 rounded-full px-3 py-1 shadow-sm">Projet personnel</span>
+          </div>
+          <div class="p-6">
+            <h3 class="font-display font-semibold text-night text-lg mb-2.5">Plateforme de suivi des activités</h3>
+            <p class="text-night/70 text-sm leading-6 mb-4">
+              Application web progressive (PWA) de suivi des activités, bénéficiaires et partenaires pour les projets de terrain en RD Congo — fonctionne même sans connexion internet.
+            </p>
+            <div class="flex flex-wrap gap-1.5">
+              <span class="border border-night/15 rounded-full px-2.5 py-0.5 text-[11px] font-medium text-night/60">PWA</span>
+              <span class="border border-night/15 rounded-full px-2.5 py-0.5 text-[11px] font-medium text-night/60">Hors-ligne</span>
+              <span class="border border-night/15 rounded-full px-2.5 py-0.5 text-[11px] font-medium text-night/60">IndexedDB</span>
+            </div>
+          </div>
+        </article>
+
+        <article data-cat="web" class="project-card reveal bg-white border border-night/10 shadow-sm rounded-2xl overflow-hidden hover:shadow-lg hover:-translate-y-1">
+          <div class="relative h-32 bg-gradient-to-br from-petrol to-night overflow-hidden">
+            <div class="absolute inset-0" style="background-image: radial-gradient(rgba(255,255,255,0.09) 1.5px, transparent 1.5px); background-size: 22px 22px;"></div>
+            <span class="absolute -bottom-5 -right-3 text-7xl text-lagoon/25"><i class="fab fa-github"></i></span>
+            <span class="absolute top-4 left-4 text-[11px] font-medium bg-[#ffffff]/15 text-[#ffffff]/85 rounded-full px-3 py-1">Projet personnel</span>
+          </div>
+          <div class="p-6">
+            <h3 class="font-display font-semibold text-night text-lg mb-2.5">Ce portfolio</h3>
+            <p class="text-night/70 text-sm leading-6 mb-4">
+              Site statique responsive bilingue développé en HTML et Tailwind CSS (bootcamp Kadea Academy), déployé en continu sur Cloudflare Pages. Code source disponible sur
+              <a href="https://github.com/MerveAS/portfolio-merveille" target="_blank" class="text-navy underline underline-offset-4 hover:text-night transition">GitHub</a>.
+            </p>
+            <div class="flex flex-wrap gap-1.5">
+              <span class="border border-night/15 rounded-full px-2.5 py-0.5 text-[11px] font-medium text-night/60">HTML / Tailwind</span>
+              <span class="border border-night/15 rounded-full px-2.5 py-0.5 text-[11px] font-medium text-night/60">Cloudflare Pages</span>
+              <span class="border border-night/15 rounded-full px-2.5 py-0.5 text-[11px] font-medium text-night/60">CI/CD</span>
+            </div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="max-w-6xl mx-auto px-5 sm:px-8 py-14 md:py-20">
+      <div class="reveal bg-gradient-to-br from-petrol to-night rounded-3xl p-8 md:p-12 text-center">
+        <h2 class="font-display font-bold text-[#ffffff] text-2xl md:text-3xl mb-4">Votre projet pourrait être le prochain</h2>
+        <p class="text-[#ffffff]/70 leading-8 max-w-2xl mx-auto mb-8">
+          Système MEL, tableau de bord, application terrain ou plateforme web : construisons ensemble l'outil qui servira vos équipes.
+        </p>
+        <a href="contact.html" class="inline-flex items-center gap-3 rounded-full bg-gradient-to-r from-navy to-lagoon text-[#ffffff] font-semibold px-8 py-3.5 shadow-lg shadow-black/30 hover:-translate-y-0.5 transition">
+          Parlons-en <i class="fas fa-arrow-right"></i>
+        </a>
+      </div>
+    </section>
   </main>
 
   <footer class="mt-16 bg-gradient-to-br from-petrol to-night text-[#ffffff]">
@@ -166,5 +305,45 @@
       </div>
     </div>
   </footer>
+
+  <script>
+    const revealEls = document.querySelectorAll('.reveal');
+    const inView = el => { const r = el.getBoundingClientRect(); return r.top < window.innerHeight && r.bottom > 0; };
+    if ('IntersectionObserver' in window) {
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); } });
+      }, { threshold: 0.05, rootMargin: '0px 0px -5% 0px' });
+      revealEls.forEach(el => { if (inView(el)) { el.classList.add('visible'); } else { observer.observe(el); } });
+      window.addEventListener('scroll', () => { revealEls.forEach(el => { if (!el.classList.contains('visible') && inView(el)) el.classList.add('visible'); }); }, { passive: true });
+    } else {
+      revealEls.forEach(el => el.classList.add('visible'));
+    }
+
+    const animateCounter = el => {
+      const target = parseInt(el.dataset.count, 10);
+      const duration = 1200; const start = performance.now();
+      const step = now => {
+        const p = Math.min((now - start) / duration, 1);
+        el.textContent = Math.round(target * (1 - Math.pow(1 - p, 3)));
+        if (p < 1) requestAnimationFrame(step);
+      };
+      requestAnimationFrame(step);
+    };
+    document.querySelectorAll('.counter').forEach(animateCounter);
+
+    const buttons = document.querySelectorAll('.filter-btn');
+    const cards = document.querySelectorAll('.project-card');
+    const activeClasses = ['bg-gradient-to-r','from-navy','to-lagoon','text-[#ffffff]','shadow-md','font-semibold'];
+    const inactiveClasses = ['border','border-night/15','text-night/70','hover:border-navy/50','hover:text-navy','font-medium'];
+    buttons.forEach(btn => btn.addEventListener('click', () => {
+      const f = btn.dataset.filter;
+      buttons.forEach(b => { b.classList.remove(...activeClasses, ...inactiveClasses); b.classList.add(...(b === btn ? activeClasses : inactiveClasses)); });
+      cards.forEach(card => {
+        const match = f === 'all' || card.dataset.cat.split(' ').includes(f);
+        card.classList.toggle('filtered-out', !match);
+        if (match) card.classList.add('visible');
+      });
+    }));
+  </script>
 </body>
 </html>
