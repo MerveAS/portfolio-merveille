@@ -9,6 +9,8 @@
   <meta property="og:description" content="Suivi-évaluation, SIG et télédétection, analyse de données, développement web et gestion des processus." />
   <meta property="og:image" content="Photomerveille.jpg" />
   <meta property="og:type" content="website" />
+  <link rel="alternate" hreflang="en" href="https://merveille.fitigroup.org/en/expertise.html" />
+  <link rel="alternate" hreflang="fr" href="https://merveille.fitigroup.org/expertises.html" />
   <link rel="icon" href="favicon.svg" type="image/svg+xml" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -36,15 +38,24 @@
     }
   </script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    html { scroll-behavior: smooth; }
+    .reveal { opacity: 0; transform: translateY(28px); transition: opacity .7s ease, transform .7s ease; }
+    .reveal.visible { opacity: 1; transform: none; }
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      .reveal { opacity: 1; transform: none; transition: none; }
+    }
+  </style>
 </head>
 <body class="min-h-screen flex flex-col bg-gradient-to-b from-pale via-pale to-sky text-night font-sans antialiased">
 
   <header class="sticky top-0 z-50 bg-pale/95 backdrop-blur border-b border-navy/20">
-    <div class="max-w-6xl mx-auto px-5 sm:px-8 h-16 md:h-20 flex items-center justify-between gap-4">
+    <div class="max-w-6xl mx-auto px-5 sm:px-8 min-h-16 md:min-h-20 py-2 flex items-center justify-between gap-4">
       <a href="index.html" class="font-display font-bold text-night text-base sm:text-lg md:text-xl tracking-tight">
         Merveille <span class="text-navy hidden sm:inline">AGANZE SAMI</span>
       </a>
-      <nav class="flex items-center gap-4 sm:gap-6 md:gap-8 text-xs sm:text-sm md:text-[15px]">
+      <nav class="flex flex-wrap justify-end items-center gap-x-4 gap-y-1 sm:gap-x-6 md:gap-x-8 text-xs sm:text-sm md:text-[15px]">
         <a href="index.html" class="text-night/70 hover:text-navy transition">Accueil</a>
         <a href="blog.html" class="text-night/70 hover:text-navy transition">Blog</a>
         <a href="expertises.html" class="text-navy font-semibold">Expertises</a>
@@ -55,65 +66,178 @@
     </div>
   </header>
 
-  <main class="flex-1 max-w-6xl w-full mx-auto px-5 sm:px-8 py-12 md:py-16">
-    <p class="text-navy font-semibold uppercase tracking-[0.25em] text-xs mb-3">Savoir-faire</p>
-    <h1 class="font-display font-bold text-night text-3xl md:text-4xl mb-14">Domaines d'expertise</h1>
+  <main class="flex-1">
 
-    <div class="space-y-16 md:space-y-20">
-      <article class="grid md:grid-cols-2 gap-8 lg:gap-14 items-center">
+    <section class="max-w-6xl mx-auto px-5 sm:px-8 pt-10 md:pt-14">
+      <div class="bg-gradient-to-br from-petrol to-night rounded-[2rem] md:rounded-[2.5rem] px-6 sm:px-10 md:px-14 py-12 md:py-14 relative overflow-hidden">
+        <div class="absolute -bottom-28 -right-20 w-80 h-80 bg-navy/20 rounded-full blur-2xl"></div>
+        <div class="relative">
+          <p class="text-lagoon font-semibold uppercase tracking-[0.25em] text-xs mb-4">Savoir-faire</p>
+          <h1 class="font-display font-bold text-[#ffffff] text-3xl sm:text-4xl md:text-5xl leading-tight mb-5">
+            Cinq domaines,<br />une même mission : <span class="bg-gradient-to-r from-navy to-lagoon bg-clip-text text-transparent">vos décisions</span>
+          </h1>
+          <p class="text-[#ffffff]/70 leading-8 max-w-2xl mb-8">
+            Du terrain au tableau de bord : je combine suivi-évaluation, information géospatiale, analyse de données, développement web et gestion des processus pour transformer vos données en résultats.
+          </p>
+          <div class="flex flex-wrap gap-3">
+            <a href="#sera" class="border border-[#ffffff]/30 rounded-full px-4 py-1.5 text-sm text-[#ffffff]/80 hover:border-lagoon hover:text-lagoon transition">01 · Suivi-Évaluation</a>
+            <a href="#sig" class="border border-[#ffffff]/30 rounded-full px-4 py-1.5 text-sm text-[#ffffff]/80 hover:border-lagoon hover:text-lagoon transition">02 · SIG &amp; télédétection</a>
+            <a href="#data" class="border border-[#ffffff]/30 rounded-full px-4 py-1.5 text-sm text-[#ffffff]/80 hover:border-lagoon hover:text-lagoon transition">03 · Analyse de données</a>
+            <a href="#web" class="border border-[#ffffff]/30 rounded-full px-4 py-1.5 text-sm text-[#ffffff]/80 hover:border-lagoon hover:text-lagoon transition">04 · Développement web</a>
+            <a href="#processus" class="border border-[#ffffff]/30 rounded-full px-4 py-1.5 text-sm text-[#ffffff]/80 hover:border-lagoon hover:text-lagoon transition">05 · Gestion des processus</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="max-w-6xl mx-auto px-5 sm:px-8 py-14 md:py-20 space-y-20 md:space-y-28">
+
+      <section id="sera" class="reveal scroll-mt-28 grid md:grid-cols-2 gap-10 lg:gap-16 items-center">
         <div>
+          <p class="font-display font-bold text-6xl text-night/10 leading-none mb-3">01</p>
           <span class="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-gradient-to-br from-sky to-lagoon/40 text-navy text-xl mb-5"><i class="fas fa-chart-line"></i></span>
-          <h2 class="font-display font-semibold text-night text-2xl mb-4">Suivi, Évaluation, Redevabilité et Apprentissage</h2>
-          <p class="leading-8 text-night/80">
-            Je conçois et développe des solutions simples, efficaces et adaptées aux besoins des organisations et des entrepreneurs. Mon approche vise à structurer et digitaliser les activités à travers des interfaces claires, des outils fonctionnels et des plateformes orientées utilisateur.
+          <h2 class="font-display font-bold text-night text-2xl md:text-3xl mb-4">Suivi, Évaluation, Redevabilité et Apprentissage</h2>
+          <p class="leading-8 text-night/75 mb-6">
+            Je conçois des systèmes MEL complets et digitaux, alignés sur vos cadres logiques et les exigences de vos bailleurs (BMZ, DGIS, Danida…). De la collecte terrain à la capitalisation, vos données deviennent un outil de pilotage et de redevabilité.
           </p>
+          <ul class="space-y-2.5 text-night/80 mb-7">
+            <li class="flex items-start gap-3"><i class="fas fa-circle-check text-navy mt-1.5"></i>Concevoir vos plans MEL et cadres logiques</li>
+            <li class="flex items-start gap-3"><i class="fas fa-circle-check text-navy mt-1.5"></i>Digitaliser votre collecte de données terrain</li>
+            <li class="flex items-start gap-3"><i class="fas fa-circle-check text-navy mt-1.5"></i>Conduire vos évaluations baseline, mi-parcours et finales</li>
+            <li class="flex items-start gap-3"><i class="fas fa-circle-check text-navy mt-1.5"></i>Produire un reporting bailleurs fiable et à temps</li>
+          </ul>
+          <div class="flex flex-wrap gap-2">
+            <span class="border border-night/15 rounded-full px-3 py-1 text-xs font-medium text-night/60">KoboToolbox</span>
+            <span class="border border-night/15 rounded-full px-3 py-1 text-xs font-medium text-night/60">ODK / XLSForm</span>
+            <span class="border border-night/15 rounded-full px-3 py-1 text-xs font-medium text-night/60">CommCare</span>
+            <span class="border border-night/15 rounded-full px-3 py-1 text-xs font-medium text-night/60">Survey Solutions</span>
+            <span class="border border-night/15 rounded-full px-3 py-1 text-xs font-medium text-night/60">Cadres logiques</span>
+          </div>
         </div>
-        <img src="premium_photo-1688821126516-aad66aa5510d.avif" alt="Analyse de données" class="w-full h-64 md:h-80 object-cover rounded-2xl shadow-xl ring-1 ring-navy/25" />
-      </article>
+        <div class="rounded-2xl overflow-hidden shadow-xl ring-1 ring-night/10 group">
+          <img src="premium_photo-1688821126516-aad66aa5510d.avif" alt="Suivi-évaluation et analyse de documents" class="w-full h-64 md:h-96 object-cover group-hover:scale-105 transition duration-700" />
+        </div>
+      </section>
 
-      <article class="grid md:grid-cols-2 gap-8 lg:gap-14 items-center">
+      <section id="sig" class="reveal scroll-mt-28 grid md:grid-cols-2 gap-10 lg:gap-16 items-center">
         <div class="md:order-2">
+          <p class="font-display font-bold text-6xl text-night/10 leading-none mb-3">02</p>
           <span class="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-gradient-to-br from-sky to-lagoon/40 text-navy text-xl mb-5"><i class="fas fa-map-location-dot"></i></span>
-          <h2 class="font-display font-semibold text-night text-2xl mb-4">SIG et télédétection</h2>
-          <p class="leading-8 text-night/80">
-            J'utilise les systèmes d'information géographique et la télédétection pour analyser, visualiser et exploiter les données spatiales au service de la prise de décision. À travers la production de cartes, l'interprétation d'images satellitaires, la modélisation spatiale et la gestion de bases de données cartographiques, j'apporte une meilleure compréhension des territoires, du suivi des activités et des dynamiques environnementales.
+          <h2 class="font-display font-bold text-night text-2xl md:text-3xl mb-4">SIG et télédétection</h2>
+          <p class="leading-8 text-night/75 mb-6">
+            J'exploite les systèmes d'information géographique et l'imagerie satellitaire pour donner une dimension spatiale à vos décisions : suivi de la déforestation et du bois-énergie, cartographie d'activités, modélisation spatiale et bases de données cartographiques.
           </p>
+          <ul class="space-y-2.5 text-night/80 mb-7">
+            <li class="flex items-start gap-3"><i class="fas fa-circle-check text-navy mt-1.5"></i>Produire vos cartes thématiques et atlas de projet</li>
+            <li class="flex items-start gap-3"><i class="fas fa-circle-check text-navy mt-1.5"></i>Analyser images satellitaires et données LiDAR</li>
+            <li class="flex items-start gap-3"><i class="fas fa-circle-check text-navy mt-1.5"></i>Structurer vos bases de données spatiales (PostGIS)</li>
+            <li class="flex items-start gap-3"><i class="fas fa-circle-check text-navy mt-1.5"></i>Suivre les dynamiques environnementales de vos zones</li>
+          </ul>
+          <div class="flex flex-wrap gap-2">
+            <span class="border border-night/15 rounded-full px-3 py-1 text-xs font-medium text-night/60">QGIS</span>
+            <span class="border border-night/15 rounded-full px-3 py-1 text-xs font-medium text-night/60">ArcGIS</span>
+            <span class="border border-night/15 rounded-full px-3 py-1 text-xs font-medium text-night/60">PostGIS</span>
+            <span class="border border-night/15 rounded-full px-3 py-1 text-xs font-medium text-night/60">Télédétection</span>
+            <span class="border border-night/15 rounded-full px-3 py-1 text-xs font-medium text-night/60">LiDAR</span>
+          </div>
         </div>
-        <img src="maps.avif" alt="Cartographie" class="w-full h-64 md:h-80 object-cover rounded-2xl shadow-xl ring-1 ring-navy/25 md:order-1" />
-      </article>
+        <div class="rounded-2xl overflow-hidden shadow-xl ring-1 ring-night/10 group md:order-1">
+          <img src="maps.avif" alt="Cartographie et SIG" class="w-full h-64 md:h-96 object-cover group-hover:scale-105 transition duration-700" />
+        </div>
+      </section>
 
-      <article class="grid md:grid-cols-2 gap-8 lg:gap-14 items-center">
+      <section id="data" class="reveal scroll-mt-28 grid md:grid-cols-2 gap-10 lg:gap-16 items-center">
         <div>
+          <p class="font-display font-bold text-6xl text-night/10 leading-none mb-3">03</p>
           <span class="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-gradient-to-br from-sky to-lagoon/40 text-navy text-xl mb-5"><i class="fas fa-chart-pie"></i></span>
-          <h2 class="font-display font-semibold text-night text-2xl mb-4">Analyse de données</h2>
-          <p class="leading-8 text-night/80">
-            J'exploite les données pour produire des analyses fiables et des visualisations parlantes : nettoyage et structuration, analyses statistiques (Stata, R, Python), tableaux de bord interactifs Power BI et restitutions adaptées aux décideurs. L'objectif : transformer des données brutes en informations actionnables pour le pilotage et la prise de décision.
+          <h2 class="font-display font-bold text-night text-2xl md:text-3xl mb-4">Analyse de données</h2>
+          <p class="leading-8 text-night/75 mb-6">
+            Des données brutes aux informations actionnables : nettoyage, structuration, analyses statistiques et visualisations qui parlent aux décideurs. Mes tableaux de bord Power BI offrent un suivi dynamique de vos indicateurs, en temps réel.
           </p>
+          <ul class="space-y-2.5 text-night/80 mb-7">
+            <li class="flex items-start gap-3"><i class="fas fa-circle-check text-navy mt-1.5"></i>Nettoyer, valider et sécuriser vos données</li>
+            <li class="flex items-start gap-3"><i class="fas fa-circle-check text-navy mt-1.5"></i>Mener vos analyses statistiques (quantitatif &amp; qualitatif)</li>
+            <li class="flex items-start gap-3"><i class="fas fa-circle-check text-navy mt-1.5"></i>Construire vos tableaux de bord Power BI interactifs</li>
+            <li class="flex items-start gap-3"><i class="fas fa-circle-check text-navy mt-1.5"></i>Restituer les résultats de façon claire et visuelle</li>
+          </ul>
+          <div class="flex flex-wrap gap-2">
+            <span class="border border-night/15 rounded-full px-3 py-1 text-xs font-medium text-night/60">Power BI</span>
+            <span class="border border-night/15 rounded-full px-3 py-1 text-xs font-medium text-night/60">Stata</span>
+            <span class="border border-night/15 rounded-full px-3 py-1 text-xs font-medium text-night/60">R</span>
+            <span class="border border-night/15 rounded-full px-3 py-1 text-xs font-medium text-night/60">Python</span>
+            <span class="border border-night/15 rounded-full px-3 py-1 text-xs font-medium text-night/60">SPSS</span>
+            <span class="border border-night/15 rounded-full px-3 py-1 text-xs font-medium text-night/60">Excel avancé</span>
+          </div>
         </div>
-        <img src="DATA.avif" alt="Analyse de données" class="w-full h-64 md:h-80 object-cover rounded-2xl shadow-xl ring-1 ring-navy/25" />
-      </article>
+        <div class="rounded-2xl overflow-hidden shadow-xl ring-1 ring-night/10 group">
+          <img src="DATA.avif" alt="Analyse de données et visualisation" class="w-full h-64 md:h-96 object-cover group-hover:scale-105 transition duration-700" />
+        </div>
+      </section>
 
-      <article class="grid md:grid-cols-2 gap-8 lg:gap-14 items-center">
+      <section id="web" class="reveal scroll-mt-28 grid md:grid-cols-2 gap-10 lg:gap-16 items-center">
         <div class="md:order-2">
+          <p class="font-display font-bold text-6xl text-night/10 leading-none mb-3">04</p>
           <span class="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-gradient-to-br from-sky to-lagoon/40 text-navy text-xl mb-5"><i class="fas fa-code"></i></span>
-          <h2 class="font-display font-semibold text-night text-2xl mb-4">Développement web</h2>
-          <p class="leading-8 text-night/80">
-            Je conçois et développe des solutions web performantes en intégrant des bases de données structurées pour répondre aux besoins des organisations et des entrepreneurs. Mon approche consiste à créer des plateformes intuitives et fonctionnelles permettant de collecter, stocker, gérer et exploiter les données de manière efficace.
+          <h2 class="font-display font-bold text-night text-2xl md:text-3xl mb-4">Développement web</h2>
+          <p class="leading-8 text-night/75 mb-6">
+            Je conçois des plateformes web simples, fonctionnelles et adossées à des bases de données structurées — pensées pour le terrain et les contextes à faible connectivité, comme ce portfolio ou mes applications de suivi d'activités.
           </p>
+          <ul class="space-y-2.5 text-night/80 mb-7">
+            <li class="flex items-start gap-3"><i class="fas fa-circle-check text-navy mt-1.5"></i>Développer vos plateformes et sites sur mesure</li>
+            <li class="flex items-start gap-3"><i class="fas fa-circle-check text-navy mt-1.5"></i>Structurer vos bases de données (SQL, PostgreSQL)</li>
+            <li class="flex items-start gap-3"><i class="fas fa-circle-check text-navy mt-1.5"></i>Concevoir des interfaces claires, orientées utilisateur</li>
+            <li class="flex items-start gap-3"><i class="fas fa-circle-check text-navy mt-1.5"></i>Automatiser vos flux de données (APIs, webhooks)</li>
+          </ul>
+          <div class="flex flex-wrap gap-2">
+            <span class="border border-night/15 rounded-full px-3 py-1 text-xs font-medium text-night/60">HTML / CSS</span>
+            <span class="border border-night/15 rounded-full px-3 py-1 text-xs font-medium text-night/60">JavaScript</span>
+            <span class="border border-night/15 rounded-full px-3 py-1 text-xs font-medium text-night/60">Python</span>
+            <span class="border border-night/15 rounded-full px-3 py-1 text-xs font-medium text-night/60">GitHub</span>
+            <span class="border border-night/15 rounded-full px-3 py-1 text-xs font-medium text-night/60">Figma</span>
+          </div>
         </div>
-        <img src="Github2.jpeg" alt="Développement web" class="w-full h-64 md:h-80 object-cover rounded-2xl shadow-xl ring-1 ring-navy/25 md:order-1" />
-      </article>
+        <div class="rounded-2xl overflow-hidden shadow-xl ring-1 ring-night/10 group md:order-1">
+          <img src="Github2.jpeg" alt="Développement web" class="w-full h-64 md:h-96 object-cover group-hover:scale-105 transition duration-700" />
+        </div>
+      </section>
 
-      <article class="grid md:grid-cols-2 gap-8 lg:gap-14 items-center">
+      <section id="processus" class="reveal scroll-mt-28 grid md:grid-cols-2 gap-10 lg:gap-16 items-center">
         <div>
+          <p class="font-display font-bold text-6xl text-night/10 leading-none mb-3">05</p>
           <span class="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-gradient-to-br from-sky to-lagoon/40 text-navy text-xl mb-5"><i class="fas fa-diagram-project"></i></span>
-          <h2 class="font-display font-semibold text-night text-2xl mb-4">Gestion des processus</h2>
-          <p class="leading-8 text-night/80">
-            J'accompagne les organisations dans la maîtrise de leurs processus métier : identification, cartographie, schématisation et digitalisation des processus, harmonisation des outils et automatisation des flux de travail. Cette démarche clarifie les rôles, fluidifie les opérations et prépare une transformation digitale réussie.
+          <h2 class="font-display font-bold text-night text-2xl md:text-3xl mb-4">Gestion des processus</h2>
+          <p class="leading-8 text-night/75 mb-6">
+            Avant de digitaliser, il faut comprendre. J'accompagne vos équipes dans l'identification, la cartographie et la schématisation de vos processus métier — puis leur digitalisation et automatisation pour des opérations plus fluides.
           </p>
+          <ul class="space-y-2.5 text-night/80 mb-7">
+            <li class="flex items-start gap-3"><i class="fas fa-circle-check text-navy mt-1.5"></i>Identifier et cartographier vos processus métier</li>
+            <li class="flex items-start gap-3"><i class="fas fa-circle-check text-navy mt-1.5"></i>Schématiser vos flux (diagrammes, logigrammes)</li>
+            <li class="flex items-start gap-3"><i class="fas fa-circle-check text-navy mt-1.5"></i>Digitaliser et automatiser vos flux de travail</li>
+            <li class="flex items-start gap-3"><i class="fas fa-circle-check text-navy mt-1.5"></i>Harmoniser vos outils et former vos équipes</li>
+          </ul>
+          <div class="flex flex-wrap gap-2">
+            <span class="border border-night/15 rounded-full px-3 py-1 text-xs font-medium text-night/60">Power Apps</span>
+            <span class="border border-night/15 rounded-full px-3 py-1 text-xs font-medium text-night/60">Power Automate</span>
+            <span class="border border-night/15 rounded-full px-3 py-1 text-xs font-medium text-night/60">Microsoft Fabric</span>
+            <span class="border border-night/15 rounded-full px-3 py-1 text-xs font-medium text-night/60">Cartographie de processus</span>
+          </div>
         </div>
-        <img src="data 2.avif" alt="Gestion des processus" class="w-full h-64 md:h-80 object-cover rounded-2xl shadow-xl ring-1 ring-navy/25" />
-      </article>
+        <div class="rounded-2xl overflow-hidden shadow-xl ring-1 ring-night/10 group">
+          <img src="data 2.avif" alt="Gestion et digitalisation des processus" class="w-full h-64 md:h-96 object-cover group-hover:scale-105 transition duration-700" />
+        </div>
+      </section>
+
+      <section class="reveal">
+        <div class="bg-gradient-to-br from-petrol to-night rounded-3xl p-8 md:p-12 text-center">
+          <h2 class="font-display font-bold text-[#ffffff] text-2xl md:text-3xl mb-4">Une expertise vous intéresse ?</h2>
+          <p class="text-[#ffffff]/70 leading-8 max-w-2xl mx-auto mb-8">
+            Chaque projet est unique. Parlons du vôtre et voyons comment ces compétences peuvent servir vos objectifs.
+          </p>
+          <a href="contact.html" class="inline-flex items-center gap-3 rounded-full bg-gradient-to-r from-navy to-lagoon text-[#ffffff] font-semibold px-8 py-3.5 shadow-lg shadow-black/30 hover:-translate-y-0.5 transition">
+            Discutons de votre projet <i class="fas fa-arrow-right"></i>
+          </a>
+        </div>
+      </section>
     </div>
   </main>
 
@@ -153,5 +277,19 @@
       </div>
     </div>
   </footer>
+
+  <script>
+    const revealEls = document.querySelectorAll('.reveal');
+    const inView = el => { const r = el.getBoundingClientRect(); return r.top < window.innerHeight && r.bottom > 0; };
+    if ('IntersectionObserver' in window) {
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); } });
+      }, { threshold: 0.05, rootMargin: '0px 0px -5% 0px' });
+      revealEls.forEach(el => { if (inView(el)) { el.classList.add('visible'); } else { observer.observe(el); } });
+      window.addEventListener('scroll', () => { revealEls.forEach(el => { if (!el.classList.contains('visible') && inView(el)) el.classList.add('visible'); }); }, { passive: true });
+    } else {
+      revealEls.forEach(el => el.classList.add('visible'));
+    }
+  </script>
 </body>
 </html>
