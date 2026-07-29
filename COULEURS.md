@@ -1,5 +1,13 @@
 # Palette de couleurs du portfolio
 
+> ⚠️ **Palette active (depuis juillet 2026)** — inspiration « retail minimal » :
+> fond blanc cassé `#F7F5F2` (token `pale`), pêche doux `#F7DCD1` (`sky`),
+> anthracite `#222B38` (`night`, textes), corail `#EE7A5C` (`navy`, accents/boutons),
+> gris-bleu `#8A93A3` (`steel`), anthracite profond `#26303E` (`petrol`), corail clair `#F2A48F` (`lagoon`).
+> Polices : Plus Jakarta Sans (titres) + DM Sans (texte).
+> La palette de bleus ci-dessous est conservée en référence — pour y revenir, il suffit de
+> remettre ces valeurs dans le bloc `tailwind.config` des pages.
+
 Palette de référence (dégradé de bleus, du plus sombre au plus clair).
 
 | Aperçu | Code hex | Nom suggéré | Usage recommandé |
