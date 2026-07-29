@@ -38,15 +38,24 @@
     }
   </script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    html { scroll-behavior: smooth; }
+    .reveal { opacity: 0; transform: translateY(28px); transition: opacity .7s ease, transform .7s ease; }
+    .reveal.visible { opacity: 1; transform: none; }
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      .reveal { opacity: 1; transform: none; transition: none; }
+    }
+  </style>
 </head>
 <body class="min-h-screen flex flex-col bg-gradient-to-b from-pale via-pale to-sky text-night font-sans antialiased">
 
   <header class="sticky top-0 z-50 bg-pale/95 backdrop-blur border-b border-navy/20">
-    <div class="max-w-6xl mx-auto px-5 sm:px-8 h-16 md:h-20 flex items-center justify-between gap-4">
+    <div class="max-w-6xl mx-auto px-5 sm:px-8 min-h-16 md:min-h-20 py-2 flex items-center justify-between gap-4">
       <a href="index.html" class="font-display font-bold text-night text-base sm:text-lg md:text-xl tracking-tight">
         Merveille <span class="text-navy hidden sm:inline">AGANZE SAMI</span>
       </a>
-      <nav class="flex items-center gap-3 sm:gap-5 md:gap-7 text-xs sm:text-sm md:text-[15px]">
+      <nav class="flex flex-wrap justify-end items-center gap-x-4 gap-y-1 sm:gap-x-6 md:gap-x-8 text-xs sm:text-sm md:text-[15px]">
         <a href="index.html" class="text-night/70 hover:text-navy transition">Home</a>
         <a href="blog.html" class="text-night/70 hover:text-navy transition">Blog</a>
         <a href="expertise.html" class="text-navy font-semibold">Expertise</a>
@@ -57,65 +66,178 @@
     </div>
   </header>
 
-  <main class="flex-1 max-w-6xl w-full mx-auto px-5 sm:px-8 py-12 md:py-16">
-    <p class="text-navy font-semibold uppercase tracking-[0.25em] text-xs mb-3">Know-how</p>
-    <h1 class="font-display font-bold text-night text-3xl md:text-4xl mb-14">Areas of expertise</h1>
+  <main class="flex-1">
 
-    <div class="space-y-16 md:space-y-20">
-      <article class="grid md:grid-cols-2 gap-8 lg:gap-14 items-center">
+    <section class="max-w-6xl mx-auto px-5 sm:px-8 pt-10 md:pt-14">
+      <div class="bg-gradient-to-br from-petrol to-night rounded-[2rem] md:rounded-[2.5rem] px-6 sm:px-10 md:px-14 py-12 md:py-14 relative overflow-hidden">
+        <div class="absolute -bottom-28 -right-20 w-80 h-80 bg-navy/20 rounded-full blur-2xl"></div>
+        <div class="relative">
+          <p class="text-lagoon font-semibold uppercase tracking-[0.25em] text-xs mb-4">Know-how</p>
+          <h1 class="font-display font-bold text-[#ffffff] text-3xl sm:text-4xl md:text-5xl leading-tight mb-5">
+            Five domains,<br />one mission: <span class="bg-gradient-to-r from-navy to-lagoon bg-clip-text text-transparent">your decisions</span>
+          </h1>
+          <p class="text-[#ffffff]/70 leading-8 max-w-2xl mb-8">
+            From the field to the dashboard: I combine monitoring &amp; evaluation, geospatial information, data analysis, web development and process management to turn your data into results.
+          </p>
+          <div class="flex flex-wrap gap-3">
+            <a href="#mel" class="border border-[#ffffff]/30 rounded-full px-4 py-1.5 text-sm text-[#ffffff]/80 hover:border-lagoon hover:text-lagoon transition">01 · Monitoring &amp; Evaluation</a>
+            <a href="#gis" class="border border-[#ffffff]/30 rounded-full px-4 py-1.5 text-sm text-[#ffffff]/80 hover:border-lagoon hover:text-lagoon transition">02 · GIS &amp; remote sensing</a>
+            <a href="#data" class="border border-[#ffffff]/30 rounded-full px-4 py-1.5 text-sm text-[#ffffff]/80 hover:border-lagoon hover:text-lagoon transition">03 · Data analysis</a>
+            <a href="#web" class="border border-[#ffffff]/30 rounded-full px-4 py-1.5 text-sm text-[#ffffff]/80 hover:border-lagoon hover:text-lagoon transition">04 · Web development</a>
+            <a href="#process" class="border border-[#ffffff]/30 rounded-full px-4 py-1.5 text-sm text-[#ffffff]/80 hover:border-lagoon hover:text-lagoon transition">05 · Process management</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="max-w-6xl mx-auto px-5 sm:px-8 py-14 md:py-20 space-y-20 md:space-y-28">
+
+      <section id="mel" class="reveal scroll-mt-28 grid md:grid-cols-2 gap-10 lg:gap-16 items-center">
         <div>
+          <p class="font-display font-bold text-6xl text-night/10 leading-none mb-3">01</p>
           <span class="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-gradient-to-br from-sky to-lagoon/40 text-navy text-xl mb-5"><i class="fas fa-chart-line"></i></span>
-          <h2 class="font-display font-semibold text-night text-2xl mb-4">Monitoring, Evaluation, Accountability and Learning</h2>
-          <p class="leading-8 text-night/80">
-            I design and develop simple, effective solutions tailored to the needs of organizations and entrepreneurs. My approach focuses on structuring and digitalizing activities through clear interfaces, functional tools and user-oriented platforms.
+          <h2 class="font-display font-bold text-night text-2xl md:text-3xl mb-4">Monitoring, Evaluation, Accountability and Learning</h2>
+          <p class="leading-8 text-night/75 mb-6">
+            I design complete, digital MEL systems aligned with your logical frameworks and donor requirements (BMZ, DGIS, Danida…). From field collection to knowledge capitalization, your data becomes a steering and accountability tool.
           </p>
+          <ul class="space-y-2.5 text-night/80 mb-7">
+            <li class="flex items-start gap-3"><i class="fas fa-circle-check text-navy mt-1.5"></i>Design your MEL plans and logical frameworks</li>
+            <li class="flex items-start gap-3"><i class="fas fa-circle-check text-navy mt-1.5"></i>Digitalize your field data collection</li>
+            <li class="flex items-start gap-3"><i class="fas fa-circle-check text-navy mt-1.5"></i>Lead your baseline, mid-term and final evaluations</li>
+            <li class="flex items-start gap-3"><i class="fas fa-circle-check text-navy mt-1.5"></i>Deliver reliable, on-time donor reporting</li>
+          </ul>
+          <div class="flex flex-wrap gap-2">
+            <span class="border border-night/15 rounded-full px-3 py-1 text-xs font-medium text-night/60">KoboToolbox</span>
+            <span class="border border-night/15 rounded-full px-3 py-1 text-xs font-medium text-night/60">ODK / XLSForm</span>
+            <span class="border border-night/15 rounded-full px-3 py-1 text-xs font-medium text-night/60">CommCare</span>
+            <span class="border border-night/15 rounded-full px-3 py-1 text-xs font-medium text-night/60">Survey Solutions</span>
+            <span class="border border-night/15 rounded-full px-3 py-1 text-xs font-medium text-night/60">Logical frameworks</span>
+          </div>
         </div>
-        <img src="../premium_photo-1688821126516-aad66aa5510d.avif" alt="Data analysis" class="w-full h-64 md:h-80 object-cover rounded-2xl shadow-xl ring-1 ring-navy/25" />
-      </article>
+        <div class="rounded-2xl overflow-hidden shadow-xl ring-1 ring-night/10 group">
+          <img src="../premium_photo-1688821126516-aad66aa5510d.avif" alt="Monitoring and evaluation" class="w-full h-64 md:h-96 object-cover group-hover:scale-105 transition duration-700" />
+        </div>
+      </section>
 
-      <article class="grid md:grid-cols-2 gap-8 lg:gap-14 items-center">
+      <section id="gis" class="reveal scroll-mt-28 grid md:grid-cols-2 gap-10 lg:gap-16 items-center">
         <div class="md:order-2">
+          <p class="font-display font-bold text-6xl text-night/10 leading-none mb-3">02</p>
           <span class="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-gradient-to-br from-sky to-lagoon/40 text-navy text-xl mb-5"><i class="fas fa-map-location-dot"></i></span>
-          <h2 class="font-display font-semibold text-night text-2xl mb-4">GIS and remote sensing</h2>
-          <p class="leading-8 text-night/80">
-            I use geographic information systems and remote sensing to analyze, visualize and leverage spatial data for decision-making. Through map production, satellite image interpretation, spatial modeling and cartographic database management, I provide a better understanding of territories, activity monitoring and environmental dynamics.
+          <h2 class="font-display font-bold text-night text-2xl md:text-3xl mb-4">GIS and remote sensing</h2>
+          <p class="leading-8 text-night/75 mb-6">
+            I leverage geographic information systems and satellite imagery to bring a spatial dimension to your decisions: deforestation and wood-energy monitoring, activity mapping, spatial modeling and cartographic databases.
           </p>
+          <ul class="space-y-2.5 text-night/80 mb-7">
+            <li class="flex items-start gap-3"><i class="fas fa-circle-check text-navy mt-1.5"></i>Produce your thematic maps and project atlases</li>
+            <li class="flex items-start gap-3"><i class="fas fa-circle-check text-navy mt-1.5"></i>Analyze satellite imagery and LiDAR data</li>
+            <li class="flex items-start gap-3"><i class="fas fa-circle-check text-navy mt-1.5"></i>Structure your spatial databases (PostGIS)</li>
+            <li class="flex items-start gap-3"><i class="fas fa-circle-check text-navy mt-1.5"></i>Track environmental dynamics in your areas</li>
+          </ul>
+          <div class="flex flex-wrap gap-2">
+            <span class="border border-night/15 rounded-full px-3 py-1 text-xs font-medium text-night/60">QGIS</span>
+            <span class="border border-night/15 rounded-full px-3 py-1 text-xs font-medium text-night/60">ArcGIS</span>
+            <span class="border border-night/15 rounded-full px-3 py-1 text-xs font-medium text-night/60">PostGIS</span>
+            <span class="border border-night/15 rounded-full px-3 py-1 text-xs font-medium text-night/60">Remote sensing</span>
+            <span class="border border-night/15 rounded-full px-3 py-1 text-xs font-medium text-night/60">LiDAR</span>
+          </div>
         </div>
-        <img src="../maps.avif" alt="Mapping" class="w-full h-64 md:h-80 object-cover rounded-2xl shadow-xl ring-1 ring-navy/25 md:order-1" />
-      </article>
+        <div class="rounded-2xl overflow-hidden shadow-xl ring-1 ring-night/10 group md:order-1">
+          <img src="../maps.avif" alt="Mapping and GIS" class="w-full h-64 md:h-96 object-cover group-hover:scale-105 transition duration-700" />
+        </div>
+      </section>
 
-      <article class="grid md:grid-cols-2 gap-8 lg:gap-14 items-center">
+      <section id="data" class="reveal scroll-mt-28 grid md:grid-cols-2 gap-10 lg:gap-16 items-center">
         <div>
+          <p class="font-display font-bold text-6xl text-night/10 leading-none mb-3">03</p>
           <span class="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-gradient-to-br from-sky to-lagoon/40 text-navy text-xl mb-5"><i class="fas fa-chart-pie"></i></span>
-          <h2 class="font-display font-semibold text-night text-2xl mb-4">Data analysis</h2>
-          <p class="leading-8 text-night/80">
-            I leverage data to produce reliable analyses and meaningful visualizations: data cleaning and structuring, statistical analysis (Stata, R, Python), interactive Power BI dashboards and decision-maker-friendly reporting. The goal: turning raw data into actionable insights for steering and decision-making.
+          <h2 class="font-display font-bold text-night text-2xl md:text-3xl mb-4">Data analysis</h2>
+          <p class="leading-8 text-night/75 mb-6">
+            From raw data to actionable insights: cleaning, structuring, statistical analysis and visualizations that speak to decision-makers. My Power BI dashboards provide dynamic, real-time tracking of your indicators.
           </p>
+          <ul class="space-y-2.5 text-night/80 mb-7">
+            <li class="flex items-start gap-3"><i class="fas fa-circle-check text-navy mt-1.5"></i>Clean, validate and secure your data</li>
+            <li class="flex items-start gap-3"><i class="fas fa-circle-check text-navy mt-1.5"></i>Run your statistical analyses (quantitative &amp; qualitative)</li>
+            <li class="flex items-start gap-3"><i class="fas fa-circle-check text-navy mt-1.5"></i>Build your interactive Power BI dashboards</li>
+            <li class="flex items-start gap-3"><i class="fas fa-circle-check text-navy mt-1.5"></i>Present results clearly and visually</li>
+          </ul>
+          <div class="flex flex-wrap gap-2">
+            <span class="border border-night/15 rounded-full px-3 py-1 text-xs font-medium text-night/60">Power BI</span>
+            <span class="border border-night/15 rounded-full px-3 py-1 text-xs font-medium text-night/60">Stata</span>
+            <span class="border border-night/15 rounded-full px-3 py-1 text-xs font-medium text-night/60">R</span>
+            <span class="border border-night/15 rounded-full px-3 py-1 text-xs font-medium text-night/60">Python</span>
+            <span class="border border-night/15 rounded-full px-3 py-1 text-xs font-medium text-night/60">SPSS</span>
+            <span class="border border-night/15 rounded-full px-3 py-1 text-xs font-medium text-night/60">Advanced Excel</span>
+          </div>
         </div>
-        <img src="../DATA.avif" alt="Data analysis" class="w-full h-64 md:h-80 object-cover rounded-2xl shadow-xl ring-1 ring-navy/25" />
-      </article>
+        <div class="rounded-2xl overflow-hidden shadow-xl ring-1 ring-night/10 group">
+          <img src="../DATA.avif" alt="Data analysis and visualization" class="w-full h-64 md:h-96 object-cover group-hover:scale-105 transition duration-700" />
+        </div>
+      </section>
 
-      <article class="grid md:grid-cols-2 gap-8 lg:gap-14 items-center">
+      <section id="web" class="reveal scroll-mt-28 grid md:grid-cols-2 gap-10 lg:gap-16 items-center">
         <div class="md:order-2">
+          <p class="font-display font-bold text-6xl text-night/10 leading-none mb-3">04</p>
           <span class="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-gradient-to-br from-sky to-lagoon/40 text-navy text-xl mb-5"><i class="fas fa-code"></i></span>
-          <h2 class="font-display font-semibold text-night text-2xl mb-4">Web development</h2>
-          <p class="leading-8 text-night/80">
-            I design and develop high-performing web solutions with structured databases to meet the needs of organizations and entrepreneurs. My approach is to create intuitive, functional platforms for collecting, storing, managing and leveraging data effectively.
+          <h2 class="font-display font-bold text-night text-2xl md:text-3xl mb-4">Web development</h2>
+          <p class="leading-8 text-night/75 mb-6">
+            I build simple, functional web platforms backed by structured databases — designed for the field and low-connectivity contexts, like this portfolio or my activity-tracking applications.
           </p>
+          <ul class="space-y-2.5 text-night/80 mb-7">
+            <li class="flex items-start gap-3"><i class="fas fa-circle-check text-navy mt-1.5"></i>Develop your custom platforms and websites</li>
+            <li class="flex items-start gap-3"><i class="fas fa-circle-check text-navy mt-1.5"></i>Structure your databases (SQL, PostgreSQL)</li>
+            <li class="flex items-start gap-3"><i class="fas fa-circle-check text-navy mt-1.5"></i>Design clear, user-oriented interfaces</li>
+            <li class="flex items-start gap-3"><i class="fas fa-circle-check text-navy mt-1.5"></i>Automate your data flows (APIs, webhooks)</li>
+          </ul>
+          <div class="flex flex-wrap gap-2">
+            <span class="border border-night/15 rounded-full px-3 py-1 text-xs font-medium text-night/60">HTML / CSS</span>
+            <span class="border border-night/15 rounded-full px-3 py-1 text-xs font-medium text-night/60">JavaScript</span>
+            <span class="border border-night/15 rounded-full px-3 py-1 text-xs font-medium text-night/60">Python</span>
+            <span class="border border-night/15 rounded-full px-3 py-1 text-xs font-medium text-night/60">GitHub</span>
+            <span class="border border-night/15 rounded-full px-3 py-1 text-xs font-medium text-night/60">Figma</span>
+          </div>
         </div>
-        <img src="../Github2.jpeg" alt="Web development" class="w-full h-64 md:h-80 object-cover rounded-2xl shadow-xl ring-1 ring-navy/25 md:order-1" />
-      </article>
+        <div class="rounded-2xl overflow-hidden shadow-xl ring-1 ring-night/10 group md:order-1">
+          <img src="../Github2.jpeg" alt="Web development" class="w-full h-64 md:h-96 object-cover group-hover:scale-105 transition duration-700" />
+        </div>
+      </section>
 
-      <article class="grid md:grid-cols-2 gap-8 lg:gap-14 items-center">
+      <section id="process" class="reveal scroll-mt-28 grid md:grid-cols-2 gap-10 lg:gap-16 items-center">
         <div>
+          <p class="font-display font-bold text-6xl text-night/10 leading-none mb-3">05</p>
           <span class="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-gradient-to-br from-sky to-lagoon/40 text-navy text-xl mb-5"><i class="fas fa-diagram-project"></i></span>
-          <h2 class="font-display font-semibold text-night text-2xl mb-4">Process management</h2>
-          <p class="leading-8 text-night/80">
-            I support organizations in mastering their business processes: process identification, mapping, diagramming and digitalization, tools harmonization and workflow automation. This approach clarifies roles, streamlines operations and lays the groundwork for a successful digital transformation.
+          <h2 class="font-display font-bold text-night text-2xl md:text-3xl mb-4">Process management</h2>
+          <p class="leading-8 text-night/75 mb-6">
+            Before digitalizing, you need to understand. I support your teams in identifying, mapping and diagramming your business processes — then digitalizing and automating them for smoother operations.
           </p>
+          <ul class="space-y-2.5 text-night/80 mb-7">
+            <li class="flex items-start gap-3"><i class="fas fa-circle-check text-navy mt-1.5"></i>Identify and map your business processes</li>
+            <li class="flex items-start gap-3"><i class="fas fa-circle-check text-navy mt-1.5"></i>Diagram your workflows (flowcharts)</li>
+            <li class="flex items-start gap-3"><i class="fas fa-circle-check text-navy mt-1.5"></i>Digitalize and automate your workflows</li>
+            <li class="flex items-start gap-3"><i class="fas fa-circle-check text-navy mt-1.5"></i>Harmonize your tools and train your teams</li>
+          </ul>
+          <div class="flex flex-wrap gap-2">
+            <span class="border border-night/15 rounded-full px-3 py-1 text-xs font-medium text-night/60">Power Apps</span>
+            <span class="border border-night/15 rounded-full px-3 py-1 text-xs font-medium text-night/60">Power Automate</span>
+            <span class="border border-night/15 rounded-full px-3 py-1 text-xs font-medium text-night/60">Microsoft Fabric</span>
+            <span class="border border-night/15 rounded-full px-3 py-1 text-xs font-medium text-night/60">Process mapping</span>
+          </div>
         </div>
-        <img src="../data 2.avif" alt="Process management" class="w-full h-64 md:h-80 object-cover rounded-2xl shadow-xl ring-1 ring-navy/25" />
-      </article>
+        <div class="rounded-2xl overflow-hidden shadow-xl ring-1 ring-night/10 group">
+          <img src="../data 2.avif" alt="Process management and digitalization" class="w-full h-64 md:h-96 object-cover group-hover:scale-105 transition duration-700" />
+        </div>
+      </section>
+
+      <section class="reveal">
+        <div class="bg-gradient-to-br from-petrol to-night rounded-3xl p-8 md:p-12 text-center">
+          <h2 class="font-display font-bold text-[#ffffff] text-2xl md:text-3xl mb-4">Interested in one of these skills?</h2>
+          <p class="text-[#ffffff]/70 leading-8 max-w-2xl mx-auto mb-8">
+            Every project is unique. Let's talk about yours and see how these skills can serve your goals.
+          </p>
+          <a href="contact.html" class="inline-flex items-center gap-3 rounded-full bg-gradient-to-r from-navy to-lagoon text-[#ffffff] font-semibold px-8 py-3.5 shadow-lg shadow-black/30 hover:-translate-y-0.5 transition">
+            Let's discuss your project <i class="fas fa-arrow-right"></i>
+          </a>
+        </div>
+      </section>
     </div>
   </main>
 
@@ -155,5 +277,19 @@
       </div>
     </div>
   </footer>
+
+  <script>
+    const revealEls = document.querySelectorAll('.reveal');
+    const inView = el => { const r = el.getBoundingClientRect(); return r.top < window.innerHeight && r.bottom > 0; };
+    if ('IntersectionObserver' in window) {
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); } });
+      }, { threshold: 0.05, rootMargin: '0px 0px -5% 0px' });
+      revealEls.forEach(el => { if (inView(el)) { el.classList.add('visible'); } else { observer.observe(el); } });
+      window.addEventListener('scroll', () => { revealEls.forEach(el => { if (!el.classList.contains('visible') && inView(el)) el.classList.add('visible'); }); }, { passive: true });
+    } else {
+      revealEls.forEach(el => el.classList.add('visible'));
+    }
+  </script>
 </body>
 </html>
