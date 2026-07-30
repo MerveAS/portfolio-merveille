@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Designing a MEL plan that survives the field | Merveille Aganze Sami</title>
+  <meta name="description" content="From realistic indicators to collection tools: 5 principles to build a monitoring & evaluation system that teams actually use." />
+  <meta property="og:title" content="Designing a MEL plan that survives the field" />
+  <meta property="og:description" content="5 principles to build a monitoring & evaluation system that teams actually use." />
+  <meta property="og:image" content="../Photomerveille.jpg?v=2" />
+  <meta property="og:type" content="article" />
+  <link rel="alternate" hreflang="fr" href="https://merveille.fitigroup.org/article-plan-mel.html" />
+  <link rel="alternate" hreflang="en" href="https://merveille.fitigroup.org/en/article-mel-plan.html" />
+  <link rel="icon" href="../favicon.svg?v=2" type="image/svg+xml" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            night: '#222B38',
+            navy: '#EE7A5C',
+            steel: '#8A93A3',
+            petrol: '#26303E',
+            lagoon: '#F2A48F',
+            sky: '#F7DCD1',
+            pale: '#F7F5F2'
+          },
+          fontFamily: {
+            sans: ['DM Sans', 'Arial', 'sans-serif'],
+            display: ['Plus Jakarta Sans', 'Arial', 'sans-serif']
+          }
+        }
+      }
+    }
+  </script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    html { scroll-behavior: smooth; }
+    @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col bg-gradient-to-b from-pale via-pale to-sky text-night font-sans antialiased">
+
+  <header class="sticky top-0 z-50 bg-pale/95 backdrop-blur border-b border-navy/20">
+    <div class="max-w-6xl mx-auto px-5 sm:px-8 min-h-16 md:min-h-20 py-2 flex items-center justify-between gap-4">
+      <a href="index.html" class="font-display font-bold text-night text-base sm:text-lg md:text-xl tracking-tight">
+        Merveille <span class="text-navy hidden sm:inline">AGANZE SAMI</span>
+      </a>
+      <nav class="flex flex-wrap justify-end items-center gap-x-4 gap-y-1 sm:gap-x-6 md:gap-x-8 text-xs sm:text-sm md:text-[15px]">
+        <a href="index.html" class="text-night/70 hover:text-navy transition">Home</a>
+        <a href="blog.html" class="text-navy font-semibold">Blog</a>
+        <a href="expertise.html" class="text-night/70 hover:text-navy transition">Expertise</a>
+        <a href="projects.html" class="text-night/70 hover:text-navy transition">Projects</a>
+        <a href="../article-plan-mel.html" class="text-[11px] font-semibold border border-navy/40 rounded-full px-3 py-1 text-night/70 hover:text-navy hover:border-navy/60 transition" title="Version française">FR</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="flex-1">
+
+    <section class="max-w-6xl mx-auto px-5 sm:px-8 pt-10 md:pt-14">
+      <div class="bg-gradient-to-br from-petrol to-night rounded-[2rem] md:rounded-[2.5rem] px-6 sm:px-10 md:px-14 py-12 md:py-14 relative overflow-hidden">
+        <div class="absolute -bottom-24 -right-16 w-80 h-80 bg-navy/20 rounded-full blur-2xl"></div>
+        <div class="relative max-w-3xl">
+          <a href="blog.html" class="inline-flex items-center gap-2 text-[#ffffff]/60 text-sm hover:text-lagoon transition mb-6"><i class="fas fa-arrow-left"></i> Back to blog</a>
+          <div class="flex flex-wrap items-center gap-2 mb-5">
+            <span class="text-[11px] font-semibold uppercase tracking-wider bg-gradient-to-r from-navy to-lagoon text-[#ffffff] rounded-full px-3 py-1">Article</span>
+            <span class="text-[11px] font-medium text-[#ffffff]/50"><i class="fas fa-calendar mr-1.5"></i>July 2026</span>
+            <span class="text-[11px] font-medium text-[#ffffff]/50"><i class="fas fa-clock mr-1.5"></i>6 min read</span>
+          </div>
+          <h1 class="font-display font-bold text-[#ffffff] text-3xl sm:text-4xl md:text-5xl leading-tight mb-6">
+            Designing a MEL plan<br /><span class="bg-gradient-to-r from-navy to-lagoon bg-clip-text text-transparent">that survives the field</span>
+          </h1>
+          <div class="flex items-center gap-3">
+            <img src="../Photomerveille.jpg?v=2" alt="Merveille Aganze Sami" class="w-10 h-10 rounded-full object-cover ring-2 ring-[#ffffff]/30" />
+            <div class="text-sm">
+              <p class="text-[#ffffff] font-semibold">Merveille Aganze Sami</p>
+              <p class="text-[#ffffff]/50">MEL &amp; Database Management Advisor</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <article class="max-w-3xl mx-auto px-5 sm:px-8 py-12 md:py-16">
+
+      <p class="text-lg md:text-xl leading-9 text-night/80 mb-10">
+        I have watched beautiful MEL plans die in a drawer. Impeccable logical frameworks, dozens of indicators, matrices validated by everyone — and six months later, teams filling in late Excel files, incomplete data and donor reports written in a rush. The problem is almost never the theory: it is that the plan was not designed for <strong class="text-night">the real field</strong> — the one with patchy connectivity, rotating staff and days that are already too short. Here are the five principles I apply, project after project, so that a monitoring &amp; evaluation system lives beyond its binder.
+      </p>
+
+      <h2 class="font-display font-bold text-night text-2xl md:text-3xl mb-5 flex items-baseline gap-3"><span class="text-navy font-display">1.</span> Start from decisions, not indicators</h2>
+      <p class="leading-8 text-night/80 mb-5">
+        The first question of a MEL plan is not "what should we measure?" but "<strong class="text-night">which decisions should this data inform, and for whom?</strong>" A project coordinator, a partner ministry and a donor such as BMZ or DGIS do not need the same information, nor at the same frequency.
+      </p>
+      <p class="leading-8 text-night/80 mb-6">
+        Starting from decisions, you quickly discover that a handful of well-chosen indicators, aligned with the logical framework, beats forty "just in case" indicators. Every indicator has a cost: collection, cleaning, analysis. An indicator nobody uses to decide is a tax on your teams.
+      </p>
+      <div class="bg-sky/60 border-l-4 border-navy rounded-r-2xl p-5 md:p-6 mb-10">
+        <p class="leading-7 text-night/80 text-sm md:text-base"><i class="fas fa-lightbulb text-navy mr-2"></i><strong class="text-night">Quick test:</strong> for each indicator, complete the sentence "if this value changes, then we will…". If the sentence stays empty, the indicator can probably go.</p>
+      </div>
+
+      <h2 class="font-display font-bold text-night text-2xl md:text-3xl mb-5 flex items-baseline gap-3"><span class="text-navy font-display">2.</span> Design for field reality</h2>
+      <p class="leading-8 text-night/80 mb-5">
+        A MEL plan is designed in an office but executed in areas where connectivity is intermittent, where staff change positions, and where the enumerator sometimes works in a different language from the questionnaire. Ignoring these realities means programming the collection to fail.
+      </p>
+      <ul class="space-y-3 text-night/80 leading-7 mb-10">
+        <li class="flex items-start gap-3"><i class="fas fa-circle-check text-navy mt-1.5"></i><span><strong class="text-night">Offline-first collection</strong>: tools must work without network and synchronize later.</span></li>
+        <li class="flex items-start gap-3"><i class="fas fa-circle-check text-navy mt-1.5"></i><span><strong class="text-night">Forms in the enumerator's language</strong>, tested in the field before deployment, not after.</span></li>
+        <li class="flex items-start gap-3"><i class="fas fa-circle-check text-navy mt-1.5"></i><span><strong class="text-night">Procedures that survive departures</strong>: short documentation, recorded trainings, buddy systems — staff turnover is a certainty, not a risk.</span></li>
+      </ul>
+
+      <h2 class="font-display font-bold text-night text-2xl md:text-3xl mb-5 flex items-baseline gap-3"><span class="text-navy font-display">3.</span> Digitalize collection without complicating it</h2>
+      <p class="leading-8 text-night/80 mb-5">
+        Digitalization is not an end in itself: it is a means to get more reliable data, faster. Tools like <strong class="text-night">KoboToolbox</strong> or <strong class="text-night">ODK</strong> validate data at the source — input constraints, skip logic, dropdown lists — and eliminate weeks of downstream cleaning.
+      </p>
+      <p class="leading-8 text-night/80 mb-10">
+        But the golden rule remains simplicity: a well-built 20-minute form will be filled in correctly; a one-hour form will be rushed, whatever the tool. Digitalize the process <em>as it should be</em>, not as it has accumulated over the years — which is precisely why process mapping always precedes digitalization in my practice.
+      </p>
+
+      <h2 class="font-display font-bold text-night text-2xl md:text-3xl mb-5 flex items-baseline gap-3"><span class="text-navy font-display">4.</span> Make the data visible, fast</h2>
+      <p class="leading-8 text-night/80 mb-5">
+        Nothing kills data collection more surely than silence. If field agents send data for months without ever seeing the result, quality drops — why polish what disappears into a black hole?
+      </p>
+      <p class="leading-8 text-night/80 mb-10">
+        This is where dashboards change the game. Even a simple <strong class="text-night">Power BI</strong> dashboard, automatically refreshed and shared with the teams, turns collection into a feedback loop: everyone sees their contribution, anomalies are spotted in days rather than quarters, and project reviews rely on fresh figures rather than memories.
+      </p>
+
+      <h2 class="font-display font-bold text-night text-2xl md:text-3xl mb-5 flex items-baseline gap-3"><span class="text-navy font-display">5.</span> Plan for learning, not just reporting</h2>
+      <p class="leading-8 text-night/80 mb-5">
+        The "L" of MEL is the first one we sacrifice — yet it is the one that justifies everything else. A system that only produces donor reports is a system half dead.
+      </p>
+      <p class="leading-8 text-night/80 mb-10">
+        Build into the plan, from day one: periodic reviews where data is discussed (not just presented), capitalization moments where lessons become reusable documents, and a budget to adjust the tools along the way. A living MEL plan is a plan that is allowed to change.
+      </p>
+
+      <div class="bg-gradient-to-br from-petrol to-night rounded-2xl p-6 md:p-8 mb-10">
+        <h2 class="font-display font-semibold text-[#ffffff] text-xl mb-4"><i class="fas fa-list-check text-lagoon mr-2"></i>The checklist to remember</h2>
+        <ul class="space-y-2.5 text-[#ffffff]/80 leading-7 text-sm md:text-base">
+          <li class="flex items-start gap-3"><i class="fas fa-check text-lagoon mt-1.5"></i>Every indicator is linked to a decision and an identified decision-maker</li>
+          <li class="flex items-start gap-3"><i class="fas fa-check text-lagoon mt-1.5"></i>Collection works offline and in the enumerators' language</li>
+          <li class="flex items-start gap-3"><i class="fas fa-check text-lagoon mt-1.5"></i>Forms validate data at the source (constraints, skip logic)</li>
+          <li class="flex items-start gap-3"><i class="fas fa-check text-lagoon mt-1.5"></i>Teams see the data they produce, on an up-to-date dashboard</li>
+          <li class="flex items-start gap-3"><i class="fas fa-check text-lagoon mt-1.5"></i>Learning reviews are scheduled — and the plan is allowed to evolve</li>
+        </ul>
+      </div>
+
+      <p class="leading-8 text-night/80 mb-12">
+        A MEL plan that survives the field is not the most sophisticated one: it is the one teams take ownership of because it genuinely helps them work. Sophistication can come later — trust in the data must be there from day one.
+      </p>
+
+      <div class="bg-white border border-night/10 shadow-sm rounded-2xl p-6 md:p-7 flex flex-col sm:flex-row items-center gap-5 mb-6">
+        <img src="../Photomerveille.jpg?v=2" alt="Merveille Aganze Sami" class="w-20 h-20 rounded-full object-cover ring-2 ring-navy/30" />
+        <div class="text-center sm:text-left">
+          <p class="font-display font-semibold text-night">Merveille Aganze Sami</p>
+          <p class="text-night/70 text-sm leading-6 mt-1">MEL &amp; Database Management Advisor. 9+ years of experience in monitoring &amp; evaluation, GIS and digitalization with international organizations (GIZ, Enabel) in DR Congo.</p>
+          <div class="flex justify-center sm:justify-start gap-4 mt-3 text-sm">
+            <a href="https://www.linkedin.com/in/mervag27/?skipRedirect=true" target="_blank" class="text-navy font-medium hover:text-night transition"><i class="fab fa-linkedin mr-1.5"></i>LinkedIn</a>
+            <a href="contact.html" class="text-navy font-medium hover:text-night transition"><i class="fas fa-envelope mr-1.5"></i>Contact me</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="flex flex-col sm:flex-row items-center justify-between gap-4 bg-sky/60 rounded-2xl p-6">
+        <p class="text-night/80 font-medium text-center sm:text-left">A MEL system to design or digitalize?</p>
+        <a href="contact.html" class="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-navy to-lagoon text-[#ffffff] font-semibold px-6 py-2.5 shadow-md hover:-translate-y-0.5 transition whitespace-nowrap">Let's talk <i class="fas fa-arrow-right"></i></a>
+      </div>
+    </article>
+  </main>
+
+  <footer class="mt-16 bg-gradient-to-br from-petrol to-night text-[#ffffff]">
+    <div class="max-w-6xl mx-auto px-5 sm:px-8 pt-12 md:pt-16 pb-8">
+      <div class="grid gap-10 md:grid-cols-[1.2fr_0.7fr_1.1fr]">
+        <div>
+          <p class="font-display font-bold text-xl mb-3">Merveille <span class="bg-gradient-to-r from-navy to-lagoon bg-clip-text text-transparent">AGANZE SAMI</span></p>
+          <p class="text-[#ffffff]/60 text-sm leading-7 max-w-xs">MEL &amp; Database Management Advisor. Data, GIS and digitalization at the service of your decisions.</p>
+          <div class="flex items-center gap-3 mt-6">
+            <a href="https://www.linkedin.com/in/mervag27/?skipRedirect=true" target="_blank" class="inline-flex items-center justify-center w-10 h-10 rounded-full bg-[#ffffff]/10 hover:bg-navy transition" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+            <a href="https://github.com/MerveAS" target="_blank" class="inline-flex items-center justify-center w-10 h-10 rounded-full bg-[#ffffff]/10 hover:bg-navy transition" aria-label="GitHub"><i class="fab fa-github"></i></a>
+          </div>
+        </div>
+        <div>
+          <h3 class="font-display font-semibold text-xs uppercase tracking-[0.2em] text-[#ffffff]/50 mb-4">Navigation</h3>
+          <ul class="space-y-2.5 text-sm">
+            <li><a href="index.html" class="text-[#ffffff]/70 hover:text-lagoon transition">Home</a></li>
+            <li><a href="blog.html" class="text-[#ffffff]/70 hover:text-lagoon transition">Blog</a></li>
+            <li><a href="expertise.html" class="text-[#ffffff]/70 hover:text-lagoon transition">Expertise</a></li>
+            <li><a href="projects.html" class="text-[#ffffff]/70 hover:text-lagoon transition">Projects</a></li>
+            <li><a href="contact.html" class="text-[#ffffff]/70 hover:text-lagoon transition">Contact</a></li>
+          </ul>
+        </div>
+        <div>
+          <h3 class="font-display font-semibold text-xs uppercase tracking-[0.2em] text-[#ffffff]/50 mb-4">Contact</h3>
+          <ul class="space-y-3 text-sm text-[#ffffff]/70">
+            <li class="flex items-center gap-3"><span class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-[#ffffff]/10 text-lagoon text-xs"><i class="fas fa-phone"></i></span>+243 850 012 270</li>
+            <li class="flex items-center gap-3"><span class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-[#ffffff]/10 text-lagoon text-xs"><i class="fas fa-envelope"></i></span><a href="mailto:merveille.aganzesami@fitigroup.org" class="hover:text-lagoon transition break-all">merveille.aganzesami@fitigroup.org</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="mt-10 pt-6 border-t border-[#ffffff]/10 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-[#ffffff]/50">
+        <p>© 2026 Merveille AGANZE SAMI — All rights reserved · <span class="text-[#ffffff]/30">v2.1</span></p>
+        <a href="#" onclick="window.scrollTo({top:0,behavior:'smooth'});return false;" class="inline-flex items-center gap-2 hover:text-lagoon transition">Back to top <i class="fas fa-arrow-up"></i></a>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>
