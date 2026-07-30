@@ -4,9 +4,9 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Merveille Aganze Sami | Blog</title>
-  <meta name="description" content="Blog de Merveille AGANZE SAMI : réflexions et retours d'expérience sur le suivi-évaluation, le SIG, l'analyse de données et la digitalisation." />
+  <meta name="description" content="Espace de contenus de Merveille AGANZE SAMI : articles, cours et vidéos sur le suivi-évaluation, le SIG, l'analyse de données et la digitalisation." />
   <meta property="og:title" content="Merveille Aganze Sami | Blog" />
-  <meta property="og:description" content="Réflexions et retours d'expérience : suivi-évaluation, SIG, données et digitalisation." />
+  <meta property="og:description" content="Articles, cours et vidéos : suivi-évaluation, SIG, données et digitalisation." />
   <meta property="og:image" content="Photomerveille.jpg?v=2" />
   <meta property="og:type" content="website" />
   <link rel="alternate" hreflang="en" href="https://merveille.fitigroup.org/en/blog.html" />
@@ -38,6 +38,18 @@
     }
   </script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    html { scroll-behavior: smooth; }
+    .reveal { opacity: 0; transform: translateY(28px); transition: opacity .7s ease, transform .7s ease; }
+    .reveal.visible { opacity: 1; transform: none; }
+    .content-card { transition: opacity .35s ease, transform .35s ease, box-shadow .3s ease; }
+    .content-card.filtered-out { display: none; }
+    mark.hl { background: #F7DCD1; color: #222B38; border-radius: .2rem; padding: 0 .15rem; }
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      .reveal { opacity: 1; transform: none; transition: none; }
+    }
+  </style>
 </head>
 <body class="min-h-screen flex flex-col bg-gradient-to-b from-pale via-pale to-sky text-night font-sans antialiased">
 
@@ -56,23 +68,314 @@
     </div>
   </header>
 
-  <main class="flex-1 max-w-4xl w-full mx-auto px-5 sm:px-8 py-12 md:py-16">
-    <p class="text-navy font-semibold uppercase tracking-[0.25em] text-xs mb-3">Réflexions</p>
-    <h1 class="font-display font-bold text-night text-3xl md:text-4xl mb-4">Blog</h1>
-    <p class="text-night/75 leading-8 max-w-2xl mb-12">
-      Retours d'expérience et réflexions sur le suivi-évaluation, le SIG, l'analyse de données et la digitalisation des organisations en Afrique et ailleurs.
-    </p>
+  <main class="flex-1">
 
-    <div class="bg-white border border-night/10 shadow-sm rounded-3xl p-8 md:p-12 text-center">
-      <span class="inline-flex items-center justify-center w-14 h-14 rounded-full bg-sky text-navy text-2xl mb-5"><i class="fas fa-pen-nib"></i></span>
-      <h2 class="font-display font-semibold text-night text-xl md:text-2xl mb-3">Les premiers articles arrivent bientôt</h2>
-      <p class="text-night/70 leading-8 max-w-xl mx-auto mb-8">
-        Je prépare des contenus pratiques : bonnes pratiques MEL, cartographie avec QGIS, tableaux de bord Power BI, digitalisation de la collecte de données… Revenez bientôt, ou suivez-moi sur LinkedIn pour être informé·e des publications.
-      </p>
-      <a href="https://www.linkedin.com/in/mervag27/?skipRedirect=true" target="_blank" class="inline-flex items-center gap-3 rounded-full bg-gradient-to-r from-navy to-lagoon text-[#ffffff] font-semibold px-8 py-3 shadow-lg shadow-navy/30 hover:-translate-y-0.5 transition">
-        <i class="fab fa-linkedin"></i> Me suivre sur LinkedIn
-      </a>
-    </div>
+    <section class="max-w-6xl mx-auto px-5 sm:px-8 pt-10 md:pt-14">
+      <div class="bg-gradient-to-br from-petrol to-night rounded-[2rem] md:rounded-[2.5rem] px-6 sm:px-10 md:px-14 py-12 md:py-14 relative overflow-hidden">
+        <div class="absolute -bottom-24 -right-16 w-80 h-80 bg-navy/20 rounded-full blur-2xl"></div>
+        <span class="absolute top-10 right-12 hidden md:inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-[#ffffff]/10 text-lagoon text-xl -rotate-6"><i class="fas fa-lightbulb"></i></span>
+        <div class="relative">
+          <p class="text-lagoon font-semibold uppercase tracking-[0.25em] text-xs mb-4">Ressources</p>
+          <h1 class="font-display font-bold text-[#ffffff] text-3xl sm:text-4xl md:text-5xl leading-tight mb-5">
+            Apprendre, partager,<br /><span class="bg-gradient-to-r from-navy to-lagoon bg-clip-text text-transparent">transmettre</span>
+          </h1>
+          <p class="text-[#ffffff]/70 leading-8 max-w-2xl mb-8">
+            Articles, cours et vidéos autour du suivi-évaluation, du SIG, de l'analyse de données et de la digitalisation — pensés pour les praticiens du développement en Afrique et ailleurs.
+          </p>
+          <div class="relative max-w-md">
+            <i class="fas fa-magnifying-glass absolute left-5 top-1/2 -translate-y-1/2 text-[#ffffff]/40"></i>
+            <input id="search" type="search" placeholder="Rechercher un sujet : QGIS, Power BI, MEL…" autocomplete="off"
+              class="w-full h-12 rounded-full bg-[#ffffff]/10 border border-[#ffffff]/25 pl-12 pr-4 text-[#ffffff] placeholder-[#ffffff]/40 outline-none focus:border-lagoon focus:ring-2 focus:ring-lagoon/30 transition" />
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="max-w-6xl mx-auto px-5 sm:px-8 pt-12 md:pt-16">
+      <div class="flex flex-wrap items-center gap-2.5 mb-4" id="tabs">
+        <button data-filter="all" class="tab-btn rounded-full px-5 py-2 text-sm font-semibold bg-gradient-to-r from-navy to-lagoon text-[#ffffff] shadow-md transition">Tout <span class="ml-1.5 opacity-80" data-count-for="all"></span></button>
+        <button data-filter="article" class="tab-btn rounded-full px-5 py-2 text-sm font-medium border border-night/15 text-night/70 hover:border-navy/50 hover:text-navy transition"><i class="fas fa-newspaper mr-2"></i>Articles <span class="ml-1 opacity-60" data-count-for="article"></span></button>
+        <button data-filter="cours" class="tab-btn rounded-full px-5 py-2 text-sm font-medium border border-night/15 text-night/70 hover:border-navy/50 hover:text-navy transition"><i class="fas fa-graduation-cap mr-2"></i>Cours <span class="ml-1 opacity-60" data-count-for="cours"></span></button>
+        <button data-filter="video" class="tab-btn rounded-full px-5 py-2 text-sm font-medium border border-night/15 text-night/70 hover:border-navy/50 hover:text-navy transition"><i class="fas fa-play mr-2"></i>Vidéos <span class="ml-1 opacity-60" data-count-for="video"></span></button>
+      </div>
+      <p class="text-night/60 text-sm mb-10"><i class="fas fa-circle-info text-navy mr-2"></i>Tous les contenus ci-dessous sont en préparation — leur publication démarre bientôt.</p>
+
+      <article data-cat="article" data-tags="mel cadre logique suivi evaluation terrain indicateurs" class="content-card reveal mb-6 bg-gradient-to-br from-petrol to-night rounded-3xl overflow-hidden">
+        <div class="grid md:grid-cols-[1.25fr_0.75fr] gap-8 p-7 md:p-10 items-center">
+          <div>
+            <div class="flex flex-wrap items-center gap-2 mb-4">
+              <span class="text-[11px] font-semibold uppercase tracking-wider bg-gradient-to-r from-navy to-lagoon text-[#ffffff] rounded-full px-3 py-1">À la une</span>
+              <span class="text-[11px] font-medium border border-[#ffffff]/25 text-[#ffffff]/70 rounded-full px-3 py-1">Article</span>
+              <span class="text-[11px] font-medium text-[#ffffff]/50"><i class="fas fa-clock mr-1.5"></i>8 min de lecture</span>
+            </div>
+            <h2 class="font-display font-bold text-[#ffffff] text-2xl md:text-3xl mb-4">Concevoir un plan MEL qui tient sur le terrain</h2>
+            <p class="text-[#ffffff]/70 leading-8 mb-6">
+              Des indicateurs réalistes aux outils de collecte : comment bâtir un dispositif de suivi-évaluation que les équipes utilisent vraiment — et qui survit aux réalités du terrain, de la connectivité intermittente aux rotations de personnel.
+            </p>
+            <div class="flex flex-wrap gap-2">
+              <span class="border border-[#ffffff]/25 rounded-full px-3 py-1 text-xs font-medium text-[#ffffff]/70">MEL</span>
+              <span class="border border-[#ffffff]/25 rounded-full px-3 py-1 text-xs font-medium text-[#ffffff]/70">Cadre logique</span>
+              <span class="border border-[#ffffff]/25 rounded-full px-3 py-1 text-xs font-medium text-[#ffffff]/70">Terrain</span>
+            </div>
+          </div>
+          <div class="relative h-44 md:h-56 rounded-2xl bg-[#ffffff]/5 overflow-hidden">
+            <div class="absolute inset-0" style="background-image: radial-gradient(rgba(255,255,255,0.09) 1.5px, transparent 1.5px); background-size: 24px 24px;"></div>
+            <div class="absolute inset-0 flex items-center justify-center">
+              <span class="inline-flex items-center justify-center w-20 h-20 md:w-24 md:h-24 rounded-full bg-gradient-to-br from-navy to-lagoon text-[#ffffff] text-3xl shadow-2xl"><i class="fas fa-pen-nib"></i></span>
+            </div>
+            <span class="absolute top-5 left-5 inline-flex items-center justify-center w-10 h-10 rounded-xl bg-[#ffffff]/10 text-lagoon shadow-md -rotate-6"><i class="fas fa-list-check"></i></span>
+            <span class="absolute bottom-5 right-5 inline-flex items-center justify-center w-10 h-10 rounded-full bg-[#ffffff] text-navy shadow-md rotate-6"><i class="fas fa-bullseye"></i></span>
+          </div>
+        </div>
+      </article>
+
+      <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6" id="content-grid">
+
+        <article data-cat="article" data-tags="sig teledetection qgis deforestation satellite foret donnees ouvertes" class="content-card reveal bg-white border border-night/10 shadow-sm rounded-2xl overflow-hidden hover:shadow-lg hover:-translate-y-1">
+          <div class="relative h-32 bg-gradient-to-br from-sky to-pale overflow-hidden">
+            <div class="absolute inset-0" style="background-image: radial-gradient(rgba(34,43,56,0.08) 1.5px, transparent 1.5px); background-size: 22px 22px;"></div>
+            <span class="absolute -bottom-5 -right-3 text-7xl text-navy/15"><i class="fas fa-map-location-dot"></i></span>
+            <span class="absolute top-4 left-4 text-[11px] font-medium bg-[#ffffff] text-night/70 rounded-full px-3 py-1 shadow-sm">Article · À venir</span>
+          </div>
+          <div class="p-6">
+            <h2 class="font-display font-semibold text-night text-lg mb-2.5">Suivre la déforestation avec des données ouvertes</h2>
+            <p class="text-night/70 text-sm leading-6 mb-4">
+              Imagerie satellitaire, QGIS et données libres : une méthode accessible pour cartographier les dynamiques forestières de vos zones d'intervention.
+            </p>
+            <div class="flex items-center justify-between">
+              <div class="flex flex-wrap gap-1.5">
+                <span class="border border-night/15 rounded-full px-2.5 py-0.5 text-[11px] font-medium text-night/60">SIG</span>
+                <span class="border border-night/15 rounded-full px-2.5 py-0.5 text-[11px] font-medium text-night/60">Télédétection</span>
+              </div>
+              <span class="text-[11px] text-night/50 whitespace-nowrap"><i class="fas fa-clock mr-1"></i>10 min</span>
+            </div>
+          </div>
+        </article>
+
+        <article data-cat="article" data-tags="power bi tableau de bord dashboard data viz indicateurs erreurs" class="content-card reveal bg-white border border-night/10 shadow-sm rounded-2xl overflow-hidden hover:shadow-lg hover:-translate-y-1">
+          <div class="relative h-32 bg-gradient-to-br from-petrol to-night overflow-hidden">
+            <div class="absolute inset-0" style="background-image: radial-gradient(rgba(255,255,255,0.09) 1.5px, transparent 1.5px); background-size: 22px 22px;"></div>
+            <span class="absolute -bottom-5 -right-3 text-7xl text-lagoon/25"><i class="fas fa-chart-column"></i></span>
+            <span class="absolute top-4 left-4 text-[11px] font-medium bg-[#ffffff]/15 text-[#ffffff]/85 rounded-full px-3 py-1">Article · À venir</span>
+          </div>
+          <div class="p-6">
+            <h2 class="font-display font-semibold text-night text-lg mb-2.5">5 erreurs fréquentes dans les tableaux de bord projets</h2>
+            <p class="text-night/70 text-sm leading-6 mb-4">
+              Trop d'indicateurs, pas assez de sens : les pièges les plus courants en Power BI et comment les éviter pour servir vraiment la décision.
+            </p>
+            <div class="flex items-center justify-between">
+              <div class="flex flex-wrap gap-1.5">
+                <span class="border border-night/15 rounded-full px-2.5 py-0.5 text-[11px] font-medium text-night/60">Power BI</span>
+                <span class="border border-night/15 rounded-full px-2.5 py-0.5 text-[11px] font-medium text-night/60">Data viz</span>
+              </div>
+              <span class="text-[11px] text-night/50 whitespace-nowrap"><i class="fas fa-clock mr-1"></i>6 min</span>
+            </div>
+          </div>
+        </article>
+
+        <article data-cat="article" data-tags="processus cartographie digitalisation automatisation workflow organisation" class="content-card reveal bg-white border border-night/10 shadow-sm rounded-2xl overflow-hidden hover:shadow-lg hover:-translate-y-1">
+          <div class="relative h-32 bg-gradient-to-br from-sky to-pale overflow-hidden">
+            <div class="absolute inset-0" style="background-image: radial-gradient(rgba(34,43,56,0.08) 1.5px, transparent 1.5px); background-size: 22px 22px;"></div>
+            <span class="absolute -bottom-5 -right-3 text-7xl text-navy/15"><i class="fas fa-diagram-project"></i></span>
+            <span class="absolute top-4 left-4 text-[11px] font-medium bg-[#ffffff] text-night/70 rounded-full px-3 py-1 shadow-sm">Article · À venir</span>
+          </div>
+          <div class="p-6">
+            <h2 class="font-display font-semibold text-night text-lg mb-2.5">Cartographier ses processus avant de les digitaliser</h2>
+            <p class="text-night/70 text-sm leading-6 mb-4">
+              Pourquoi la plupart des projets de digitalisation échouent faute d'avoir compris le processus réel — et comment l'éviter en trois ateliers.
+            </p>
+            <div class="flex items-center justify-between">
+              <div class="flex flex-wrap gap-1.5">
+                <span class="border border-night/15 rounded-full px-2.5 py-0.5 text-[11px] font-medium text-night/60">Processus</span>
+                <span class="border border-night/15 rounded-full px-2.5 py-0.5 text-[11px] font-medium text-night/60">Méthode</span>
+              </div>
+              <span class="text-[11px] text-night/50 whitespace-nowrap"><i class="fas fa-clock mr-1"></i>7 min</span>
+            </div>
+          </div>
+        </article>
+
+        <article data-cat="cours" data-tags="kobotoolbox xlsform collecte mobile odk enquete formulaire debutant" class="content-card reveal bg-white border border-night/10 shadow-sm rounded-2xl overflow-hidden hover:shadow-lg hover:-translate-y-1">
+          <div class="relative h-32 bg-gradient-to-br from-petrol to-night overflow-hidden">
+            <div class="absolute inset-0" style="background-image: radial-gradient(rgba(255,255,255,0.09) 1.5px, transparent 1.5px); background-size: 22px 22px;"></div>
+            <span class="absolute -bottom-5 -right-3 text-7xl text-lagoon/25"><i class="fas fa-mobile-screen-button"></i></span>
+            <span class="absolute top-4 left-4 text-[11px] font-medium bg-[#ffffff]/15 text-[#ffffff]/85 rounded-full px-3 py-1">Cours · À venir</span>
+            <span class="absolute bottom-4 left-4 text-[11px] font-semibold bg-gradient-to-r from-navy to-lagoon text-[#ffffff] rounded-full px-2.5 py-0.5">Débutant</span>
+          </div>
+          <div class="p-6">
+            <h2 class="font-display font-semibold text-night text-lg mb-2.5">KoboToolbox de A à Z</h2>
+            <p class="text-night/70 text-sm leading-6 mb-4">
+              Concevoir un formulaire XLSForm, déployer la collecte mobile, gérer les données et automatiser les exports : le parcours complet pour vos enquêtes terrain.
+            </p>
+            <div class="flex items-center justify-between">
+              <div class="flex flex-wrap gap-1.5">
+                <span class="border border-night/15 rounded-full px-2.5 py-0.5 text-[11px] font-medium text-night/60">KoboToolbox</span>
+                <span class="border border-night/15 rounded-full px-2.5 py-0.5 text-[11px] font-medium text-night/60">XLSForm</span>
+              </div>
+              <span class="text-[11px] text-night/50 whitespace-nowrap"><i class="fas fa-layer-group mr-1"></i>6 modules</span>
+            </div>
+          </div>
+        </article>
+
+        <article data-cat="cours" data-tags="qgis cartographie sig carte analyse spatiale intermediaire" class="content-card reveal bg-white border border-night/10 shadow-sm rounded-2xl overflow-hidden hover:shadow-lg hover:-translate-y-1">
+          <div class="relative h-32 bg-gradient-to-br from-sky to-pale overflow-hidden">
+            <div class="absolute inset-0" style="background-image: radial-gradient(rgba(34,43,56,0.08) 1.5px, transparent 1.5px); background-size: 22px 22px;"></div>
+            <span class="absolute -bottom-5 -right-3 text-7xl text-navy/15"><i class="fas fa-layer-group"></i></span>
+            <span class="absolute top-4 left-4 text-[11px] font-medium bg-[#ffffff] text-night/70 rounded-full px-3 py-1 shadow-sm">Cours · À venir</span>
+            <span class="absolute bottom-4 left-4 text-[11px] font-semibold bg-gradient-to-r from-navy to-lagoon text-[#ffffff] rounded-full px-2.5 py-0.5">Intermédiaire</span>
+          </div>
+          <div class="p-6">
+            <h2 class="font-display font-semibold text-night text-lg mb-2.5">QGIS pour les projets de développement</h2>
+            <p class="text-night/70 text-sm leading-6 mb-4">
+              De la première carte à l'analyse spatiale : maîtriser QGIS pour cartographier vos activités, vos bénéficiaires et vos zones d'intervention.
+            </p>
+            <div class="flex items-center justify-between">
+              <div class="flex flex-wrap gap-1.5">
+                <span class="border border-night/15 rounded-full px-2.5 py-0.5 text-[11px] font-medium text-night/60">QGIS</span>
+                <span class="border border-night/15 rounded-full px-2.5 py-0.5 text-[11px] font-medium text-night/60">Cartographie</span>
+              </div>
+              <span class="text-[11px] text-night/50 whitespace-nowrap"><i class="fas fa-layer-group mr-1"></i>8 modules</span>
+            </div>
+          </div>
+        </article>
+
+        <article data-cat="cours" data-tags="power bi dashboard suivi evaluation indicateurs modelisation intermediaire" class="content-card reveal bg-white border border-night/10 shadow-sm rounded-2xl overflow-hidden hover:shadow-lg hover:-translate-y-1">
+          <div class="relative h-32 bg-gradient-to-br from-petrol to-night overflow-hidden">
+            <div class="absolute inset-0" style="background-image: radial-gradient(rgba(255,255,255,0.09) 1.5px, transparent 1.5px); background-size: 22px 22px;"></div>
+            <span class="absolute -bottom-5 -right-3 text-7xl text-lagoon/25"><i class="fas fa-chart-pie"></i></span>
+            <span class="absolute top-4 left-4 text-[11px] font-medium bg-[#ffffff]/15 text-[#ffffff]/85 rounded-full px-3 py-1">Cours · À venir</span>
+            <span class="absolute bottom-4 left-4 text-[11px] font-semibold bg-gradient-to-r from-navy to-lagoon text-[#ffffff] rounded-full px-2.5 py-0.5">Intermédiaire</span>
+          </div>
+          <div class="p-6">
+            <h2 class="font-display font-semibold text-night text-lg mb-2.5">Power BI pour le suivi-évaluation</h2>
+            <p class="text-night/70 text-sm leading-6 mb-4">
+              Connecter vos sources, modéliser vos indicateurs et construire un tableau de bord projet clair, automatisé et partageable avec vos partenaires.
+            </p>
+            <div class="flex items-center justify-between">
+              <div class="flex flex-wrap gap-1.5">
+                <span class="border border-night/15 rounded-full px-2.5 py-0.5 text-[11px] font-medium text-night/60">Power BI</span>
+                <span class="border border-night/15 rounded-full px-2.5 py-0.5 text-[11px] font-medium text-night/60">Indicateurs</span>
+              </div>
+              <span class="text-[11px] text-night/50 whitespace-nowrap"><i class="fas fa-layer-group mr-1"></i>7 modules</span>
+            </div>
+          </div>
+        </article>
+
+        <article data-cat="video" data-tags="tutoriel xlsform formulaire collecte kobotoolbox contraintes" class="content-card reveal bg-white border border-night/10 shadow-sm rounded-2xl overflow-hidden hover:shadow-lg hover:-translate-y-1">
+          <div class="relative h-32 bg-gradient-to-br from-sky to-pale overflow-hidden group">
+            <div class="absolute inset-0" style="background-image: radial-gradient(rgba(34,43,56,0.08) 1.5px, transparent 1.5px); background-size: 22px 22px;"></div>
+            <div class="absolute inset-0 flex items-center justify-center">
+              <span class="inline-flex items-center justify-center w-14 h-14 rounded-full bg-gradient-to-br from-navy to-lagoon text-[#ffffff] text-lg shadow-lg group-hover:scale-110 transition duration-500"><i class="fas fa-play ml-0.5"></i></span>
+            </div>
+            <span class="absolute top-4 left-4 text-[11px] font-medium bg-[#ffffff] text-night/70 rounded-full px-3 py-1 shadow-sm">Vidéo · À venir</span>
+            <span class="absolute bottom-4 right-4 text-[11px] font-medium bg-night/80 text-[#ffffff] rounded px-2 py-0.5">12:00</span>
+          </div>
+          <div class="p-6">
+            <h2 class="font-display font-semibold text-night text-lg mb-2.5">Tutoriel : créer un formulaire XLSForm</h2>
+            <p class="text-night/70 text-sm leading-6 mb-4">
+              Pas à pas, la construction d'un questionnaire mobile avec contraintes, sauts logiques et validation des données.
+            </p>
+            <div class="flex flex-wrap gap-1.5">
+              <span class="border border-night/15 rounded-full px-2.5 py-0.5 text-[11px] font-medium text-night/60">Tutoriel</span>
+              <span class="border border-night/15 rounded-full px-2.5 py-0.5 text-[11px] font-medium text-night/60">Collecte</span>
+            </div>
+          </div>
+        </article>
+
+        <article data-cat="video" data-tags="demo tableau de bord power bi activites visuels indicateurs" class="content-card reveal bg-white border border-night/10 shadow-sm rounded-2xl overflow-hidden hover:shadow-lg hover:-translate-y-1">
+          <div class="relative h-32 bg-gradient-to-br from-petrol to-night overflow-hidden group">
+            <div class="absolute inset-0" style="background-image: radial-gradient(rgba(255,255,255,0.09) 1.5px, transparent 1.5px); background-size: 22px 22px;"></div>
+            <div class="absolute inset-0 flex items-center justify-center">
+              <span class="inline-flex items-center justify-center w-14 h-14 rounded-full bg-gradient-to-br from-navy to-lagoon text-[#ffffff] text-lg shadow-lg group-hover:scale-110 transition duration-500"><i class="fas fa-play ml-0.5"></i></span>
+            </div>
+            <span class="absolute top-4 left-4 text-[11px] font-medium bg-[#ffffff]/15 text-[#ffffff]/85 rounded-full px-3 py-1">Vidéo · À venir</span>
+            <span class="absolute bottom-4 right-4 text-[11px] font-medium bg-night/80 text-[#ffffff] rounded px-2 py-0.5">18:00</span>
+          </div>
+          <div class="p-6">
+            <h2 class="font-display font-semibold text-night text-lg mb-2.5">Démo : un tableau de bord de suivi d'activités</h2>
+            <p class="text-night/70 text-sm leading-6 mb-4">
+              Visite guidée d'un dashboard réel : structure des pages, choix des visuels et lecture des indicateurs par les équipes projet.
+            </p>
+            <div class="flex flex-wrap gap-1.5">
+              <span class="border border-night/15 rounded-full px-2.5 py-0.5 text-[11px] font-medium text-night/60">Démo</span>
+              <span class="border border-night/15 rounded-full px-2.5 py-0.5 text-[11px] font-medium text-night/60">Power BI</span>
+            </div>
+          </div>
+        </article>
+
+        <article data-cat="video" data-tags="webinaire mel digitalisation retour experience programmes systeme" class="content-card reveal bg-white border border-night/10 shadow-sm rounded-2xl overflow-hidden hover:shadow-lg hover:-translate-y-1">
+          <div class="relative h-32 bg-gradient-to-br from-sky to-pale overflow-hidden group">
+            <div class="absolute inset-0" style="background-image: radial-gradient(rgba(34,43,56,0.08) 1.5px, transparent 1.5px); background-size: 22px 22px;"></div>
+            <div class="absolute inset-0 flex items-center justify-center">
+              <span class="inline-flex items-center justify-center w-14 h-14 rounded-full bg-gradient-to-br from-navy to-lagoon text-[#ffffff] text-lg shadow-lg group-hover:scale-110 transition duration-500"><i class="fas fa-play ml-0.5"></i></span>
+            </div>
+            <span class="absolute top-4 left-4 text-[11px] font-medium bg-[#ffffff] text-night/70 rounded-full px-3 py-1 shadow-sm">Vidéo · À venir</span>
+            <span class="absolute bottom-4 right-4 text-[11px] font-medium bg-night/80 text-[#ffffff] rounded px-2 py-0.5">45:00</span>
+          </div>
+          <div class="p-6">
+            <h2 class="font-display font-semibold text-night text-lg mb-2.5">Webinaire : digitaliser un système MEL</h2>
+            <p class="text-night/70 text-sm leading-6 mb-4">
+              Retour d'expérience sur la digitalisation de dispositifs de suivi-évaluation multi-programmes : étapes, écueils et facteurs de réussite.
+            </p>
+            <div class="flex flex-wrap gap-1.5">
+              <span class="border border-night/15 rounded-full px-2.5 py-0.5 text-[11px] font-medium text-night/60">Webinaire</span>
+              <span class="border border-night/15 rounded-full px-2.5 py-0.5 text-[11px] font-medium text-night/60">Retour d'expérience</span>
+            </div>
+          </div>
+        </article>
+      </div>
+
+      <div id="empty-state" class="hidden text-center py-16">
+        <span class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-gradient-to-br from-sky to-lagoon/40 text-navy text-2xl mb-5"><i class="fas fa-magnifying-glass"></i></span>
+        <h2 class="font-display font-semibold text-night text-xl mb-2">Aucun contenu ne correspond</h2>
+        <p class="text-night/60 mb-6">Essayez un autre mot-clé, ou proposez-moi ce sujet — il rejoindra peut-être le programme.</p>
+        <a href="contact.html" class="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-navy to-lagoon text-[#ffffff] font-semibold px-6 py-2.5 shadow-md hover:-translate-y-0.5 transition">Proposer ce sujet <i class="fas fa-arrow-right"></i></a>
+      </div>
+    </section>
+
+    <section class="max-w-6xl mx-auto px-5 sm:px-8 pt-14 md:pt-20">
+      <div class="reveal">
+        <p class="text-navy font-semibold uppercase tracking-[0.25em] text-xs mb-3">Programme éditorial</p>
+        <h2 class="font-display font-bold text-night text-2xl md:text-3xl mb-10">Ce qui arrive, dans l'ordre</h2>
+        <div class="relative border-l-2 border-navy/20 pl-6 md:pl-10 space-y-10">
+          <div class="relative">
+            <span class="absolute -left-[31px] md:-left-[47px] top-1 w-4 h-4 rounded-full bg-gradient-to-br from-navy to-lagoon ring-4 ring-pale"></span>
+            <span class="inline-block text-xs font-semibold text-[#ffffff] bg-gradient-to-r from-navy to-lagoon rounded-full px-3 py-1 mb-3">Étape 1</span>
+            <h3 class="font-display font-semibold text-night text-lg mb-1.5">Les premiers articles</h3>
+            <p class="text-night/70 leading-7">Format court et pratique : méthodes MEL, pièges des tableaux de bord, cartographie de processus. De quoi lancer la conversation.</p>
+          </div>
+          <div class="relative">
+            <span class="absolute -left-[31px] md:-left-[47px] top-1 w-4 h-4 rounded-full bg-lagoon ring-4 ring-pale"></span>
+            <span class="inline-block text-xs font-semibold text-night bg-white border border-night/15 rounded-full px-3 py-1 mb-3">Étape 2</span>
+            <h3 class="font-display font-semibold text-night text-lg mb-1.5">Les tutoriels vidéo</h3>
+            <p class="text-night/70 leading-7">Démonstrations écran à l'appui : XLSForm, Power BI, QGIS. Court, concret, reproductible dans vos propres projets.</p>
+          </div>
+          <div class="relative">
+            <span class="absolute -left-[31px] md:-left-[47px] top-1 w-4 h-4 rounded-full bg-sky ring-4 ring-pale"></span>
+            <span class="inline-block text-xs font-semibold text-night bg-white border border-night/15 rounded-full px-3 py-1 mb-3">Étape 3</span>
+            <h3 class="font-display font-semibold text-night text-lg mb-1.5">Les cours complets</h3>
+            <p class="text-night/70 leading-7">Parcours structurés en modules, avec exercices et jeux de données — pour monter en compétence de bout en bout.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="max-w-6xl mx-auto px-5 sm:px-8 py-14 md:py-20">
+      <div class="reveal bg-gradient-to-br from-petrol to-night rounded-3xl p-8 md:p-12 text-center">
+        <span class="inline-flex items-center justify-center w-14 h-14 rounded-full bg-[#ffffff]/10 text-lagoon text-2xl mb-5"><i class="fas fa-bell"></i></span>
+        <h2 class="font-display font-bold text-[#ffffff] text-2xl md:text-3xl mb-4">Ne manquez aucune publication</h2>
+        <p class="text-[#ffffff]/70 leading-8 max-w-2xl mx-auto mb-8">
+          Suivez-moi sur LinkedIn pour être averti·e dès la parution des premiers contenus — ou écrivez-moi si un sujet vous intéresse en particulier.
+        </p>
+        <div class="flex flex-wrap justify-center gap-4">
+          <a href="https://www.linkedin.com/in/mervag27/?skipRedirect=true" target="_blank" class="inline-flex items-center gap-3 rounded-full bg-gradient-to-r from-navy to-lagoon text-[#ffffff] font-semibold px-8 py-3.5 shadow-lg shadow-black/30 hover:-translate-y-0.5 transition">
+            <i class="fab fa-linkedin"></i> Me suivre sur LinkedIn
+          </a>
+          <a href="contact.html" class="inline-flex items-center gap-3 rounded-full border border-[#ffffff]/40 text-[#ffffff] font-semibold px-8 py-3.5 hover:bg-[#ffffff]/10 hover:-translate-y-0.5 transition">
+            Proposer un sujet <i class="fas fa-arrow-right"></i>
+          </a>
+        </div>
+      </div>
+    </section>
   </main>
 
   <footer class="mt-16 bg-gradient-to-br from-petrol to-night text-[#ffffff]">
@@ -110,5 +413,55 @@
       </div>
     </div>
   </footer>
+
+  <script>
+    const revealEls = document.querySelectorAll('.reveal');
+    const inView = el => { const r = el.getBoundingClientRect(); return r.top < window.innerHeight && r.bottom > 0; };
+    if ('IntersectionObserver' in window) {
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); } });
+      }, { threshold: 0.05, rootMargin: '0px 0px -5% 0px' });
+      revealEls.forEach(el => { if (inView(el)) { el.classList.add('visible'); } else { observer.observe(el); } });
+      window.addEventListener('scroll', () => { revealEls.forEach(el => { if (!el.classList.contains('visible') && inView(el)) el.classList.add('visible'); }); }, { passive: true });
+    } else {
+      revealEls.forEach(el => el.classList.add('visible'));
+    }
+
+    const cards = [...document.querySelectorAll('.content-card')];
+    const buttons = [...document.querySelectorAll('.tab-btn')];
+    const search = document.getElementById('search');
+    const emptyState = document.getElementById('empty-state');
+    const activeClasses = ['bg-gradient-to-r','from-navy','to-lagoon','text-[#ffffff]','shadow-md','font-semibold'];
+    const inactiveClasses = ['border','border-night/15','text-night/70','hover:border-navy/50','hover:text-navy','font-medium'];
+    let currentFilter = 'all';
+
+    document.querySelectorAll('[data-count-for]').forEach(el => {
+      const key = el.dataset.countFor;
+      el.textContent = key === 'all' ? cards.length : cards.filter(c => c.dataset.cat.split(' ').includes(key)).length;
+    });
+
+    const normalize = s => s.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '');
+
+    const apply = () => {
+      const q = normalize(search.value.trim());
+      let shown = 0;
+      cards.forEach(card => {
+        const inTab = currentFilter === 'all' || card.dataset.cat.split(' ').includes(currentFilter);
+        const haystack = normalize(card.textContent + ' ' + (card.dataset.tags || ''));
+        const inSearch = q === '' || haystack.includes(q);
+        const match = inTab && inSearch;
+        card.classList.toggle('filtered-out', !match);
+        if (match) { card.classList.add('visible'); shown++; }
+      });
+      emptyState.classList.toggle('hidden', shown > 0);
+    };
+
+    buttons.forEach(btn => btn.addEventListener('click', () => {
+      currentFilter = btn.dataset.filter;
+      buttons.forEach(b => { b.classList.remove(...activeClasses, ...inactiveClasses); b.classList.add(...(b === btn ? activeClasses : inactiveClasses)); });
+      apply();
+    }));
+    search.addEventListener('input', apply);
+  </script>
 </body>
 </html>
