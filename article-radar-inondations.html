@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Suivre les inondations quand le satellite optique est aveugle | Merveille Aganze Sami</title>
+  <meta name="description" content="En saison des pluies, l'imagerie optique ne voit rien. Comment construire un suivi des inondations par radar Sentinel-1 : principe, pipeline automatisé et pièges à connaître." />
+  <meta property="og:title" content="Suivre les inondations quand le satellite optique est aveugle" />
+  <meta property="og:description" content="Le radar Sentinel-1 traverse les nuages. Principe, pipeline automatisé sur Google Earth Engine et pièges à connaître." />
+  <meta property="og:image" content="radar-inondation-sentinel1.png" />
+  <meta property="og:type" content="article" />
+  <link rel="alternate" hreflang="en" href="https://merveille.fitigroup.org/en/article-radar-floods.html" />
+  <link rel="alternate" hreflang="fr" href="https://merveille.fitigroup.org/article-radar-inondations.html" />
+  <link rel="icon" href="favicon.svg?v=2" type="image/svg+xml" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            night: '#222B38', navy: '#EE7A5C', steel: '#8A93A3', petrol: '#26303E',
+            lagoon: '#F2A48F', sky: '#F7DCD1', pale: '#F7F5F2'
+          },
+          fontFamily: {
+            sans: ['DM Sans', 'Arial', 'sans-serif'],
+            display: ['Plus Jakarta Sans', 'Arial', 'sans-serif']
+          }
+        }
+      }
+    }
+  </script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    html { scroll-behavior: smooth; }
+    @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col bg-gradient-to-b from-pale via-pale to-sky text-night font-sans antialiased">
+
+  <header class="sticky top-0 z-50 bg-pale/95 backdrop-blur border-b border-navy/20">
+    <div class="max-w-6xl mx-auto px-5 sm:px-8 min-h-16 md:min-h-20 py-2 flex items-center justify-between gap-4">
+      <a href="index.html" class="font-display font-bold text-night text-base sm:text-lg md:text-xl tracking-tight">
+        Merveille <span class="text-navy hidden sm:inline">AGANZE SAMI</span>
+      </a>
+      <nav class="flex flex-wrap justify-end items-center gap-x-4 gap-y-1 sm:gap-x-6 md:gap-x-8 text-xs sm:text-sm md:text-[15px]">
+        <a href="index.html" class="text-night/70 hover:text-navy transition">Accueil</a>
+        <a href="blog.html" class="text-navy font-semibold">Blog</a>
+        <a href="expertises.html" class="text-night/70 hover:text-navy transition">Expertises</a>
+        <a href="projets.html" class="text-night/70 hover:text-navy transition">Projets</a>
+        <a href="en/article-radar-floods.html" class="text-[11px] font-semibold border border-navy/40 rounded-full px-3 py-1 text-night/70 hover:text-navy hover:border-navy/60 transition" title="English version">EN</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="flex-1">
+
+    <section class="max-w-6xl mx-auto px-5 sm:px-8 pt-10 md:pt-14">
+      <div class="bg-gradient-to-br from-petrol to-night rounded-[2rem] md:rounded-[2.5rem] px-6 sm:px-10 md:px-14 py-12 md:py-14 relative overflow-hidden">
+        <div class="absolute -bottom-24 -right-16 w-80 h-80 bg-navy/20 rounded-full blur-2xl"></div>
+        <div class="relative max-w-3xl">
+          <a href="blog.html" class="inline-flex items-center gap-2 text-[#ffffff]/60 text-sm hover:text-lagoon transition mb-6"><i class="fas fa-arrow-left"></i> Retour au blog</a>
+          <div class="flex flex-wrap items-center gap-2 mb-5">
+            <span class="text-[11px] font-semibold uppercase tracking-wider bg-gradient-to-r from-navy to-lagoon text-[#ffffff] rounded-full px-3 py-1">Article</span>
+            <span class="text-[11px] font-medium text-[#ffffff]/50"><i class="fas fa-calendar mr-1.5"></i>30 juin 2026</span>
+            <span class="text-[11px] font-medium text-[#ffffff]/50"><i class="fas fa-clock mr-1.5"></i>9 min de lecture</span>
+          </div>
+          <h1 class="font-display font-bold text-[#ffffff] text-3xl sm:text-4xl md:text-5xl leading-tight mb-6">
+            Suivre les inondations<br /><span class="bg-gradient-to-r from-navy to-lagoon bg-clip-text text-transparent">quand le satellite est aveugle</span>
+          </h1>
+          <div class="flex items-center gap-3">
+            <img src="Photomerveille.jpg?v=2" alt="Merveille Aganze Sami" class="w-10 h-10 rounded-full object-cover ring-2 ring-[#ffffff]/30" />
+            <div class="text-sm">
+              <p class="text-[#ffffff] font-semibold">Merveille Aganze Sami</p>
+              <p class="text-[#ffffff]/50">Conseillère MEL &amp; Gestion de Bases de Données</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <article class="max-w-3xl mx-auto px-5 sm:px-8 py-12 md:py-16">
+
+      <p class="text-lg md:text-xl leading-9 text-night/80 mb-10">
+        Il y a une ironie cruelle dans le suivi des inondations en Afrique centrale : la période où l'on a le plus besoin d'images satellites est précisément celle où l'on n'en obtient aucune. Pendant la saison des pluies, le bassin du Congo disparaît sous une couverture nuageuse quasi permanente. Les capteurs optiques — Sentinel-2, Landsat — ne voient rien. On attend une éclaircie, et pendant ce temps l'eau monte, se retire, et la crue est finie avant que la première image exploitable n'arrive.
+      </p>
+      <p class="leading-8 text-night/80 mb-10">
+        Il existe pourtant une famille de capteurs pour laquelle les nuages n'existent tout simplement pas. Voici comment mettre en place un suivi des inondations qui fonctionne quand plus rien d'autre ne fonctionne — le principe physique, la chaîne de traitement, et surtout les pièges que l'on découvre généralement trop tard.
+      </p>
+
+      <figure class="mb-12">
+        <img src="radar-inondation-sentinel1.png" alt="Comparaison entre une image optique noyée sous les nuages et une image radar SAR révélant l'étendue inondée, avec le pipeline automatisé en 4 étapes" class="w-full rounded-2xl shadow-xl ring-1 ring-night/10" />
+        <figcaption class="text-night/60 text-sm mt-3 text-center">La même zone, le même jour : l'optique ne montre que des nuages, le radar délimite l'étendue inondée.</figcaption>
+      </figure>
+
+      <h2 class="font-display font-bold text-night text-2xl md:text-3xl mb-5">Pourquoi le radar voit ce que l'optique ne voit pas</h2>
+      <p class="leading-8 text-night/80 mb-5">
+        Un capteur optique est passif : il enregistre la lumière du soleil réfléchie par la surface. Si un nuage s'interpose, il enregistre le nuage. C'est aussi simple, et aussi bloquant, que cela.
+      </p>
+      <p class="leading-8 text-night/80 mb-5">
+        Un radar à synthèse d'ouverture (SAR) fonctionne à l'inverse : il est <strong class="text-night">actif</strong>. Il émet lui-même une onde et mesure ce qui lui revient. Sentinel-1, le satellite radar du programme européen Copernicus, émet en bande C — une longueur d'onde d'environ 5,6 centimètres. Or les gouttelettes qui composent les nuages sont des centaines de fois plus petites que cela. À cette échelle, le nuage est tout simplement transparent : l'onde le traverse à l'aller, rebondit sur le sol, et le retraverse au retour.
+      </p>
+      <div class="bg-sky/60 border-l-4 border-navy rounded-r-2xl p-5 md:p-6 mb-10">
+        <p class="leading-7 text-night/80 text-sm md:text-base"><i class="fas fa-lightbulb text-navy mr-2"></i><strong class="text-night">Conséquence pratique :</strong> parce qu'il produit sa propre onde, le radar fonctionne aussi la nuit. Deux contraintes majeures de l'optique — la couverture nuageuse et l'éclairement solaire — disparaissent d'un coup.</p>
+      </div>
+
+      <h2 class="font-display font-bold text-night text-2xl md:text-3xl mb-5">Le principe de détection : l'eau est noire en radar</h2>
+      <p class="leading-8 text-night/80 mb-5">
+        Ce qui rend la détection des inondations si élégante en radar, c'est que l'eau libre possède une signature quasi caricaturale. Une surface d'eau calme est lisse à l'échelle de l'onde : elle se comporte comme un miroir. L'onde émise repart dans la direction opposée au satellite au lieu d'être diffusée dans toutes les directions. Presque rien ne revient au capteur.
+      </p>
+      <p class="leading-8 text-night/80 mb-5">
+        Résultat : sur une image radar, l'eau apparaît en <strong class="text-night">noir profond</strong>, tandis que la végétation, les sols rugueux et le bâti renvoient beaucoup plus de signal et ressortent en gris clair. Le contraste est si marqué qu'un simple seuillage du coefficient de rétrodiffusion suffit souvent à séparer l'eau du reste.
+      </p>
+      <p class="leading-8 text-night/80 mb-10">
+        Un mot sur la polarisation, car c'est un choix qui compte. Sentinel-1 acquiert généralement en double polarisation VV et VH. Pour l'eau libre, la <strong class="text-night">polarisation VV</strong> donne en général le meilleur contraste et reste le choix par défaut. La VH, plus sensible à la structure du couvert, devient utile lorsqu'on cherche à détecter de l'eau <em>sous</em> la végétation — un cas nettement plus difficile.
+      </p>
+
+      <h2 class="font-display font-bold text-night text-2xl md:text-3xl mb-5">Monter une chaîne automatisée en cinq étapes</h2>
+      <p class="leading-8 text-night/80 mb-6">
+        L'intérêt opérationnel n'est pas de produire une belle carte une fois, mais d'obtenir une carte à jour <em>à chaque revisite du satellite</em>, sans intervention manuelle. Sur Google Earth Engine, où l'archive Sentinel-1 est déjà prétraitée et où le calcul se fait côté serveur, la chaîne tient en cinq étapes.
+      </p>
+      <ol class="space-y-4 text-night/80 leading-7 mb-6 list-none">
+        <li class="flex items-start gap-4"><span class="flex-none inline-flex items-center justify-center w-8 h-8 rounded-full bg-gradient-to-br from-navy to-lagoon text-[#ffffff] text-sm font-bold">1</span><span><strong class="text-night">Construire une référence pré-crue.</strong> Un composite médian des images de saison sèche donne l'état « normal » du territoire : les cours d'eau permanents, les plans d'eau habituels. Sans cette référence, impossible de distinguer une rivière d'une inondation.</span></li>
+        <li class="flex items-start gap-4"><span class="flex-none inline-flex items-center justify-center w-8 h-8 rounded-full bg-gradient-to-br from-navy to-lagoon text-[#ffffff] text-sm font-bold">2</span><span><strong class="text-night">Filtrer le chatoiement.</strong> Toute image radar présente un grain granuleux caractéristique, le <em>speckle</em>, inhérent à l'imagerie cohérente. Un filtre spatial (Lee affiné, par exemple) ou une moyenne multi-temporelle le réduit fortement — étape indispensable avant tout seuillage.</span></li>
+        <li class="flex items-start gap-4"><span class="flex-none inline-flex items-center justify-center w-8 h-8 rounded-full bg-gradient-to-br from-navy to-lagoon text-[#ffffff] text-sm font-bold">3</span><span><strong class="text-night">Seuiller pour extraire l'eau.</strong> Un seuil fixe sur la rétrodiffusion VV fonctionne, mais se dérègle d'une scène à l'autre. La méthode d'Otsu, qui détermine automatiquement le seuil optimal à partir de l'histogramme bimodal de l'image, donne des résultats bien plus stables dans le temps.</span></li>
+        <li class="flex items-start gap-4"><span class="flex-none inline-flex items-center justify-center w-8 h-8 rounded-full bg-gradient-to-br from-navy to-lagoon text-[#ffffff] text-sm font-bold">4</span><span><strong class="text-night">Soustraire l'eau permanente.</strong> La différence entre l'eau détectée et la référence pré-crue isole l'<strong class="text-night">eau nouvelle</strong> — c'est-à-dire l'inondation proprement dite, la seule information qui intéresse un dispositif d'alerte.</span></li>
+        <li class="flex items-start gap-4"><span class="flex-none inline-flex items-center justify-center w-8 h-8 rounded-full bg-gradient-to-br from-navy to-lagoon text-[#ffffff] text-sm font-bold">5</span><span><strong class="text-night">Croiser et diffuser.</strong> L'étendue inondée est recoupée avec les couches qui donnent du sens : localités, infrastructures, parcelles, zones d'intervention du projet. La sortie alimente un tableau de bord, et le franchissement d'un seuil de superficie déclenche une alerte.</span></li>
+      </ol>
+      <p class="leading-8 text-night/80 mb-10">
+        Sentinel-1 repasse au-dessus d'une même zone tous les six à douze jours selon la latitude et la configuration de la constellation. Ce n'est pas du temps réel — mais comparé à une attente d'éclaircie qui peut durer des semaines, c'est un changement d'ordre de grandeur. Et les données sont gratuites et ouvertes.
+      </p>
+
+      <h2 class="font-display font-bold text-night text-2xl md:text-3xl mb-5">Les pièges que l'on découvre trop tard</h2>
+      <p class="leading-8 text-night/80 mb-6">
+        C'est la partie qu'on lit rarement dans les tutoriels, et c'est pourtant celle qui décide de la fiabilité opérationnelle d'un dispositif. Le radar voit à travers les nuages, mais il n'est pas infaillible.
+      </p>
+      <ul class="space-y-3.5 text-night/80 leading-7 mb-6">
+        <li class="flex items-start gap-3"><i class="fas fa-triangle-exclamation text-navy mt-1.5"></i><span><strong class="text-night">Le vent rugosifie l'eau.</strong> Une surface d'eau agitée cesse d'être un miroir : elle renvoie du signal et n'apparaît plus assez sombre. Résultat, une inondation sous-estimée les jours de vent. C'est la principale cause de faux négatifs.</span></li>
+        <li class="flex items-start gap-3"><i class="fas fa-triangle-exclamation text-navy mt-1.5"></i><span><strong class="text-night">Certaines surfaces sèches imitent l'eau.</strong> Le sable lisse, l'asphalte, les sols nus très plats renvoient eux aussi très peu de signal. Sans filtre complémentaire, ils sont classés comme inondés.</span></li>
+        <li class="flex items-start gap-3"><i class="fas fa-triangle-exclamation text-navy mt-1.5"></i><span><strong class="text-night">L'eau sous végétation ou en ville échappe au seuillage.</strong> Sous un couvert forestier ou entre des bâtiments, l'onde rebondit plusieurs fois (effet de double rebond) et revient <em>plus</em> forte, pas plus faible. L'inondation y apparaît claire — l'inverse de ce qu'on cherche. Ces contextes demandent des approches spécifiques.</span></li>
+        <li class="flex items-start gap-3"><i class="fas fa-triangle-exclamation text-navy mt-1.5"></i><span><strong class="text-night">Le relief crée des zones aveugles.</strong> En terrain accidenté, les ombres radar et les repliements produisent des artefacts que l'on confond facilement avec de l'eau.</span></li>
+      </ul>
+      <p class="leading-8 text-night/80 mb-10">
+        La parade la plus efficace tient en une phrase : <strong class="text-night">filtrer par la topographie</strong>. Un modèle numérique de terrain, ou mieux un indice de hauteur au-dessus du drainage le plus proche (HAND), permet d'éliminer d'emblée toute « eau » détectée sur un versant à forte pente ou nettement au-dessus du réseau hydrographique. L'eau ne monte pas les collines : ce simple bon sens, traduit en règle spatiale, supprime l'essentiel des faux positifs.
+      </p>
+
+      <h2 class="font-display font-bold text-night text-2xl md:text-3xl mb-5">Ce que cela change concrètement</h2>
+      <p class="leading-8 text-night/80 mb-5">
+        Pour une équipe projet, le bénéfice n'est pas technique, il est décisionnel. Disposer d'une carte d'étendue inondée quelques jours après l'événement, plutôt que quelques semaines, change la nature des questions auxquelles on peut répondre : quelles localités sont touchées, quelles routes sont coupées, quelles parcelles d'un programme agricole sont sous eau, où envoyer une mission de vérification en priorité.
+      </p>
+      <p class="leading-8 text-night/80 mb-10">
+        Cela change aussi la relation aux bailleurs et aux partenaires. Une estimation de surface inondée, datée, reproductible et documentée, vaut mieux qu'un rapport qualitatif rédigé de mémoire trois mois plus tard. Et parce que la chaîne est automatisée, la même méthode s'applique à la crue suivante sans refaire le travail.
+      </p>
+
+      <div class="bg-gradient-to-br from-petrol to-night rounded-2xl p-6 md:p-8 mb-10">
+        <h2 class="font-display font-semibold text-[#ffffff] text-xl mb-4"><i class="fas fa-list-check text-lagoon mr-2"></i>À retenir</h2>
+        <ul class="space-y-2.5 text-[#ffffff]/80 leading-7 text-sm md:text-base">
+          <li class="flex items-start gap-3"><i class="fas fa-check text-lagoon mt-1.5"></i>Le radar en bande C traverse les nuages et fonctionne de nuit : les deux limites de l'optique disparaissent</li>
+          <li class="flex items-start gap-3"><i class="fas fa-check text-lagoon mt-1.5"></i>L'eau libre apparaît très sombre en polarisation VV — un seuillage suffit souvent à l'extraire</li>
+          <li class="flex items-start gap-3"><i class="fas fa-check text-lagoon mt-1.5"></i>Une référence pré-crue est indispensable pour isoler l'eau nouvelle de l'eau permanente</li>
+          <li class="flex items-start gap-3"><i class="fas fa-check text-lagoon mt-1.5"></i>Vent, sols lisses, végétation et relief sont les quatre sources d'erreur à traiter explicitement</li>
+          <li class="flex items-start gap-3"><i class="fas fa-check text-lagoon mt-1.5"></i>Un filtre topographique (MNT ou HAND) élimine la majorité des faux positifs</li>
+        </ul>
+      </div>
+
+      <h2 class="font-display font-bold text-night text-2xl md:text-3xl mb-5">Par où commencer</h2>
+      <p class="leading-8 text-night/80 mb-10">
+        Les données Sentinel-1 sont accessibles gratuitement via le Copernicus Data Space, et déjà prétraitées dans le catalogue de Google Earth Engine — ce qui évite l'étape la plus rebutante de la chaîne radar. Le plus efficace pour se lancer : choisir une crue passée et bien documentée sur son territoire, reconstituer la carte d'étendue inondée, puis confronter le résultat aux rapports de terrain disponibles. C'est en mesurant ses propres écarts que l'on apprend à calibrer la méthode — et que l'on gagne le droit de s'en servir en situation réelle.
+      </p>
+      <p class="leading-8 text-night/80 mb-12">
+        La donnée la plus utile n'est jamais la plus belle image. C'est celle qui arrive quand plus rien d'autre n'est visible.
+      </p>
+
+      <div class="bg-white border border-night/10 shadow-sm rounded-2xl p-6 md:p-7 flex flex-col sm:flex-row items-center gap-5 mb-6">
+        <img src="Photomerveille.jpg?v=2" alt="Merveille Aganze Sami" class="w-20 h-20 rounded-full object-cover ring-2 ring-navy/30" />
+        <div class="text-center sm:text-left">
+          <p class="font-display font-semibold text-night">Merveille Aganze Sami</p>
+          <p class="text-night/70 text-sm leading-6 mt-1">Conseillère MEL &amp; Gestion de Bases de Données. Plus de 9 ans d'expérience en suivi-évaluation, SIG et digitalisation auprès d'organisations internationales (GIZ, Enabel) en RD Congo.</p>
+          <div class="flex justify-center sm:justify-start gap-4 mt-3 text-sm">
+            <a href="https://www.linkedin.com/in/mervag27/?skipRedirect=true" target="_blank" class="text-navy font-medium hover:text-night transition"><i class="fab fa-linkedin mr-1.5"></i>LinkedIn</a>
+            <a href="contact.html" class="text-navy font-medium hover:text-night transition"><i class="fas fa-envelope mr-1.5"></i>Me contacter</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="flex flex-col sm:flex-row items-center justify-between gap-4 bg-sky/60 rounded-2xl p-6">
+        <p class="text-night/80 font-medium text-center sm:text-left">Un suivi environnemental à fiabiliser par satellite ?</p>
+        <a href="contact.html" class="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-navy to-lagoon text-[#ffffff] font-semibold px-6 py-2.5 shadow-md hover:-translate-y-0.5 transition whitespace-nowrap">Parlons-en <i class="fas fa-arrow-right"></i></a>
+      </div>
+    </article>
+  </main>
+
+  <footer class="mt-16 bg-gradient-to-br from-petrol to-night text-[#ffffff]">
+    <div class="max-w-6xl mx-auto px-5 sm:px-8 pt-12 md:pt-16 pb-8">
+      <div class="grid gap-10 md:grid-cols-[1.2fr_0.7fr_1.1fr]">
+        <div>
+          <p class="font-display font-bold text-xl mb-3">Merveille <span class="bg-gradient-to-r from-navy to-lagoon bg-clip-text text-transparent">AGANZE SAMI</span></p>
+          <p class="text-[#ffffff]/60 text-sm leading-7 max-w-xs">Conseillère MEL &amp; Gestion de Bases de Données. Données, SIG et digitalisation au service de vos décisions.</p>
+          <div class="flex items-center gap-3 mt-6">
+            <a href="https://www.linkedin.com/in/mervag27/?skipRedirect=true" target="_blank" class="inline-flex items-center justify-center w-10 h-10 rounded-full bg-[#ffffff]/10 hover:bg-navy transition" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+            <a href="https://github.com/MerveAS" target="_blank" class="inline-flex items-center justify-center w-10 h-10 rounded-full bg-[#ffffff]/10 hover:bg-navy transition" aria-label="GitHub"><i class="fab fa-github"></i></a>
+          </div>
+        </div>
+        <div>
+          <h3 class="font-display font-semibold text-xs uppercase tracking-[0.2em] text-[#ffffff]/50 mb-4">Navigation</h3>
+          <ul class="space-y-2.5 text-sm">
+            <li><a href="index.html" class="text-[#ffffff]/70 hover:text-lagoon transition">Accueil</a></li>
+            <li><a href="blog.html" class="text-[#ffffff]/70 hover:text-lagoon transition">Blog</a></li>
+            <li><a href="expertises.html" class="text-[#ffffff]/70 hover:text-lagoon transition">Expertises</a></li>
+            <li><a href="projets.html" class="text-[#ffffff]/70 hover:text-lagoon transition">Projets</a></li>
+            <li><a href="contact.html" class="text-[#ffffff]/70 hover:text-lagoon transition">Contact</a></li>
+          </ul>
+        </div>
+        <div>
+          <h3 class="font-display font-semibold text-xs uppercase tracking-[0.2em] text-[#ffffff]/50 mb-4">Contact</h3>
+          <ul class="space-y-3 text-sm text-[#ffffff]/70">
+            <li class="flex items-center gap-3"><span class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-[#ffffff]/10 text-lagoon text-xs"><i class="fas fa-phone"></i></span>+243 850 012 270</li>
+            <li class="flex items-center gap-3"><span class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-[#ffffff]/10 text-lagoon text-xs"><i class="fas fa-envelope"></i></span><a href="mailto:merveille.aganzesami@fitigroup.org" class="hover:text-lagoon transition break-all">merveille.aganzesami@fitigroup.org</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="mt-10 pt-6 border-t border-[#ffffff]/10 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-[#ffffff]/50">
+        <p>© 2026 Merveille AGANZE SAMI — Tous droits réservés · <span class="text-[#ffffff]/30">v2.1</span></p>
+        <a href="#" onclick="window.scrollTo({top:0,behavior:'smooth'});return false;" class="inline-flex items-center gap-2 hover:text-lagoon transition">Retour en haut <i class="fas fa-arrow-up"></i></a>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>
