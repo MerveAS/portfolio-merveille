@@ -3,10 +3,10 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Suivre les inondations quand le satellite optique est aveugle | Merveille Aganze Sami</title>
-  <meta name="description" content="En saison des pluies, l'imagerie optique ne voit rien. Comment construire un suivi des inondations par radar Sentinel-1 : principe, pipeline automatisé et pièges à connaître." />
-  <meta property="og:title" content="Suivre les inondations quand le satellite optique est aveugle" />
-  <meta property="og:description" content="Le radar Sentinel-1 traverse les nuages. Principe, pipeline automatisé sur Google Earth Engine et pièges à connaître." />
+  <title>Cartographier les inondations sous couverture nuageuse : l'apport du radar Sentinel-1 | Merveille Aganze Sami</title>
+  <meta name="description" content="En saison des pluies, l'imagerie optique est peu disponible. Principes, chaîne de traitement et limites de la cartographie des inondations par radar Sentinel-1, références à l'appui." />
+  <meta property="og:title" content="Cartographier les inondations sous couverture nuageuse : l'apport du radar Sentinel-1" />
+  <meta property="og:description" content="Principes, chaîne de traitement et limites de la cartographie des inondations par radar Sentinel-1." />
   <meta property="og:image" content="radar-inondation-sentinel1.png" />
   <meta property="og:type" content="article" />
   <link rel="alternate" hreflang="en" href="https://merveille.fitigroup.org/en/article-radar-floods.html" />
@@ -35,6 +35,7 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <style>
     html { scroll-behavior: smooth; }
+    .ref { font-variant-numeric: tabular-nums; }
     @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
   </style>
 </head>
@@ -65,11 +66,12 @@
           <div class="flex flex-wrap items-center gap-2 mb-5">
             <span class="text-[11px] font-semibold uppercase tracking-wider bg-gradient-to-r from-navy to-lagoon text-[#ffffff] rounded-full px-3 py-1">Article</span>
             <span class="text-[11px] font-medium text-[#ffffff]/50"><i class="fas fa-calendar mr-1.5"></i>30 juin 2026</span>
-            <span class="text-[11px] font-medium text-[#ffffff]/50"><i class="fas fa-clock mr-1.5"></i>9 min de lecture</span>
+            <span class="text-[11px] font-medium text-[#ffffff]/50"><i class="fas fa-clock mr-1.5"></i>10 min de lecture</span>
           </div>
           <h1 class="font-display font-bold text-[#ffffff] text-3xl sm:text-4xl md:text-5xl leading-tight mb-6">
-            Suivre les inondations<br /><span class="bg-gradient-to-r from-navy to-lagoon bg-clip-text text-transparent">quand le satellite est aveugle</span>
+            Cartographier les inondations<br /><span class="bg-gradient-to-r from-navy to-lagoon bg-clip-text text-transparent">sous couverture nuageuse</span>
           </h1>
+          <p class="text-[#ffffff]/60 text-base mb-6">L'apport du radar Sentinel-1 : principes, chaîne de traitement et limites</p>
           <div class="flex items-center gap-3">
             <img src="Photomerveille.jpg?v=2" alt="Merveille Aganze Sami" class="w-10 h-10 rounded-full object-cover ring-2 ring-[#ffffff]/30" />
             <div class="text-sm">
@@ -83,95 +85,113 @@
 
     <article class="max-w-3xl mx-auto px-5 sm:px-8 py-12 md:py-16">
 
-      <p class="text-lg md:text-xl leading-9 text-night/80 mb-10">
-        Il y a une ironie cruelle dans le suivi des inondations en Afrique centrale : la période où l'on a le plus besoin d'images satellites est précisément celle où l'on n'en obtient aucune. Pendant la saison des pluies, le bassin du Congo disparaît sous une couverture nuageuse quasi permanente. Les capteurs optiques — Sentinel-2, Landsat — ne voient rien. On attend une éclaircie, et pendant ce temps l'eau monte, se retire, et la crue est finie avant que la première image exploitable n'arrive.
+      <p class="text-lg md:text-xl leading-9 text-night/80 mb-8">
+        Le suivi des inondations en Afrique centrale se heurte à une contrainte structurelle : la période de plus forte exposition au risque coïncide avec celle où l'imagerie satellitaire optique est la moins disponible. Pendant la saison des pluies, la couverture nuageuse du bassin du Congo limite fortement l'acquisition d'observations exploitables par les capteurs optiques — une difficulté bien documentée pour le suivi forestier de la région <a href="#ref-reiche" class="text-navy hover:underline">(Reiche et al., 2021)</a> et pour l'observation des milieux tropicaux en général <a href="#ref-langhorst" class="text-navy hover:underline">(Langhorst et al., 2024)</a>.
       </p>
       <p class="leading-8 text-night/80 mb-10">
-        Il existe pourtant une famille de capteurs pour laquelle les nuages n'existent tout simplement pas. Voici comment mettre en place un suivi des inondations qui fonctionne quand plus rien d'autre ne fonctionne — le principe physique, la chaîne de traitement, et surtout les pièges que l'on découvre généralement trop tard.
+        L'imagerie radar offre une alternative robuste à cette limite. Cet article présente les principes physiques qui la fondent, une chaîne de traitement reproductible à partir des données Sentinel-1, et — point souvent sous-documenté — les sources d'erreur qu'il convient d'anticiper avant tout usage opérationnel.
       </p>
 
       <figure class="mb-12">
-        <img src="radar-inondation-sentinel1.png" alt="Comparaison entre une image optique noyée sous les nuages et une image radar SAR révélant l'étendue inondée, avec le pipeline automatisé en 4 étapes" class="w-full rounded-2xl shadow-xl ring-1 ring-night/10" />
-        <figcaption class="text-night/60 text-sm mt-3 text-center">La même zone, le même jour : l'optique ne montre que des nuages, le radar délimite l'étendue inondée.</figcaption>
+        <img src="radar-inondation-sentinel1.png" alt="Comparaison entre une image optique masquée par les nuages et une image radar SAR délimitant l'étendue inondée, accompagnée du schéma de la chaîne de traitement en quatre étapes" class="w-full rounded-2xl shadow-xl ring-1 ring-night/10" />
+        <figcaption class="text-night/60 text-sm mt-3 text-center"><strong class="text-night/70">Figure 1.</strong> Illustration schématique : sur une même zone, l'observation optique est masquée par les nuages tandis que le signal radar permet de délimiter l'étendue en eau.</figcaption>
       </figure>
 
-      <h2 class="font-display font-bold text-night text-2xl md:text-3xl mb-5">Pourquoi le radar voit ce que l'optique ne voit pas</h2>
+      <h2 class="font-display font-bold text-night text-2xl md:text-3xl mb-5">1. Fondement physique : la transparence des nuages en bande C</h2>
       <p class="leading-8 text-night/80 mb-5">
-        Un capteur optique est passif : il enregistre la lumière du soleil réfléchie par la surface. Si un nuage s'interpose, il enregistre le nuage. C'est aussi simple, et aussi bloquant, que cela.
+        Un capteur optique est un système passif : il mesure le rayonnement solaire réfléchi par la surface terrestre. Toute couche nuageuse interposée devient donc l'objet mesuré, ce qui rend l'observation du sol impossible.
       </p>
       <p class="leading-8 text-night/80 mb-5">
-        Un radar à synthèse d'ouverture (SAR) fonctionne à l'inverse : il est <strong class="text-night">actif</strong>. Il émet lui-même une onde et mesure ce qui lui revient. Sentinel-1, le satellite radar du programme européen Copernicus, émet en bande C — une longueur d'onde d'environ 5,6 centimètres. Or les gouttelettes qui composent les nuages sont des centaines de fois plus petites que cela. À cette échelle, le nuage est tout simplement transparent : l'onde le traverse à l'aller, rebondit sur le sol, et le retraverse au retour.
+        Un radar à synthèse d'ouverture (SAR) est en revanche un système <strong class="text-night">actif</strong> : il émet son propre rayonnement micro-ondes et mesure l'énergie rétrodiffusée par la surface. La mission Sentinel-1 du programme Copernicus opère en bande C, à une longueur d'onde d'environ 5,6 cm <a href="#ref-torres" class="text-navy hover:underline">(Torres et al., 2012)</a>. Les gouttelettes constitutives des nuages étant de plusieurs ordres de grandeur inférieures à cette longueur d'onde, leur interaction avec le signal reste négligeable : l'atmosphère nuageuse est, à cette échelle, quasi transparente.
       </p>
       <div class="bg-sky/60 border-l-4 border-navy rounded-r-2xl p-5 md:p-6 mb-10">
-        <p class="leading-7 text-night/80 text-sm md:text-base"><i class="fas fa-lightbulb text-navy mr-2"></i><strong class="text-night">Conséquence pratique :</strong> parce qu'il produit sa propre onde, le radar fonctionne aussi la nuit. Deux contraintes majeures de l'optique — la couverture nuageuse et l'éclairement solaire — disparaissent d'un coup.</p>
+        <p class="leading-7 text-night/80 text-sm md:text-base"><i class="fas fa-circle-info text-navy mr-2"></i><strong class="text-night">Conséquence opérationnelle.</strong> L'émission active affranchit également l'acquisition de l'éclairement solaire. Les deux principales contraintes de l'optique — nébulosité et alternance jour/nuit — sont ainsi levées, ce qui garantit une régularité d'observation indépendante des conditions météorologiques.</p>
       </div>
 
-      <h2 class="font-display font-bold text-night text-2xl md:text-3xl mb-5">Le principe de détection : l'eau est noire en radar</h2>
+      <h2 class="font-display font-bold text-night text-2xl md:text-3xl mb-5">2. Signature radar des surfaces en eau</h2>
       <p class="leading-8 text-night/80 mb-5">
-        Ce qui rend la détection des inondations si élégante en radar, c'est que l'eau libre possède une signature quasi caricaturale. Une surface d'eau calme est lisse à l'échelle de l'onde : elle se comporte comme un miroir. L'onde émise repart dans la direction opposée au satellite au lieu d'être diffusée dans toutes les directions. Presque rien ne revient au capteur.
+        La détection des surfaces inondées repose sur une propriété bien établie : une étendue d'eau calme se comporte, à l'échelle de la longueur d'onde, comme une surface spéculaire. Le signal incident est réfléchi majoritairement dans la direction opposée au capteur, si bien que l'énergie rétrodiffusée mesurée est faible. L'eau libre apparaît en conséquence sombre sur l'image, en net contraste avec la végétation, les sols rugueux et les surfaces bâties, dont la diffusion est plus élevée.
       </p>
       <p class="leading-8 text-night/80 mb-5">
-        Résultat : sur une image radar, l'eau apparaît en <strong class="text-night">noir profond</strong>, tandis que la végétation, les sols rugueux et le bâti renvoient beaucoup plus de signal et ressortent en gris clair. Le contraste est si marqué qu'un simple seuillage du coefficient de rétrodiffusion suffit souvent à séparer l'eau du reste.
+        Ce contraste se traduit quantitativement : en bande C, le coefficient de rétrodiffusion des surfaces en eau libre se situe généralement entre <strong class="text-night">−15 et −20 dB</strong>, une plage largement rapportée dans la littérature et mobilisée dans les chaînes automatisées <a href="#ref-twele" class="text-navy hover:underline">(Twele et al., 2016)</a>. Cette séparabilité explique qu'un seuillage de l'histogramme suffise, dans de nombreux contextes, à extraire l'eau — les approches par seuillage restant parmi les plus employées pour la cartographie des inondations par SAR <a href="#ref-landuyt" class="text-navy hover:underline">(Landuyt et al., 2019)</a>.
       </p>
       <p class="leading-8 text-night/80 mb-10">
-        Un mot sur la polarisation, car c'est un choix qui compte. Sentinel-1 acquiert généralement en double polarisation VV et VH. Pour l'eau libre, la <strong class="text-night">polarisation VV</strong> donne en général le meilleur contraste et reste le choix par défaut. La VH, plus sensible à la structure du couvert, devient utile lorsqu'on cherche à détecter de l'eau <em>sous</em> la végétation — un cas nettement plus difficile.
+        Le choix de la polarisation mérite attention. Sentinel-1 acquiert le plus souvent en double polarisation VV et VH. Pour la détection d'eau libre, la <strong class="text-night">polarisation VV</strong> est généralement privilégiée en raison de son meilleur contraste eau/non-eau. La polarisation VH, plus sensible à la diffusion de volume du couvert végétal, présente un intérêt complémentaire lorsque l'objectif est de détecter une inondation sous végétation — configuration nettement plus complexe <a href="#ref-tsyganskaya" class="text-navy hover:underline">(Tsyganskaya et al., 2018)</a>.
       </p>
 
-      <h2 class="font-display font-bold text-night text-2xl md:text-3xl mb-5">Monter une chaîne automatisée en cinq étapes</h2>
+      <h2 class="font-display font-bold text-night text-2xl md:text-3xl mb-5">3. Chaîne de traitement en cinq étapes</h2>
       <p class="leading-8 text-night/80 mb-6">
-        L'intérêt opérationnel n'est pas de produire une belle carte une fois, mais d'obtenir une carte à jour <em>à chaque revisite du satellite</em>, sans intervention manuelle. Sur Google Earth Engine, où l'archive Sentinel-1 est déjà prétraitée et où le calcul se fait côté serveur, la chaîne tient en cinq étapes.
+        L'intérêt opérationnel réside moins dans la production d'une carte isolée que dans la capacité à régénérer cette carte à chaque revisite du satellite, sans intervention manuelle. La plateforme Google Earth Engine, qui met à disposition l'archive Sentinel-1 prétraitée et exécute les calculs côté serveur <a href="#ref-gorelick" class="text-navy hover:underline">(Gorelick et al., 2017)</a>, se prête bien à cette automatisation.
       </p>
       <ol class="space-y-4 text-night/80 leading-7 mb-6 list-none">
-        <li class="flex items-start gap-4"><span class="flex-none inline-flex items-center justify-center w-8 h-8 rounded-full bg-gradient-to-br from-navy to-lagoon text-[#ffffff] text-sm font-bold">1</span><span><strong class="text-night">Construire une référence pré-crue.</strong> Un composite médian des images de saison sèche donne l'état « normal » du territoire : les cours d'eau permanents, les plans d'eau habituels. Sans cette référence, impossible de distinguer une rivière d'une inondation.</span></li>
-        <li class="flex items-start gap-4"><span class="flex-none inline-flex items-center justify-center w-8 h-8 rounded-full bg-gradient-to-br from-navy to-lagoon text-[#ffffff] text-sm font-bold">2</span><span><strong class="text-night">Filtrer le chatoiement.</strong> Toute image radar présente un grain granuleux caractéristique, le <em>speckle</em>, inhérent à l'imagerie cohérente. Un filtre spatial (Lee affiné, par exemple) ou une moyenne multi-temporelle le réduit fortement — étape indispensable avant tout seuillage.</span></li>
-        <li class="flex items-start gap-4"><span class="flex-none inline-flex items-center justify-center w-8 h-8 rounded-full bg-gradient-to-br from-navy to-lagoon text-[#ffffff] text-sm font-bold">3</span><span><strong class="text-night">Seuiller pour extraire l'eau.</strong> Un seuil fixe sur la rétrodiffusion VV fonctionne, mais se dérègle d'une scène à l'autre. La méthode d'Otsu, qui détermine automatiquement le seuil optimal à partir de l'histogramme bimodal de l'image, donne des résultats bien plus stables dans le temps.</span></li>
-        <li class="flex items-start gap-4"><span class="flex-none inline-flex items-center justify-center w-8 h-8 rounded-full bg-gradient-to-br from-navy to-lagoon text-[#ffffff] text-sm font-bold">4</span><span><strong class="text-night">Soustraire l'eau permanente.</strong> La différence entre l'eau détectée et la référence pré-crue isole l'<strong class="text-night">eau nouvelle</strong> — c'est-à-dire l'inondation proprement dite, la seule information qui intéresse un dispositif d'alerte.</span></li>
-        <li class="flex items-start gap-4"><span class="flex-none inline-flex items-center justify-center w-8 h-8 rounded-full bg-gradient-to-br from-navy to-lagoon text-[#ffffff] text-sm font-bold">5</span><span><strong class="text-night">Croiser et diffuser.</strong> L'étendue inondée est recoupée avec les couches qui donnent du sens : localités, infrastructures, parcelles, zones d'intervention du projet. La sortie alimente un tableau de bord, et le franchissement d'un seuil de superficie déclenche une alerte.</span></li>
+        <li class="flex items-start gap-4"><span class="flex-none inline-flex items-center justify-center w-8 h-8 rounded-full bg-gradient-to-br from-navy to-lagoon text-[#ffffff] text-sm font-bold">1</span><span><strong class="text-night">Établir une référence d'eau permanente.</strong> Un composite médian d'images de saison sèche caractérise l'état hydrologique de référence. Le jeu de données <em>Global Surface Water</em> du JRC, dérivé de trente-deux ans d'archives Landsat, constitue une alternative ou un complément robuste pour distinguer eau permanente et eau saisonnière <a href="#ref-pekel" class="text-navy hover:underline">(Pekel et al., 2016)</a>.</span></li>
+        <li class="flex items-start gap-4"><span class="flex-none inline-flex items-center justify-center w-8 h-8 rounded-full bg-gradient-to-br from-navy to-lagoon text-[#ffffff] text-sm font-bold">2</span><span><strong class="text-night">Réduire le chatoiement.</strong> Le <em>speckle</em> est un bruit multiplicatif inhérent à l'imagerie cohérente. Son atténuation par filtrage adaptatif, dont le filtre de Lee constitue la référence historique <a href="#ref-lee" class="text-navy hover:underline">(Lee, 1980)</a>, ou par moyenne multi-temporelle, conditionne la qualité du seuillage ultérieur.</span></li>
+        <li class="flex items-start gap-4"><span class="flex-none inline-flex items-center justify-center w-8 h-8 rounded-full bg-gradient-to-br from-navy to-lagoon text-[#ffffff] text-sm font-bold">3</span><span><strong class="text-night">Déterminer le seuil de séparation.</strong> Un seuil fixe présente une stabilité limitée d'une scène à l'autre. La méthode d'Otsu, qui identifie le seuil minimisant la variance intra-classe d'un histogramme bimodal <a href="#ref-otsu" class="text-navy hover:underline">(Otsu, 1979)</a>, offre une détermination automatique plus reproductible. Les approches hiérarchiques par sous-fenêtres améliorent encore la robustesse lorsque l'eau occupe une faible proportion de la scène <a href="#ref-chini" class="text-navy hover:underline">(Chini et al., 2017)</a>.</span></li>
+        <li class="flex items-start gap-4"><span class="flex-none inline-flex items-center justify-center w-8 h-8 rounded-full bg-gradient-to-br from-navy to-lagoon text-[#ffffff] text-sm font-bold">4</span><span><strong class="text-night">Isoler l'eau nouvelle.</strong> La différence entre l'eau détectée et la référence permanente délimite l'extension inondée proprement dite, seule grandeur pertinente pour un dispositif d'alerte.</span></li>
+        <li class="flex items-start gap-4"><span class="flex-none inline-flex items-center justify-center w-8 h-8 rounded-full bg-gradient-to-br from-navy to-lagoon text-[#ffffff] text-sm font-bold">5</span><span><strong class="text-night">Croiser et diffuser.</strong> L'intersection avec les couches d'exposition — localités, infrastructures, parcelles, zones d'intervention — convertit une surface en information décisionnelle. Le franchissement d'un seuil de superficie peut alors déclencher une alerte automatisée.</span></li>
       </ol>
       <p class="leading-8 text-night/80 mb-10">
-        Sentinel-1 repasse au-dessus d'une même zone tous les six à douze jours selon la latitude et la configuration de la constellation. Ce n'est pas du temps réel — mais comparé à une attente d'éclaircie qui peut durer des semaines, c'est un changement d'ordre de grandeur. Et les données sont gratuites et ouvertes.
+        La fréquence de revisite de Sentinel-1 est de l'ordre de six à douze jours selon la latitude et la configuration de la constellation. Elle ne relève pas du temps réel, mais offre une régularité que l'optique ne peut garantir en contexte tropical humide. Les données sont distribuées gratuitement et sous licence ouverte.
       </p>
 
-      <h2 class="font-display font-bold text-night text-2xl md:text-3xl mb-5">Les pièges que l'on découvre trop tard</h2>
+      <h2 class="font-display font-bold text-night text-2xl md:text-3xl mb-5">4. Limites et sources d'erreur</h2>
       <p class="leading-8 text-night/80 mb-6">
-        C'est la partie qu'on lit rarement dans les tutoriels, et c'est pourtant celle qui décide de la fiabilité opérationnelle d'un dispositif. Le radar voit à travers les nuages, mais il n'est pas infaillible.
+        La fiabilité opérationnelle d'une chaîne de détection dépend directement de la prise en compte explicite de ses limites. Les principales sont documentées et concernent aussi bien les faux négatifs que les faux positifs <a href="#ref-landuyt" class="text-navy hover:underline">(Landuyt et al., 2019)</a>.
       </p>
       <ul class="space-y-3.5 text-night/80 leading-7 mb-6">
-        <li class="flex items-start gap-3"><i class="fas fa-triangle-exclamation text-navy mt-1.5"></i><span><strong class="text-night">Le vent rugosifie l'eau.</strong> Une surface d'eau agitée cesse d'être un miroir : elle renvoie du signal et n'apparaît plus assez sombre. Résultat, une inondation sous-estimée les jours de vent. C'est la principale cause de faux négatifs.</span></li>
-        <li class="flex items-start gap-3"><i class="fas fa-triangle-exclamation text-navy mt-1.5"></i><span><strong class="text-night">Certaines surfaces sèches imitent l'eau.</strong> Le sable lisse, l'asphalte, les sols nus très plats renvoient eux aussi très peu de signal. Sans filtre complémentaire, ils sont classés comme inondés.</span></li>
-        <li class="flex items-start gap-3"><i class="fas fa-triangle-exclamation text-navy mt-1.5"></i><span><strong class="text-night">L'eau sous végétation ou en ville échappe au seuillage.</strong> Sous un couvert forestier ou entre des bâtiments, l'onde rebondit plusieurs fois (effet de double rebond) et revient <em>plus</em> forte, pas plus faible. L'inondation y apparaît claire — l'inverse de ce qu'on cherche. Ces contextes demandent des approches spécifiques.</span></li>
-        <li class="flex items-start gap-3"><i class="fas fa-triangle-exclamation text-navy mt-1.5"></i><span><strong class="text-night">Le relief crée des zones aveugles.</strong> En terrain accidenté, les ombres radar et les repliements produisent des artefacts que l'on confond facilement avec de l'eau.</span></li>
+        <li class="flex items-start gap-3"><i class="fas fa-circle-exclamation text-navy mt-1.5"></i><span><strong class="text-night">Rugosité induite par le vent.</strong> Une surface d'eau agitée perd son comportement spéculaire et rétrodiffuse davantage de signal, ce qui élève sa valeur au-dessus du seuil de détection. Il en résulte une sous-estimation de l'étendue inondée lors d'épisodes venteux.</span></li>
+        <li class="flex items-start gap-3"><i class="fas fa-circle-exclamation text-navy mt-1.5"></i><span><strong class="text-night">Confusion avec des surfaces sèches lisses.</strong> Les sols nus très plans, les surfaces sableuses et les revêtements bitumés présentent également une faible rétrodiffusion et peuvent être classés à tort comme surfaces en eau.</span></li>
+        <li class="flex items-start gap-3"><i class="fas fa-circle-exclamation text-navy mt-1.5"></i><span><strong class="text-night">Inondation sous couvert végétal ou en milieu urbain.</strong> Sous végétation ou entre bâtiments, le mécanisme de double rebond entre la surface en eau et les structures verticales accroît la rétrodiffusion au lieu de la diminuer. L'inondation y apparaît alors en valeurs élevées, ce qui invalide le seuillage simple et requiert des approches dédiées <a href="#ref-tsyganskaya" class="text-navy hover:underline">(Tsyganskaya et al., 2018)</a>.</span></li>
+        <li class="flex items-start gap-3"><i class="fas fa-circle-exclamation text-navy mt-1.5"></i><span><strong class="text-night">Effets géométriques du relief.</strong> En terrain accidenté, les ombres radar et les phénomènes de repliement génèrent des zones de faible signal susceptibles d'être confondues avec de l'eau.</span></li>
       </ul>
       <p class="leading-8 text-night/80 mb-10">
-        La parade la plus efficace tient en une phrase : <strong class="text-night">filtrer par la topographie</strong>. Un modèle numérique de terrain, ou mieux un indice de hauteur au-dessus du drainage le plus proche (HAND), permet d'éliminer d'emblée toute « eau » détectée sur un versant à forte pente ou nettement au-dessus du réseau hydrographique. L'eau ne monte pas les collines : ce simple bon sens, traduit en règle spatiale, supprime l'essentiel des faux positifs.
+        Le principal levier de correction est topographique. L'intégration d'un modèle numérique de terrain, et plus spécifiquement de l'indice de hauteur au-dessus du drainage le plus proche (HAND), permet d'écarter les détections situées sur des versants pentus ou nettement au-dessus du réseau hydrographique <a href="#ref-nobre" class="text-navy hover:underline">(Nobre et al., 2011)</a>. Cette contextualisation topographique et hydrologique réduit sensiblement le taux de faux positifs et fait aujourd'hui partie des bonnes pratiques des chaînes opérationnelles.
       </p>
 
-      <h2 class="font-display font-bold text-night text-2xl md:text-3xl mb-5">Ce que cela change concrètement</h2>
+      <h2 class="font-display font-bold text-night text-2xl md:text-3xl mb-5">5. Portée opérationnelle</h2>
       <p class="leading-8 text-night/80 mb-5">
-        Pour une équipe projet, le bénéfice n'est pas technique, il est décisionnel. Disposer d'une carte d'étendue inondée quelques jours après l'événement, plutôt que quelques semaines, change la nature des questions auxquelles on peut répondre : quelles localités sont touchées, quelles routes sont coupées, quelles parcelles d'un programme agricole sont sous eau, où envoyer une mission de vérification en priorité.
+        Pour une équipe projet, l'apport se mesure en délai de décision. Disposer d'une estimation d'étendue inondée dans les jours suivant l'événement, plutôt que dans les semaines, modifie la nature des questions auxquelles il est possible de répondre : localités affectées, axes de circulation interrompus, parcelles agricoles submergées, priorisation des missions de vérification.
       </p>
       <p class="leading-8 text-night/80 mb-10">
-        Cela change aussi la relation aux bailleurs et aux partenaires. Une estimation de surface inondée, datée, reproductible et documentée, vaut mieux qu'un rapport qualitatif rédigé de mémoire trois mois plus tard. Et parce que la chaîne est automatisée, la même méthode s'applique à la crue suivante sans refaire le travail.
+        L'apport est également méthodologique. Une estimation datée, reproductible et documentée — méthode, seuil, source, incertitude — constitue un élément de redevabilité plus solide qu'une appréciation qualitative reconstituée a posteriori. L'automatisation de la chaîne garantit en outre la comparabilité entre événements successifs.
       </p>
 
       <div class="bg-gradient-to-br from-petrol to-night rounded-2xl p-6 md:p-8 mb-10">
-        <h2 class="font-display font-semibold text-[#ffffff] text-xl mb-4"><i class="fas fa-list-check text-lagoon mr-2"></i>À retenir</h2>
+        <h2 class="font-display font-semibold text-[#ffffff] text-xl mb-4"><i class="fas fa-list-check text-lagoon mr-2"></i>Points essentiels</h2>
         <ul class="space-y-2.5 text-[#ffffff]/80 leading-7 text-sm md:text-base">
-          <li class="flex items-start gap-3"><i class="fas fa-check text-lagoon mt-1.5"></i>Le radar en bande C traverse les nuages et fonctionne de nuit : les deux limites de l'optique disparaissent</li>
-          <li class="flex items-start gap-3"><i class="fas fa-check text-lagoon mt-1.5"></i>L'eau libre apparaît très sombre en polarisation VV — un seuillage suffit souvent à l'extraire</li>
-          <li class="flex items-start gap-3"><i class="fas fa-check text-lagoon mt-1.5"></i>Une référence pré-crue est indispensable pour isoler l'eau nouvelle de l'eau permanente</li>
-          <li class="flex items-start gap-3"><i class="fas fa-check text-lagoon mt-1.5"></i>Vent, sols lisses, végétation et relief sont les quatre sources d'erreur à traiter explicitement</li>
-          <li class="flex items-start gap-3"><i class="fas fa-check text-lagoon mt-1.5"></i>Un filtre topographique (MNT ou HAND) élimine la majorité des faux positifs</li>
+          <li class="flex items-start gap-3"><i class="fas fa-check text-lagoon mt-1.5"></i>La bande C (≈ 5,6 cm) traverse la couverture nuageuse et s'affranchit de l'éclairement solaire</li>
+          <li class="flex items-start gap-3"><i class="fas fa-check text-lagoon mt-1.5"></i>L'eau libre présente une rétrodiffusion faible, généralement comprise entre −15 et −20 dB en polarisation VV</li>
+          <li class="flex items-start gap-3"><i class="fas fa-check text-lagoon mt-1.5"></i>Une référence d'eau permanente est nécessaire pour isoler l'extension inondée</li>
+          <li class="flex items-start gap-3"><i class="fas fa-check text-lagoon mt-1.5"></i>Vent, surfaces lisses sèches, couvert végétal et relief constituent les quatre principales sources d'erreur</li>
+          <li class="flex items-start gap-3"><i class="fas fa-check text-lagoon mt-1.5"></i>La contextualisation topographique (MNT, HAND) réduit significativement les faux positifs</li>
         </ul>
       </div>
 
-      <h2 class="font-display font-bold text-night text-2xl md:text-3xl mb-5">Par où commencer</h2>
+      <h2 class="font-display font-bold text-night text-2xl md:text-3xl mb-5">6. Mise en œuvre : premiers pas</h2>
       <p class="leading-8 text-night/80 mb-10">
-        Les données Sentinel-1 sont accessibles gratuitement via le Copernicus Data Space, et déjà prétraitées dans le catalogue de Google Earth Engine — ce qui évite l'étape la plus rebutante de la chaîne radar. Le plus efficace pour se lancer : choisir une crue passée et bien documentée sur son territoire, reconstituer la carte d'étendue inondée, puis confronter le résultat aux rapports de terrain disponibles. C'est en mesurant ses propres écarts que l'on apprend à calibrer la méthode — et que l'on gagne le droit de s'en servir en situation réelle.
+        Les données Sentinel-1 sont accessibles via le Copernicus Data Space Ecosystem et disponibles sous forme prétraitée dans le catalogue de Google Earth Engine. Une démarche d'apprentissage efficace consiste à reconstituer l'étendue d'une crue passée et documentée sur son propre territoire, puis à confronter le résultat aux observations de terrain disponibles. Cette confrontation permet d'estimer les taux d'omission et de commission propres au contexte, et constitue le préalable raisonnable à tout usage en situation opérationnelle.
       </p>
       <p class="leading-8 text-night/80 mb-12">
-        La donnée la plus utile n'est jamais la plus belle image. C'est celle qui arrive quand plus rien d'autre n'est visible.
+        La valeur d'une donnée d'observation tient moins à sa résolution ou à son rendu visuel qu'à sa disponibilité au moment où la décision doit être prise. En contexte tropical humide, cette disponibilité est précisément ce que l'imagerie radar apporte.
       </p>
+
+      <div class="bg-white border border-night/10 shadow-sm rounded-2xl p-6 md:p-8 mb-10">
+        <h2 class="font-display font-semibold text-night text-xl mb-5"><i class="fas fa-book text-navy mr-2"></i>Références</h2>
+        <ol class="space-y-4 text-night/75 text-sm leading-6 ref">
+          <li id="ref-chini">Chini, M., Hostache, R., Giustarini, L., &amp; Matgen, P. (2017). A Hierarchical Split-Based Approach for Parametric Thresholding of SAR Images: Flood Inundation as a Test Case. <em>IEEE Transactions on Geoscience and Remote Sensing</em>, 55(12), 6975–6988. <a href="https://doi.org/10.1109/TGRS.2017.2737664" target="_blank" class="text-navy hover:underline break-all">doi.org/10.1109/TGRS.2017.2737664</a></li>
+          <li id="ref-gorelick">Gorelick, N., Hancher, M., Dixon, M., Ilyushchenko, S., Thau, D., &amp; Moore, R. (2017). Google Earth Engine: Planetary-scale geospatial analysis for everyone. <em>Remote Sensing of Environment</em>, 202, 18–27. <a href="https://doi.org/10.1016/j.rse.2017.06.031" target="_blank" class="text-navy hover:underline break-all">doi.org/10.1016/j.rse.2017.06.031</a></li>
+          <li id="ref-landuyt">Landuyt, L., Van Wesemael, A., Schumann, G. J.-P., Hostache, R., Verhoest, N. E. C., &amp; Van Coillie, F. M. B. (2019). Flood Mapping Based on Synthetic Aperture Radar: An Assessment of Established Approaches. <em>IEEE Transactions on Geoscience and Remote Sensing</em>, 57(2), 722–739. <a href="https://doi.org/10.1109/TGRS.2018.2860054" target="_blank" class="text-navy hover:underline break-all">doi.org/10.1109/TGRS.2018.2860054</a></li>
+          <li id="ref-langhorst">Langhorst, T., &amp; Pavelsky, T. (2024). Global Cloud Biases in Optical Satellite Remote Sensing of Rivers. <em>Geophysical Research Letters</em>, 51(15). <a href="https://doi.org/10.1029/2024GL110085" target="_blank" class="text-navy hover:underline break-all">doi.org/10.1029/2024GL110085</a></li>
+          <li id="ref-lee">Lee, J.-S. (1980). Digital Image Enhancement and Noise Filtering by Use of Local Statistics. <em>IEEE Transactions on Pattern Analysis and Machine Intelligence</em>, PAMI-2(2), 165–168. <a href="https://doi.org/10.1109/TPAMI.1980.4766994" target="_blank" class="text-navy hover:underline break-all">doi.org/10.1109/TPAMI.1980.4766994</a></li>
+          <li id="ref-nobre">Nobre, A. D., Cuartas, L. A., Hodnett, M., Rennó, C. D., Rodrigues, G., Silveira, A., Waterloo, M., &amp; Saleska, S. (2011). Height Above the Nearest Drainage – a hydrologically relevant new terrain model. <em>Journal of Hydrology</em>, 404(1–2), 13–29. <a href="https://doi.org/10.1016/j.jhydrol.2011.03.051" target="_blank" class="text-navy hover:underline break-all">doi.org/10.1016/j.jhydrol.2011.03.051</a></li>
+          <li id="ref-otsu">Otsu, N. (1979). A Threshold Selection Method from Gray-Level Histograms. <em>IEEE Transactions on Systems, Man, and Cybernetics</em>, 9(1), 62–66. <a href="https://doi.org/10.1109/TSMC.1979.4310076" target="_blank" class="text-navy hover:underline break-all">doi.org/10.1109/TSMC.1979.4310076</a></li>
+          <li id="ref-pekel">Pekel, J.-F., Cottam, A., Gorelick, N., &amp; Belward, A. S. (2016). High-resolution mapping of global surface water and its long-term changes. <em>Nature</em>, 540, 418–422. <a href="https://doi.org/10.1038/nature20584" target="_blank" class="text-navy hover:underline break-all">doi.org/10.1038/nature20584</a></li>
+          <li id="ref-reiche">Reiche, J., Mullissa, A., Slagter, B., Gou, Y., Tsendbazar, N.-E., Odongo-Braun, C., Vollrath, A., Weisse, M. J., Stolle, F., Pickens, A., Donchyts, G., Clinton, N., Gorelick, N., &amp; Herold, M. (2021). Forest disturbance alerts for the Congo Basin using Sentinel-1. <em>Environmental Research Letters</em>, 16(2), 024005. <a href="https://doi.org/10.1088/1748-9326/abd0a8" target="_blank" class="text-navy hover:underline break-all">doi.org/10.1088/1748-9326/abd0a8</a></li>
+          <li id="ref-torres">Torres, R., Snoeij, P., Geudtner, D., Bibby, D., Davidson, M., Attema, E., et al. (2012). GMES Sentinel-1 mission. <em>Remote Sensing of Environment</em>, 120, 9–24. <a href="https://doi.org/10.1016/j.rse.2011.05.028" target="_blank" class="text-navy hover:underline break-all">doi.org/10.1016/j.rse.2011.05.028</a></li>
+          <li id="ref-tsyganskaya">Tsyganskaya, V., Martinis, S., Marzahn, P., &amp; Ludwig, R. (2018). SAR-based detection of flooded vegetation – a review of characteristics and approaches. <em>International Journal of Remote Sensing</em>, 39(8), 2255–2293. <a href="https://doi.org/10.1080/01431161.2017.1420938" target="_blank" class="text-navy hover:underline break-all">doi.org/10.1080/01431161.2017.1420938</a></li>
+          <li id="ref-twele">Twele, A., Cao, W., Plank, S., &amp; Martinis, S. (2016). Sentinel-1-based flood mapping: a fully automated processing chain. <em>International Journal of Remote Sensing</em>, 37(13), 2990–3004. <a href="https://doi.org/10.1080/01431161.2016.1192304" target="_blank" class="text-navy hover:underline break-all">doi.org/10.1080/01431161.2016.1192304</a></li>
+        </ol>
+      </div>
 
       <div class="bg-white border border-night/10 shadow-sm rounded-2xl p-6 md:p-7 flex flex-col sm:flex-row items-center gap-5 mb-6">
         <img src="Photomerveille.jpg?v=2" alt="Merveille Aganze Sami" class="w-20 h-20 rounded-full object-cover ring-2 ring-navy/30" />
@@ -186,8 +206,8 @@
       </div>
 
       <div class="flex flex-col sm:flex-row items-center justify-between gap-4 bg-sky/60 rounded-2xl p-6">
-        <p class="text-night/80 font-medium text-center sm:text-left">Un suivi environnemental à fiabiliser par satellite ?</p>
-        <a href="contact.html" class="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-navy to-lagoon text-[#ffffff] font-semibold px-6 py-2.5 shadow-md hover:-translate-y-0.5 transition whitespace-nowrap">Parlons-en <i class="fas fa-arrow-right"></i></a>
+        <p class="text-night/80 font-medium text-center sm:text-left">Un suivi environnemental à fiabiliser par observation satellitaire ?</p>
+        <a href="contact.html" class="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-navy to-lagoon text-[#ffffff] font-semibold px-6 py-2.5 shadow-md hover:-translate-y-0.5 transition whitespace-nowrap">Prendre contact <i class="fas fa-arrow-right"></i></a>
       </div>
     </article>
   </main>
