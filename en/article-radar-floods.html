@@ -3,10 +3,10 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Monitoring floods when the optical satellite is blind | Merveille Aganze Sami</title>
-  <meta name="description" content="During the rainy season, optical imagery sees nothing. How to build flood monitoring with Sentinel-1 radar: principle, automated pipeline and the pitfalls to know." />
-  <meta property="og:title" content="Monitoring floods when the optical satellite is blind" />
-  <meta property="og:description" content="Sentinel-1 radar sees through clouds. Principle, automated Google Earth Engine pipeline and pitfalls to know." />
+  <title>Mapping floods under cloud cover: the contribution of Sentinel-1 radar | Merveille Aganze Sami</title>
+  <meta name="description" content="During the rainy season, optical imagery is scarcely available. Principles, processing chain and limitations of flood mapping with Sentinel-1 radar, with references." />
+  <meta property="og:title" content="Mapping floods under cloud cover: the contribution of Sentinel-1 radar" />
+  <meta property="og:description" content="Principles, processing chain and limitations of flood mapping with Sentinel-1 radar." />
   <meta property="og:image" content="../radar-inondation-sentinel1.png" />
   <meta property="og:type" content="article" />
   <link rel="alternate" hreflang="fr" href="https://merveille.fitigroup.org/article-radar-inondations.html" />
@@ -35,6 +35,7 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <style>
     html { scroll-behavior: smooth; }
+    .ref { font-variant-numeric: tabular-nums; }
     @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
   </style>
 </head>
@@ -65,11 +66,12 @@
           <div class="flex flex-wrap items-center gap-2 mb-5">
             <span class="text-[11px] font-semibold uppercase tracking-wider bg-gradient-to-r from-navy to-lagoon text-[#ffffff] rounded-full px-3 py-1">Article</span>
             <span class="text-[11px] font-medium text-[#ffffff]/50"><i class="fas fa-calendar mr-1.5"></i>30 June 2026</span>
-            <span class="text-[11px] font-medium text-[#ffffff]/50"><i class="fas fa-clock mr-1.5"></i>9 min read</span>
+            <span class="text-[11px] font-medium text-[#ffffff]/50"><i class="fas fa-clock mr-1.5"></i>10 min read</span>
           </div>
           <h1 class="font-display font-bold text-[#ffffff] text-3xl sm:text-4xl md:text-5xl leading-tight mb-6">
-            Monitoring floods<br /><span class="bg-gradient-to-r from-navy to-lagoon bg-clip-text text-transparent">when the satellite is blind</span>
+            Mapping floods<br /><span class="bg-gradient-to-r from-navy to-lagoon bg-clip-text text-transparent">under cloud cover</span>
           </h1>
+          <p class="text-[#ffffff]/60 text-base mb-6">The contribution of Sentinel-1 radar: principles, processing chain and limitations</p>
           <div class="flex items-center gap-3">
             <img src="../Photomerveille.jpg?v=2" alt="Merveille Aganze Sami" class="w-10 h-10 rounded-full object-cover ring-2 ring-[#ffffff]/30" />
             <div class="text-sm">
@@ -83,95 +85,113 @@
 
     <article class="max-w-3xl mx-auto px-5 sm:px-8 py-12 md:py-16">
 
-      <p class="text-lg md:text-xl leading-9 text-night/80 mb-10">
-        There is a cruel irony in flood monitoring across Central Africa: the period when satellite imagery is most needed is precisely the one when none is available. During the rainy season, the Congo Basin disappears under near-permanent cloud cover. Optical sensors — Sentinel-2, Landsat — see nothing. You wait for a clear sky while the water rises, recedes, and the flood is over before the first usable image arrives.
+      <p class="text-lg md:text-xl leading-9 text-night/80 mb-8">
+        Flood monitoring in Central Africa faces a structural constraint: the period of highest exposure to risk coincides with the one in which optical satellite imagery is least available. During the rainy season, cloud cover over the Congo Basin severely limits the acquisition of usable optical observations — a difficulty well documented for forest monitoring in the region <a href="#ref-reiche" class="text-navy hover:underline">(Reiche et al., 2021)</a> and for observation of tropical environments more broadly <a href="#ref-langhorst" class="text-navy hover:underline">(Langhorst &amp; Pavelsky, 2024)</a>.
       </p>
       <p class="leading-8 text-night/80 mb-10">
-        Yet there is a family of sensors for which clouds simply do not exist. Here is how to set up flood monitoring that works when nothing else does — the physical principle, the processing chain, and above all the pitfalls that are usually discovered far too late.
+        Radar imagery offers a robust alternative to this limitation. This article outlines the physical principles on which it rests, a reproducible processing chain based on Sentinel-1 data, and — a frequently under-documented aspect — the sources of error that should be anticipated before any operational use.
       </p>
 
       <figure class="mb-12">
-        <img src="../radar-inondation-sentinel1.png" alt="Comparison between an optical image drowned in clouds and a SAR radar image revealing the flooded area, with the 4-step automated pipeline" class="w-full rounded-2xl shadow-xl ring-1 ring-night/10" />
-        <figcaption class="text-night/60 text-sm mt-3 text-center">Same area, same day: optical shows only clouds, radar delineates the flooded extent.</figcaption>
+        <img src="../radar-inondation-sentinel1.png" alt="Comparison between an optical image masked by clouds and a SAR radar image delineating the flooded extent, together with a diagram of the four-step processing chain" class="w-full rounded-2xl shadow-xl ring-1 ring-night/10" />
+        <figcaption class="text-night/60 text-sm mt-3 text-center"><strong class="text-night/70">Figure 1.</strong> Schematic illustration: over the same area, optical observation is masked by clouds while the radar signal allows the water extent to be delineated.</figcaption>
       </figure>
 
-      <h2 class="font-display font-bold text-night text-2xl md:text-3xl mb-5">Why radar sees what optical cannot</h2>
+      <h2 class="font-display font-bold text-night text-2xl md:text-3xl mb-5">1. Physical basis: cloud transparency in C-band</h2>
       <p class="leading-8 text-night/80 mb-5">
-        An optical sensor is passive: it records sunlight reflected by the surface. If a cloud gets in the way, it records the cloud. It is that simple, and that blocking.
+        An optical sensor is a passive system: it measures solar radiation reflected by the Earth's surface. Any intervening cloud layer therefore becomes the object being measured, making ground observation impossible.
       </p>
       <p class="leading-8 text-night/80 mb-5">
-        A Synthetic Aperture Radar (SAR) works the other way around: it is <strong class="text-night">active</strong>. It emits its own wave and measures what comes back. Sentinel-1, the radar satellite of the European Copernicus programme, transmits in C-band — a wavelength of about 5.6 centimetres. The droplets that make up clouds are hundreds of times smaller than that. At this scale the cloud is simply transparent: the wave passes through on the way down, bounces off the ground, and passes through again on the way back.
+        A Synthetic Aperture Radar (SAR), by contrast, is an <strong class="text-night">active</strong> system: it emits its own microwave radiation and measures the energy backscattered by the surface. The Copernicus Sentinel-1 mission operates in C-band, at a wavelength of approximately 5.6 cm <a href="#ref-torres" class="text-navy hover:underline">(Torres et al., 2012)</a>. Since cloud droplets are several orders of magnitude smaller than this wavelength, their interaction with the signal remains negligible: at this scale, the cloudy atmosphere is effectively transparent.
       </p>
       <div class="bg-sky/60 border-l-4 border-navy rounded-r-2xl p-5 md:p-6 mb-10">
-        <p class="leading-7 text-night/80 text-sm md:text-base"><i class="fas fa-lightbulb text-navy mr-2"></i><strong class="text-night">Practical consequence:</strong> because it generates its own wave, radar also works at night. Two major constraints of optical imagery — cloud cover and solar illumination — disappear at once.</p>
+        <p class="leading-7 text-night/80 text-sm md:text-base"><i class="fas fa-circle-info text-navy mr-2"></i><strong class="text-night">Operational consequence.</strong> Active emission also removes dependence on solar illumination. The two principal constraints of optical imagery — cloudiness and the day/night cycle — are thus lifted, ensuring observation regularity independent of weather conditions.</p>
       </div>
 
-      <h2 class="font-display font-bold text-night text-2xl md:text-3xl mb-5">The detection principle: water is black in radar</h2>
+      <h2 class="font-display font-bold text-night text-2xl md:text-3xl mb-5">2. Radar signature of water surfaces</h2>
       <p class="leading-8 text-night/80 mb-5">
-        What makes flood detection so elegant in radar is that open water has an almost caricatural signature. A calm water surface is smooth at the scale of the wave: it behaves like a mirror. The emitted wave travels away from the satellite instead of scattering in all directions. Almost nothing returns to the sensor.
+        Detection of flooded surfaces relies on a well-established property: at the scale of the wavelength, a calm water body behaves as a specular surface. The incident signal is reflected predominantly away from the sensor, so that the measured backscattered energy is low. Open water consequently appears dark in the image, in marked contrast with vegetation, rough soils and built-up surfaces, whose scattering is higher.
       </p>
       <p class="leading-8 text-night/80 mb-5">
-        As a result, water appears <strong class="text-night">deep black</strong> on a radar image, while vegetation, rough soils and built-up areas send back far more signal and appear light grey. The contrast is so pronounced that a simple threshold on the backscatter coefficient is often enough to separate water from everything else.
+        This contrast can be quantified: in C-band, the backscatter coefficient of open water surfaces generally falls between <strong class="text-night">−15 and −20 dB</strong>, a range widely reported in the literature and used in automated chains <a href="#ref-twele" class="text-navy hover:underline">(Twele et al., 2016)</a>. This separability explains why histogram thresholding is, in many contexts, sufficient to extract water — threshold-based approaches remaining among the most widely used for SAR flood mapping <a href="#ref-landuyt" class="text-navy hover:underline">(Landuyt et al., 2019)</a>.
       </p>
       <p class="leading-8 text-night/80 mb-10">
-        A word on polarisation, because it is a choice that matters. Sentinel-1 generally acquires in dual polarisation, VV and VH. For open water, <strong class="text-night">VV polarisation</strong> usually offers the best contrast and remains the default choice. VH, more sensitive to canopy structure, becomes useful when looking for water <em>under</em> vegetation — a considerably harder case.
+        The choice of polarisation warrants attention. Sentinel-1 most often acquires in dual polarisation, VV and VH. For open-water detection, <strong class="text-night">VV polarisation</strong> is generally preferred owing to its better water/non-water contrast. VH polarisation, more sensitive to volume scattering within the canopy, is of complementary interest when the objective is to detect flooding beneath vegetation — a considerably more complex configuration <a href="#ref-tsyganskaya" class="text-navy hover:underline">(Tsyganskaya et al., 2018)</a>.
       </p>
 
-      <h2 class="font-display font-bold text-night text-2xl md:text-3xl mb-5">Building an automated chain in five steps</h2>
+      <h2 class="font-display font-bold text-night text-2xl md:text-3xl mb-5">3. A five-step processing chain</h2>
       <p class="leading-8 text-night/80 mb-6">
-        The operational value is not in producing one beautiful map, but in getting an up-to-date map <em>at every satellite revisit</em>, without manual intervention. On Google Earth Engine, where the Sentinel-1 archive is already pre-processed and computation happens server-side, the chain fits in five steps.
+        Operational value lies less in producing a single map than in the capacity to regenerate that map at each satellite revisit, without manual intervention. The Google Earth Engine platform, which provides the pre-processed Sentinel-1 archive and executes computation server-side <a href="#ref-gorelick" class="text-navy hover:underline">(Gorelick et al., 2017)</a>, lends itself well to this automation.
       </p>
       <ol class="space-y-4 text-night/80 leading-7 mb-6 list-none">
-        <li class="flex items-start gap-4"><span class="flex-none inline-flex items-center justify-center w-8 h-8 rounded-full bg-gradient-to-br from-navy to-lagoon text-[#ffffff] text-sm font-bold">1</span><span><strong class="text-night">Build a pre-flood baseline.</strong> A median composite of dry-season images gives the "normal" state of the territory: permanent rivers, usual water bodies. Without this reference, a river cannot be distinguished from a flood.</span></li>
-        <li class="flex items-start gap-4"><span class="flex-none inline-flex items-center justify-center w-8 h-8 rounded-full bg-gradient-to-br from-navy to-lagoon text-[#ffffff] text-sm font-bold">2</span><span><strong class="text-night">Filter the speckle.</strong> Every radar image carries a characteristic grainy noise, <em>speckle</em>, inherent to coherent imaging. A spatial filter (Refined Lee, for instance) or a multi-temporal average reduces it substantially — an essential step before any thresholding.</span></li>
-        <li class="flex items-start gap-4"><span class="flex-none inline-flex items-center justify-center w-8 h-8 rounded-full bg-gradient-to-br from-navy to-lagoon text-[#ffffff] text-sm font-bold">3</span><span><strong class="text-night">Threshold to extract water.</strong> A fixed threshold on VV backscatter works, but drifts from one scene to the next. Otsu's method, which automatically determines the optimal threshold from the image's bimodal histogram, gives far more stable results over time.</span></li>
-        <li class="flex items-start gap-4"><span class="flex-none inline-flex items-center justify-center w-8 h-8 rounded-full bg-gradient-to-br from-navy to-lagoon text-[#ffffff] text-sm font-bold">4</span><span><strong class="text-night">Subtract permanent water.</strong> The difference between detected water and the pre-flood baseline isolates <strong class="text-night">new water</strong> — the flood itself, the only information an alert system cares about.</span></li>
-        <li class="flex items-start gap-4"><span class="flex-none inline-flex items-center justify-center w-8 h-8 rounded-full bg-gradient-to-br from-navy to-lagoon text-[#ffffff] text-sm font-bold">5</span><span><strong class="text-night">Cross-reference and publish.</strong> The flooded extent is intersected with the layers that give it meaning: settlements, infrastructure, plots, project intervention areas. The output feeds a dashboard, and crossing an area threshold triggers an alert.</span></li>
+        <li class="flex items-start gap-4"><span class="flex-none inline-flex items-center justify-center w-8 h-8 rounded-full bg-gradient-to-br from-navy to-lagoon text-[#ffffff] text-sm font-bold">1</span><span><strong class="text-night">Establish a permanent-water reference.</strong> A median composite of dry-season images characterises the baseline hydrological state. The JRC <em>Global Surface Water</em> dataset, derived from thirty-two years of Landsat archives, offers a robust alternative or complement for distinguishing permanent from seasonal water <a href="#ref-pekel" class="text-navy hover:underline">(Pekel et al., 2016)</a>.</span></li>
+        <li class="flex items-start gap-4"><span class="flex-none inline-flex items-center justify-center w-8 h-8 rounded-full bg-gradient-to-br from-navy to-lagoon text-[#ffffff] text-sm font-bold">2</span><span><strong class="text-night">Reduce speckle.</strong> Speckle is a multiplicative noise inherent to coherent imaging. Its attenuation through adaptive filtering, for which the Lee filter is the historical reference <a href="#ref-lee" class="text-navy hover:underline">(Lee, 1980)</a>, or through multi-temporal averaging, conditions the quality of subsequent thresholding.</span></li>
+        <li class="flex items-start gap-4"><span class="flex-none inline-flex items-center justify-center w-8 h-8 rounded-full bg-gradient-to-br from-navy to-lagoon text-[#ffffff] text-sm font-bold">3</span><span><strong class="text-night">Determine the separation threshold.</strong> A fixed threshold shows limited stability from scene to scene. Otsu's method, which identifies the threshold minimising intra-class variance in a bimodal histogram <a href="#ref-otsu" class="text-navy hover:underline">(Otsu, 1979)</a>, provides a more reproducible automatic determination. Hierarchical split-based approaches further improve robustness when water occupies a small proportion of the scene <a href="#ref-chini" class="text-navy hover:underline">(Chini et al., 2017)</a>.</span></li>
+        <li class="flex items-start gap-4"><span class="flex-none inline-flex items-center justify-center w-8 h-8 rounded-full bg-gradient-to-br from-navy to-lagoon text-[#ffffff] text-sm font-bold">4</span><span><strong class="text-night">Isolate new water.</strong> The difference between detected water and the permanent reference delineates the flood extent proper, the only quantity relevant to an alert system.</span></li>
+        <li class="flex items-start gap-4"><span class="flex-none inline-flex items-center justify-center w-8 h-8 rounded-full bg-gradient-to-br from-navy to-lagoon text-[#ffffff] text-sm font-bold">5</span><span><strong class="text-night">Cross-reference and disseminate.</strong> Intersection with exposure layers — settlements, infrastructure, plots, intervention areas — converts an area into decision-relevant information. Crossing an area threshold can then trigger an automated alert.</span></li>
       </ol>
       <p class="leading-8 text-night/80 mb-10">
-        Sentinel-1 revisits the same area every six to twelve days depending on latitude and constellation configuration. This is not real time — but compared with waiting for a clear sky that may take weeks, it is a change of order of magnitude. And the data is free and open.
+        Sentinel-1 revisit frequency is of the order of six to twelve days depending on latitude and constellation configuration. This does not constitute real time, but provides a regularity that optical imagery cannot guarantee in humid tropical settings. The data are distributed free of charge under an open licence.
       </p>
 
-      <h2 class="font-display font-bold text-night text-2xl md:text-3xl mb-5">The pitfalls discovered too late</h2>
+      <h2 class="font-display font-bold text-night text-2xl md:text-3xl mb-5">4. Limitations and sources of error</h2>
       <p class="leading-8 text-night/80 mb-6">
-        This is the part rarely found in tutorials, and yet the one that determines the operational reliability of a system. Radar sees through clouds, but it is not infallible.
+        The operational reliability of a detection chain depends directly on explicit treatment of its limitations. The main ones are documented and concern both false negatives and false positives <a href="#ref-landuyt" class="text-navy hover:underline">(Landuyt et al., 2019)</a>.
       </p>
       <ul class="space-y-3.5 text-night/80 leading-7 mb-6">
-        <li class="flex items-start gap-3"><i class="fas fa-triangle-exclamation text-navy mt-1.5"></i><span><strong class="text-night">Wind roughens water.</strong> A choppy water surface stops being a mirror: it returns signal and no longer appears dark enough. The result is an underestimated flood on windy days. This is the main cause of false negatives.</span></li>
-        <li class="flex items-start gap-3"><i class="fas fa-triangle-exclamation text-navy mt-1.5"></i><span><strong class="text-night">Some dry surfaces imitate water.</strong> Smooth sand, asphalt and very flat bare soils also return very little signal. Without an additional filter, they are classified as flooded.</span></li>
-        <li class="flex items-start gap-3"><i class="fas fa-triangle-exclamation text-navy mt-1.5"></i><span><strong class="text-night">Water under vegetation or in cities escapes thresholding.</strong> Beneath a forest canopy or between buildings, the wave bounces several times (double-bounce effect) and returns <em>stronger</em>, not weaker. Flooding there appears bright — the opposite of what is being looked for. These contexts require dedicated approaches.</span></li>
-        <li class="flex items-start gap-3"><i class="fas fa-triangle-exclamation text-navy mt-1.5"></i><span><strong class="text-night">Terrain creates blind zones.</strong> In rugged areas, radar shadow and layover produce artefacts easily mistaken for water.</span></li>
+        <li class="flex items-start gap-3"><i class="fas fa-circle-exclamation text-navy mt-1.5"></i><span><strong class="text-night">Wind-induced roughness.</strong> A choppy water surface loses its specular behaviour and backscatters more signal, raising its value above the detection threshold. This results in underestimation of flood extent during windy episodes.</span></li>
+        <li class="flex items-start gap-3"><i class="fas fa-circle-exclamation text-navy mt-1.5"></i><span><strong class="text-night">Confusion with smooth dry surfaces.</strong> Very flat bare soils, sandy surfaces and bituminous pavements also exhibit low backscatter and may be wrongly classified as water surfaces.</span></li>
+        <li class="flex items-start gap-3"><i class="fas fa-circle-exclamation text-navy mt-1.5"></i><span><strong class="text-night">Flooding beneath vegetation or in urban areas.</strong> Under canopy or between buildings, the double-bounce mechanism between the water surface and vertical structures increases backscatter rather than reducing it. Flooding then appears in high values, which invalidates simple thresholding and calls for dedicated approaches <a href="#ref-tsyganskaya" class="text-navy hover:underline">(Tsyganskaya et al., 2018)</a>.</span></li>
+        <li class="flex items-start gap-3"><i class="fas fa-circle-exclamation text-navy mt-1.5"></i><span><strong class="text-night">Geometric terrain effects.</strong> In rugged terrain, radar shadow and layover generate low-signal areas liable to be confused with water.</span></li>
       </ul>
       <p class="leading-8 text-night/80 mb-10">
-        The most effective safeguard fits in one sentence: <strong class="text-night">filter by topography</strong>. A digital elevation model, or better a Height Above Nearest Drainage (HAND) index, immediately removes any "water" detected on a steep slope or well above the drainage network. Water does not climb hills: that simple common sense, translated into a spatial rule, eliminates most false positives.
+        The principal corrective lever is topographic. Integrating a digital elevation model, and more specifically the Height Above Nearest Drainage (HAND) index, allows detections located on steep slopes or well above the drainage network to be discarded <a href="#ref-nobre" class="text-navy hover:underline">(Nobre et al., 2011)</a>. This topographic and hydrological contextualisation appreciably reduces the false-positive rate and is now part of good practice in operational chains.
       </p>
 
-      <h2 class="font-display font-bold text-night text-2xl md:text-3xl mb-5">What it changes in practice</h2>
+      <h2 class="font-display font-bold text-night text-2xl md:text-3xl mb-5">5. Operational significance</h2>
       <p class="leading-8 text-night/80 mb-5">
-        For a project team, the benefit is not technical, it is decisional. Having a flood extent map a few days after the event, rather than a few weeks, changes the nature of the questions that can be answered: which settlements are affected, which roads are cut, which plots of an agricultural programme are under water, where to send a verification mission first.
+        For a project team, the benefit is measured in decision latency. Having a flood extent estimate within days of the event, rather than within weeks, changes the nature of the questions that can be answered: affected settlements, interrupted transport routes, submerged agricultural plots, prioritisation of verification missions.
       </p>
       <p class="leading-8 text-night/80 mb-10">
-        It also changes the relationship with donors and partners. A dated, reproducible and documented flooded-area estimate is worth more than a qualitative report written from memory three months later. And because the chain is automated, the same method applies to the next flood without redoing the work.
+        The contribution is also methodological. A dated, reproducible and documented estimate — method, threshold, source, uncertainty — constitutes a stronger accountability record than a qualitative assessment reconstructed after the fact. Automating the chain further ensures comparability between successive events.
       </p>
 
       <div class="bg-gradient-to-br from-petrol to-night rounded-2xl p-6 md:p-8 mb-10">
-        <h2 class="font-display font-semibold text-[#ffffff] text-xl mb-4"><i class="fas fa-list-check text-lagoon mr-2"></i>Key takeaways</h2>
+        <h2 class="font-display font-semibold text-[#ffffff] text-xl mb-4"><i class="fas fa-list-check text-lagoon mr-2"></i>Key points</h2>
         <ul class="space-y-2.5 text-[#ffffff]/80 leading-7 text-sm md:text-base">
-          <li class="flex items-start gap-3"><i class="fas fa-check text-lagoon mt-1.5"></i>C-band radar sees through clouds and works at night: both optical limitations disappear</li>
-          <li class="flex items-start gap-3"><i class="fas fa-check text-lagoon mt-1.5"></i>Open water appears very dark in VV polarisation — thresholding is often enough to extract it</li>
-          <li class="flex items-start gap-3"><i class="fas fa-check text-lagoon mt-1.5"></i>A pre-flood baseline is essential to separate new water from permanent water</li>
-          <li class="flex items-start gap-3"><i class="fas fa-check text-lagoon mt-1.5"></i>Wind, smooth soils, vegetation and terrain are the four error sources to handle explicitly</li>
-          <li class="flex items-start gap-3"><i class="fas fa-check text-lagoon mt-1.5"></i>A topographic filter (DEM or HAND) removes most false positives</li>
+          <li class="flex items-start gap-3"><i class="fas fa-check text-lagoon mt-1.5"></i>C-band (≈ 5.6 cm) penetrates cloud cover and is independent of solar illumination</li>
+          <li class="flex items-start gap-3"><i class="fas fa-check text-lagoon mt-1.5"></i>Open water exhibits low backscatter, generally between −15 and −20 dB in VV polarisation</li>
+          <li class="flex items-start gap-3"><i class="fas fa-check text-lagoon mt-1.5"></i>A permanent-water reference is required to isolate the flood extent</li>
+          <li class="flex items-start gap-3"><i class="fas fa-check text-lagoon mt-1.5"></i>Wind, smooth dry surfaces, vegetation cover and terrain are the four principal sources of error</li>
+          <li class="flex items-start gap-3"><i class="fas fa-check text-lagoon mt-1.5"></i>Topographic contextualisation (DEM, HAND) significantly reduces false positives</li>
         </ul>
       </div>
 
-      <h2 class="font-display font-bold text-night text-2xl md:text-3xl mb-5">Where to start</h2>
+      <h2 class="font-display font-bold text-night text-2xl md:text-3xl mb-5">6. Implementation: first steps</h2>
       <p class="leading-8 text-night/80 mb-10">
-        Sentinel-1 data is freely available through the Copernicus Data Space, and already pre-processed in the Google Earth Engine catalogue — which removes the most off-putting step of the radar chain. The most effective way to begin: pick a past, well-documented flood in your own territory, reconstruct the flood extent map, then compare the result with available field reports. It is by measuring your own discrepancies that you learn to calibrate the method — and earn the right to use it in a real situation.
+        Sentinel-1 data are accessible through the Copernicus Data Space Ecosystem and available in pre-processed form in the Google Earth Engine catalogue. An effective learning approach consists in reconstructing the extent of a past, well-documented flood in one's own territory, then comparing the result with available field observations. This comparison allows context-specific omission and commission rates to be estimated, and constitutes a reasonable prerequisite to any operational use.
       </p>
       <p class="leading-8 text-night/80 mb-12">
-        The most useful data is never the most beautiful image. It is the one that arrives when nothing else is visible.
+        The value of an observation dataset depends less on its resolution or visual rendering than on its availability at the moment a decision must be taken. In humid tropical settings, that availability is precisely what radar imagery provides.
       </p>
+
+      <div class="bg-white border border-night/10 shadow-sm rounded-2xl p-6 md:p-8 mb-10">
+        <h2 class="font-display font-semibold text-night text-xl mb-5"><i class="fas fa-book text-navy mr-2"></i>References</h2>
+        <ol class="space-y-4 text-night/75 text-sm leading-6 ref">
+          <li id="ref-chini">Chini, M., Hostache, R., Giustarini, L., &amp; Matgen, P. (2017). A Hierarchical Split-Based Approach for Parametric Thresholding of SAR Images: Flood Inundation as a Test Case. <em>IEEE Transactions on Geoscience and Remote Sensing</em>, 55(12), 6975–6988. <a href="https://doi.org/10.1109/TGRS.2017.2737664" target="_blank" class="text-navy hover:underline break-all">doi.org/10.1109/TGRS.2017.2737664</a></li>
+          <li id="ref-gorelick">Gorelick, N., Hancher, M., Dixon, M., Ilyushchenko, S., Thau, D., &amp; Moore, R. (2017). Google Earth Engine: Planetary-scale geospatial analysis for everyone. <em>Remote Sensing of Environment</em>, 202, 18–27. <a href="https://doi.org/10.1016/j.rse.2017.06.031" target="_blank" class="text-navy hover:underline break-all">doi.org/10.1016/j.rse.2017.06.031</a></li>
+          <li id="ref-landuyt">Landuyt, L., Van Wesemael, A., Schumann, G. J.-P., Hostache, R., Verhoest, N. E. C., &amp; Van Coillie, F. M. B. (2019). Flood Mapping Based on Synthetic Aperture Radar: An Assessment of Established Approaches. <em>IEEE Transactions on Geoscience and Remote Sensing</em>, 57(2), 722–739. <a href="https://doi.org/10.1109/TGRS.2018.2860054" target="_blank" class="text-navy hover:underline break-all">doi.org/10.1109/TGRS.2018.2860054</a></li>
+          <li id="ref-langhorst">Langhorst, T., &amp; Pavelsky, T. (2024). Global Cloud Biases in Optical Satellite Remote Sensing of Rivers. <em>Geophysical Research Letters</em>, 51(15). <a href="https://doi.org/10.1029/2024GL110085" target="_blank" class="text-navy hover:underline break-all">doi.org/10.1029/2024GL110085</a></li>
+          <li id="ref-lee">Lee, J.-S. (1980). Digital Image Enhancement and Noise Filtering by Use of Local Statistics. <em>IEEE Transactions on Pattern Analysis and Machine Intelligence</em>, PAMI-2(2), 165–168. <a href="https://doi.org/10.1109/TPAMI.1980.4766994" target="_blank" class="text-navy hover:underline break-all">doi.org/10.1109/TPAMI.1980.4766994</a></li>
+          <li id="ref-nobre">Nobre, A. D., Cuartas, L. A., Hodnett, M., Rennó, C. D., Rodrigues, G., Silveira, A., Waterloo, M., &amp; Saleska, S. (2011). Height Above the Nearest Drainage – a hydrologically relevant new terrain model. <em>Journal of Hydrology</em>, 404(1–2), 13–29. <a href="https://doi.org/10.1016/j.jhydrol.2011.03.051" target="_blank" class="text-navy hover:underline break-all">doi.org/10.1016/j.jhydrol.2011.03.051</a></li>
+          <li id="ref-otsu">Otsu, N. (1979). A Threshold Selection Method from Gray-Level Histograms. <em>IEEE Transactions on Systems, Man, and Cybernetics</em>, 9(1), 62–66. <a href="https://doi.org/10.1109/TSMC.1979.4310076" target="_blank" class="text-navy hover:underline break-all">doi.org/10.1109/TSMC.1979.4310076</a></li>
+          <li id="ref-pekel">Pekel, J.-F., Cottam, A., Gorelick, N., &amp; Belward, A. S. (2016). High-resolution mapping of global surface water and its long-term changes. <em>Nature</em>, 540, 418–422. <a href="https://doi.org/10.1038/nature20584" target="_blank" class="text-navy hover:underline break-all">doi.org/10.1038/nature20584</a></li>
+          <li id="ref-reiche">Reiche, J., Mullissa, A., Slagter, B., Gou, Y., Tsendbazar, N.-E., Odongo-Braun, C., Vollrath, A., Weisse, M. J., Stolle, F., Pickens, A., Donchyts, G., Clinton, N., Gorelick, N., &amp; Herold, M. (2021). Forest disturbance alerts for the Congo Basin using Sentinel-1. <em>Environmental Research Letters</em>, 16(2), 024005. <a href="https://doi.org/10.1088/1748-9326/abd0a8" target="_blank" class="text-navy hover:underline break-all">doi.org/10.1088/1748-9326/abd0a8</a></li>
+          <li id="ref-torres">Torres, R., Snoeij, P., Geudtner, D., Bibby, D., Davidson, M., Attema, E., et al. (2012). GMES Sentinel-1 mission. <em>Remote Sensing of Environment</em>, 120, 9–24. <a href="https://doi.org/10.1016/j.rse.2011.05.028" target="_blank" class="text-navy hover:underline break-all">doi.org/10.1016/j.rse.2011.05.028</a></li>
+          <li id="ref-tsyganskaya">Tsyganskaya, V., Martinis, S., Marzahn, P., &amp; Ludwig, R. (2018). SAR-based detection of flooded vegetation – a review of characteristics and approaches. <em>International Journal of Remote Sensing</em>, 39(8), 2255–2293. <a href="https://doi.org/10.1080/01431161.2017.1420938" target="_blank" class="text-navy hover:underline break-all">doi.org/10.1080/01431161.2017.1420938</a></li>
+          <li id="ref-twele">Twele, A., Cao, W., Plank, S., &amp; Martinis, S. (2016). Sentinel-1-based flood mapping: a fully automated processing chain. <em>International Journal of Remote Sensing</em>, 37(13), 2990–3004. <a href="https://doi.org/10.1080/01431161.2016.1192304" target="_blank" class="text-navy hover:underline break-all">doi.org/10.1080/01431161.2016.1192304</a></li>
+        </ol>
+      </div>
 
       <div class="bg-white border border-night/10 shadow-sm rounded-2xl p-6 md:p-7 flex flex-col sm:flex-row items-center gap-5 mb-6">
         <img src="../Photomerveille.jpg?v=2" alt="Merveille Aganze Sami" class="w-20 h-20 rounded-full object-cover ring-2 ring-navy/30" />
@@ -186,8 +206,8 @@
       </div>
 
       <div class="flex flex-col sm:flex-row items-center justify-between gap-4 bg-sky/60 rounded-2xl p-6">
-        <p class="text-night/80 font-medium text-center sm:text-left">Environmental monitoring to strengthen with satellite data?</p>
-        <a href="contact.html" class="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-navy to-lagoon text-[#ffffff] font-semibold px-6 py-2.5 shadow-md hover:-translate-y-0.5 transition whitespace-nowrap">Let's talk <i class="fas fa-arrow-right"></i></a>
+        <p class="text-night/80 font-medium text-center sm:text-left">Environmental monitoring to strengthen through satellite observation?</p>
+        <a href="contact.html" class="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-navy to-lagoon text-[#ffffff] font-semibold px-6 py-2.5 shadow-md hover:-translate-y-0.5 transition whitespace-nowrap">Get in touch <i class="fas fa-arrow-right"></i></a>
       </div>
     </article>
   </main>
