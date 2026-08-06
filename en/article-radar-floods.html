@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Monitoring floods when the optical satellite is blind | Merveille Aganze Sami</title>
+  <meta name="description" content="During the rainy season, optical imagery sees nothing. How to build flood monitoring with Sentinel-1 radar: principle, automated pipeline and the pitfalls to know." />
+  <meta property="og:title" content="Monitoring floods when the optical satellite is blind" />
+  <meta property="og:description" content="Sentinel-1 radar sees through clouds. Principle, automated Google Earth Engine pipeline and pitfalls to know." />
+  <meta property="og:image" content="../radar-inondation-sentinel1.png" />
+  <meta property="og:type" content="article" />
+  <link rel="alternate" hreflang="fr" href="https://merveille.fitigroup.org/article-radar-inondations.html" />
+  <link rel="alternate" hreflang="en" href="https://merveille.fitigroup.org/en/article-radar-floods.html" />
+  <link rel="icon" href="../favicon.svg?v=2" type="image/svg+xml" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            night: '#222B38', navy: '#EE7A5C', steel: '#8A93A3', petrol: '#26303E',
+            lagoon: '#F2A48F', sky: '#F7DCD1', pale: '#F7F5F2'
+          },
+          fontFamily: {
+            sans: ['DM Sans', 'Arial', 'sans-serif'],
+            display: ['Plus Jakarta Sans', 'Arial', 'sans-serif']
+          }
+        }
+      }
+    }
+  </script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    html { scroll-behavior: smooth; }
+    @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col bg-gradient-to-b from-pale via-pale to-sky text-night font-sans antialiased">
+
+  <header class="sticky top-0 z-50 bg-pale/95 backdrop-blur border-b border-navy/20">
+    <div class="max-w-6xl mx-auto px-5 sm:px-8 min-h-16 md:min-h-20 py-2 flex items-center justify-between gap-4">
+      <a href="index.html" class="font-display font-bold text-night text-base sm:text-lg md:text-xl tracking-tight">
+        Merveille <span class="text-navy hidden sm:inline">AGANZE SAMI</span>
+      </a>
+      <nav class="flex flex-wrap justify-end items-center gap-x-4 gap-y-1 sm:gap-x-6 md:gap-x-8 text-xs sm:text-sm md:text-[15px]">
+        <a href="index.html" class="text-night/70 hover:text-navy transition">Home</a>
+        <a href="blog.html" class="text-navy font-semibold">Blog</a>
+        <a href="expertise.html" class="text-night/70 hover:text-navy transition">Expertise</a>
+        <a href="projects.html" class="text-night/70 hover:text-navy transition">Projects</a>
+        <a href="../article-radar-inondations.html" class="text-[11px] font-semibold border border-navy/40 rounded-full px-3 py-1 text-night/70 hover:text-navy hover:border-navy/60 transition" title="Version française">FR</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="flex-1">
+
+    <section class="max-w-6xl mx-auto px-5 sm:px-8 pt-10 md:pt-14">
+      <div class="bg-gradient-to-br from-petrol to-night rounded-[2rem] md:rounded-[2.5rem] px-6 sm:px-10 md:px-14 py-12 md:py-14 relative overflow-hidden">
+        <div class="absolute -bottom-24 -right-16 w-80 h-80 bg-navy/20 rounded-full blur-2xl"></div>
+        <div class="relative max-w-3xl">
+          <a href="blog.html" class="inline-flex items-center gap-2 text-[#ffffff]/60 text-sm hover:text-lagoon transition mb-6"><i class="fas fa-arrow-left"></i> Back to blog</a>
+          <div class="flex flex-wrap items-center gap-2 mb-5">
+            <span class="text-[11px] font-semibold uppercase tracking-wider bg-gradient-to-r from-navy to-lagoon text-[#ffffff] rounded-full px-3 py-1">Article</span>
+            <span class="text-[11px] font-medium text-[#ffffff]/50"><i class="fas fa-calendar mr-1.5"></i>30 June 2026</span>
+            <span class="text-[11px] font-medium text-[#ffffff]/50"><i class="fas fa-clock mr-1.5"></i>9 min read</span>
+          </div>
+          <h1 class="font-display font-bold text-[#ffffff] text-3xl sm:text-4xl md:text-5xl leading-tight mb-6">
+            Monitoring floods<br /><span class="bg-gradient-to-r from-navy to-lagoon bg-clip-text text-transparent">when the satellite is blind</span>
+          </h1>
+          <div class="flex items-center gap-3">
+            <img src="../Photomerveille.jpg?v=2" alt="Merveille Aganze Sami" class="w-10 h-10 rounded-full object-cover ring-2 ring-[#ffffff]/30" />
+            <div class="text-sm">
+              <p class="text-[#ffffff] font-semibold">Merveille Aganze Sami</p>
+              <p class="text-[#ffffff]/50">MEL &amp; Database Management Advisor</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <article class="max-w-3xl mx-auto px-5 sm:px-8 py-12 md:py-16">
+
+      <p class="text-lg md:text-xl leading-9 text-night/80 mb-10">
+        There is a cruel irony in flood monitoring across Central Africa: the period when satellite imagery is most needed is precisely the one when none is available. During the rainy season, the Congo Basin disappears under near-permanent cloud cover. Optical sensors — Sentinel-2, Landsat — see nothing. You wait for a clear sky while the water rises, recedes, and the flood is over before the first usable image arrives.
+      </p>
+      <p class="leading-8 text-night/80 mb-10">
+        Yet there is a family of sensors for which clouds simply do not exist. Here is how to set up flood monitoring that works when nothing else does — the physical principle, the processing chain, and above all the pitfalls that are usually discovered far too late.
+      </p>
+
+      <figure class="mb-12">
+        <img src="../radar-inondation-sentinel1.png" alt="Comparison between an optical image drowned in clouds and a SAR radar image revealing the flooded area, with the 4-step automated pipeline" class="w-full rounded-2xl shadow-xl ring-1 ring-night/10" />
+        <figcaption class="text-night/60 text-sm mt-3 text-center">Same area, same day: optical shows only clouds, radar delineates the flooded extent.</figcaption>
+      </figure>
+
+      <h2 class="font-display font-bold text-night text-2xl md:text-3xl mb-5">Why radar sees what optical cannot</h2>
+      <p class="leading-8 text-night/80 mb-5">
+        An optical sensor is passive: it records sunlight reflected by the surface. If a cloud gets in the way, it records the cloud. It is that simple, and that blocking.
+      </p>
+      <p class="leading-8 text-night/80 mb-5">
+        A Synthetic Aperture Radar (SAR) works the other way around: it is <strong class="text-night">active</strong>. It emits its own wave and measures what comes back. Sentinel-1, the radar satellite of the European Copernicus programme, transmits in C-band — a wavelength of about 5.6 centimetres. The droplets that make up clouds are hundreds of times smaller than that. At this scale the cloud is simply transparent: the wave passes through on the way down, bounces off the ground, and passes through again on the way back.
+      </p>
+      <div class="bg-sky/60 border-l-4 border-navy rounded-r-2xl p-5 md:p-6 mb-10">
+        <p class="leading-7 text-night/80 text-sm md:text-base"><i class="fas fa-lightbulb text-navy mr-2"></i><strong class="text-night">Practical consequence:</strong> because it generates its own wave, radar also works at night. Two major constraints of optical imagery — cloud cover and solar illumination — disappear at once.</p>
+      </div>
+
+      <h2 class="font-display font-bold text-night text-2xl md:text-3xl mb-5">The detection principle: water is black in radar</h2>
+      <p class="leading-8 text-night/80 mb-5">
+        What makes flood detection so elegant in radar is that open water has an almost caricatural signature. A calm water surface is smooth at the scale of the wave: it behaves like a mirror. The emitted wave travels away from the satellite instead of scattering in all directions. Almost nothing returns to the sensor.
+      </p>
+      <p class="leading-8 text-night/80 mb-5">
+        As a result, water appears <strong class="text-night">deep black</strong> on a radar image, while vegetation, rough soils and built-up areas send back far more signal and appear light grey. The contrast is so pronounced that a simple threshold on the backscatter coefficient is often enough to separate water from everything else.
+      </p>
+      <p class="leading-8 text-night/80 mb-10">
+        A word on polarisation, because it is a choice that matters. Sentinel-1 generally acquires in dual polarisation, VV and VH. For open water, <strong class="text-night">VV polarisation</strong> usually offers the best contrast and remains the default choice. VH, more sensitive to canopy structure, becomes useful when looking for water <em>under</em> vegetation — a considerably harder case.
+      </p>
+
+      <h2 class="font-display font-bold text-night text-2xl md:text-3xl mb-5">Building an automated chain in five steps</h2>
+      <p class="leading-8 text-night/80 mb-6">
+        The operational value is not in producing one beautiful map, but in getting an up-to-date map <em>at every satellite revisit</em>, without manual intervention. On Google Earth Engine, where the Sentinel-1 archive is already pre-processed and computation happens server-side, the chain fits in five steps.
+      </p>
+      <ol class="space-y-4 text-night/80 leading-7 mb-6 list-none">
+        <li class="flex items-start gap-4"><span class="flex-none inline-flex items-center justify-center w-8 h-8 rounded-full bg-gradient-to-br from-navy to-lagoon text-[#ffffff] text-sm font-bold">1</span><span><strong class="text-night">Build a pre-flood baseline.</strong> A median composite of dry-season images gives the "normal" state of the territory: permanent rivers, usual water bodies. Without this reference, a river cannot be distinguished from a flood.</span></li>
+        <li class="flex items-start gap-4"><span class="flex-none inline-flex items-center justify-center w-8 h-8 rounded-full bg-gradient-to-br from-navy to-lagoon text-[#ffffff] text-sm font-bold">2</span><span><strong class="text-night">Filter the speckle.</strong> Every radar image carries a characteristic grainy noise, <em>speckle</em>, inherent to coherent imaging. A spatial filter (Refined Lee, for instance) or a multi-temporal average reduces it substantially — an essential step before any thresholding.</span></li>
+        <li class="flex items-start gap-4"><span class="flex-none inline-flex items-center justify-center w-8 h-8 rounded-full bg-gradient-to-br from-navy to-lagoon text-[#ffffff] text-sm font-bold">3</span><span><strong class="text-night">Threshold to extract water.</strong> A fixed threshold on VV backscatter works, but drifts from one scene to the next. Otsu's method, which automatically determines the optimal threshold from the image's bimodal histogram, gives far more stable results over time.</span></li>
+        <li class="flex items-start gap-4"><span class="flex-none inline-flex items-center justify-center w-8 h-8 rounded-full bg-gradient-to-br from-navy to-lagoon text-[#ffffff] text-sm font-bold">4</span><span><strong class="text-night">Subtract permanent water.</strong> The difference between detected water and the pre-flood baseline isolates <strong class="text-night">new water</strong> — the flood itself, the only information an alert system cares about.</span></li>
+        <li class="flex items-start gap-4"><span class="flex-none inline-flex items-center justify-center w-8 h-8 rounded-full bg-gradient-to-br from-navy to-lagoon text-[#ffffff] text-sm font-bold">5</span><span><strong class="text-night">Cross-reference and publish.</strong> The flooded extent is intersected with the layers that give it meaning: settlements, infrastructure, plots, project intervention areas. The output feeds a dashboard, and crossing an area threshold triggers an alert.</span></li>
+      </ol>
+      <p class="leading-8 text-night/80 mb-10">
+        Sentinel-1 revisits the same area every six to twelve days depending on latitude and constellation configuration. This is not real time — but compared with waiting for a clear sky that may take weeks, it is a change of order of magnitude. And the data is free and open.
+      </p>
+
+      <h2 class="font-display font-bold text-night text-2xl md:text-3xl mb-5">The pitfalls discovered too late</h2>
+      <p class="leading-8 text-night/80 mb-6">
+        This is the part rarely found in tutorials, and yet the one that determines the operational reliability of a system. Radar sees through clouds, but it is not infallible.
+      </p>
+      <ul class="space-y-3.5 text-night/80 leading-7 mb-6">
+        <li class="flex items-start gap-3"><i class="fas fa-triangle-exclamation text-navy mt-1.5"></i><span><strong class="text-night">Wind roughens water.</strong> A choppy water surface stops being a mirror: it returns signal and no longer appears dark enough. The result is an underestimated flood on windy days. This is the main cause of false negatives.</span></li>
+        <li class="flex items-start gap-3"><i class="fas fa-triangle-exclamation text-navy mt-1.5"></i><span><strong class="text-night">Some dry surfaces imitate water.</strong> Smooth sand, asphalt and very flat bare soils also return very little signal. Without an additional filter, they are classified as flooded.</span></li>
+        <li class="flex items-start gap-3"><i class="fas fa-triangle-exclamation text-navy mt-1.5"></i><span><strong class="text-night">Water under vegetation or in cities escapes thresholding.</strong> Beneath a forest canopy or between buildings, the wave bounces several times (double-bounce effect) and returns <em>stronger</em>, not weaker. Flooding there appears bright — the opposite of what is being looked for. These contexts require dedicated approaches.</span></li>
+        <li class="flex items-start gap-3"><i class="fas fa-triangle-exclamation text-navy mt-1.5"></i><span><strong class="text-night">Terrain creates blind zones.</strong> In rugged areas, radar shadow and layover produce artefacts easily mistaken for water.</span></li>
+      </ul>
+      <p class="leading-8 text-night/80 mb-10">
+        The most effective safeguard fits in one sentence: <strong class="text-night">filter by topography</strong>. A digital elevation model, or better a Height Above Nearest Drainage (HAND) index, immediately removes any "water" detected on a steep slope or well above the drainage network. Water does not climb hills: that simple common sense, translated into a spatial rule, eliminates most false positives.
+      </p>
+
+      <h2 class="font-display font-bold text-night text-2xl md:text-3xl mb-5">What it changes in practice</h2>
+      <p class="leading-8 text-night/80 mb-5">
+        For a project team, the benefit is not technical, it is decisional. Having a flood extent map a few days after the event, rather than a few weeks, changes the nature of the questions that can be answered: which settlements are affected, which roads are cut, which plots of an agricultural programme are under water, where to send a verification mission first.
+      </p>
+      <p class="leading-8 text-night/80 mb-10">
+        It also changes the relationship with donors and partners. A dated, reproducible and documented flooded-area estimate is worth more than a qualitative report written from memory three months later. And because the chain is automated, the same method applies to the next flood without redoing the work.
+      </p>
+
+      <div class="bg-gradient-to-br from-petrol to-night rounded-2xl p-6 md:p-8 mb-10">
+        <h2 class="font-display font-semibold text-[#ffffff] text-xl mb-4"><i class="fas fa-list-check text-lagoon mr-2"></i>Key takeaways</h2>
+        <ul class="space-y-2.5 text-[#ffffff]/80 leading-7 text-sm md:text-base">
+          <li class="flex items-start gap-3"><i class="fas fa-check text-lagoon mt-1.5"></i>C-band radar sees through clouds and works at night: both optical limitations disappear</li>
+          <li class="flex items-start gap-3"><i class="fas fa-check text-lagoon mt-1.5"></i>Open water appears very dark in VV polarisation — thresholding is often enough to extract it</li>
+          <li class="flex items-start gap-3"><i class="fas fa-check text-lagoon mt-1.5"></i>A pre-flood baseline is essential to separate new water from permanent water</li>
+          <li class="flex items-start gap-3"><i class="fas fa-check text-lagoon mt-1.5"></i>Wind, smooth soils, vegetation and terrain are the four error sources to handle explicitly</li>
+          <li class="flex items-start gap-3"><i class="fas fa-check text-lagoon mt-1.5"></i>A topographic filter (DEM or HAND) removes most false positives</li>
+        </ul>
+      </div>
+
+      <h2 class="font-display font-bold text-night text-2xl md:text-3xl mb-5">Where to start</h2>
+      <p class="leading-8 text-night/80 mb-10">
+        Sentinel-1 data is freely available through the Copernicus Data Space, and already pre-processed in the Google Earth Engine catalogue — which removes the most off-putting step of the radar chain. The most effective way to begin: pick a past, well-documented flood in your own territory, reconstruct the flood extent map, then compare the result with available field reports. It is by measuring your own discrepancies that you learn to calibrate the method — and earn the right to use it in a real situation.
+      </p>
+      <p class="leading-8 text-night/80 mb-12">
+        The most useful data is never the most beautiful image. It is the one that arrives when nothing else is visible.
+      </p>
+
+      <div class="bg-white border border-night/10 shadow-sm rounded-2xl p-6 md:p-7 flex flex-col sm:flex-row items-center gap-5 mb-6">
+        <img src="../Photomerveille.jpg?v=2" alt="Merveille Aganze Sami" class="w-20 h-20 rounded-full object-cover ring-2 ring-navy/30" />
+        <div class="text-center sm:text-left">
+          <p class="font-display font-semibold text-night">Merveille Aganze Sami</p>
+          <p class="text-night/70 text-sm leading-6 mt-1">MEL &amp; Database Management Advisor. 9+ years of experience in monitoring &amp; evaluation, GIS and digitalization with international organizations (GIZ, Enabel) in DR Congo.</p>
+          <div class="flex justify-center sm:justify-start gap-4 mt-3 text-sm">
+            <a href="https://www.linkedin.com/in/mervag27/?skipRedirect=true" target="_blank" class="text-navy font-medium hover:text-night transition"><i class="fab fa-linkedin mr-1.5"></i>LinkedIn</a>
+            <a href="contact.html" class="text-navy font-medium hover:text-night transition"><i class="fas fa-envelope mr-1.5"></i>Contact me</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="flex flex-col sm:flex-row items-center justify-between gap-4 bg-sky/60 rounded-2xl p-6">
+        <p class="text-night/80 font-medium text-center sm:text-left">Environmental monitoring to strengthen with satellite data?</p>
+        <a href="contact.html" class="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-navy to-lagoon text-[#ffffff] font-semibold px-6 py-2.5 shadow-md hover:-translate-y-0.5 transition whitespace-nowrap">Let's talk <i class="fas fa-arrow-right"></i></a>
+      </div>
+    </article>
+  </main>
+
+  <footer class="mt-16 bg-gradient-to-br from-petrol to-night text-[#ffffff]">
+    <div class="max-w-6xl mx-auto px-5 sm:px-8 pt-12 md:pt-16 pb-8">
+      <div class="grid gap-10 md:grid-cols-[1.2fr_0.7fr_1.1fr]">
+        <div>
+          <p class="font-display font-bold text-xl mb-3">Merveille <span class="bg-gradient-to-r from-navy to-lagoon bg-clip-text text-transparent">AGANZE SAMI</span></p>
+          <p class="text-[#ffffff]/60 text-sm leading-7 max-w-xs">MEL &amp; Database Management Advisor. Data, GIS and digitalization at the service of your decisions.</p>
+          <div class="flex items-center gap-3 mt-6">
+            <a href="https://www.linkedin.com/in/mervag27/?skipRedirect=true" target="_blank" class="inline-flex items-center justify-center w-10 h-10 rounded-full bg-[#ffffff]/10 hover:bg-navy transition" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+            <a href="https://github.com/MerveAS" target="_blank" class="inline-flex items-center justify-center w-10 h-10 rounded-full bg-[#ffffff]/10 hover:bg-navy transition" aria-label="GitHub"><i class="fab fa-github"></i></a>
+          </div>
+        </div>
+        <div>
+          <h3 class="font-display font-semibold text-xs uppercase tracking-[0.2em] text-[#ffffff]/50 mb-4">Navigation</h3>
+          <ul class="space-y-2.5 text-sm">
+            <li><a href="index.html" class="text-[#ffffff]/70 hover:text-lagoon transition">Home</a></li>
+            <li><a href="blog.html" class="text-[#ffffff]/70 hover:text-lagoon transition">Blog</a></li>
+            <li><a href="expertise.html" class="text-[#ffffff]/70 hover:text-lagoon transition">Expertise</a></li>
+            <li><a href="projects.html" class="text-[#ffffff]/70 hover:text-lagoon transition">Projects</a></li>
+            <li><a href="contact.html" class="text-[#ffffff]/70 hover:text-lagoon transition">Contact</a></li>
+          </ul>
+        </div>
+        <div>
+          <h3 class="font-display font-semibold text-xs uppercase tracking-[0.2em] text-[#ffffff]/50 mb-4">Contact</h3>
+          <ul class="space-y-3 text-sm text-[#ffffff]/70">
+            <li class="flex items-center gap-3"><span class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-[#ffffff]/10 text-lagoon text-xs"><i class="fas fa-phone"></i></span>+243 850 012 270</li>
+            <li class="flex items-center gap-3"><span class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-[#ffffff]/10 text-lagoon text-xs"><i class="fas fa-envelope"></i></span><a href="mailto:merveille.aganzesami@fitigroup.org" class="hover:text-lagoon transition break-all">merveille.aganzesami@fitigroup.org</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="mt-10 pt-6 border-t border-[#ffffff]/10 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-[#ffffff]/50">
+        <p>© 2026 Merveille AGANZE SAMI — All rights reserved · <span class="text-[#ffffff]/30">v2.1</span></p>
+        <a href="#" onclick="window.scrollTo({top:0,behavior:'smooth'});return false;" class="inline-flex items-center gap-2 hover:text-lagoon transition">Back to top <i class="fas fa-arrow-up"></i></a>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>
