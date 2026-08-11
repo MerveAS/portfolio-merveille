@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Autocorrélation spatiale : mesurer si la géographie d'un indicateur est un signal | Merveille Aganze Sami</title>
+  <meta name="description" content="Deux territoires peuvent partager la même moyenne et présenter des structures spatiales opposées. L'indice de Moran et les LISA permettent de tester si ce regroupement relève du hasard." />
+  <meta property="og:title" content="Autocorrélation spatiale : mesurer si la géographie d'un indicateur est un signal" />
+  <meta property="og:description" content="Deux territoires peuvent partager la même moyenne et présenter des structures spatiales opposées. L'indice de Moran et les LISA permettent de tester si ce regroupement relève du hasard." />
+  <meta property="og:image" content="visuels/visuel_2026-07-27_moransi.png" />
+  <meta property="og:type" content="article" />
+  <link rel="alternate" hreflang="fr" href="https://merveille.fitigroup.org/article-autocorrelation-spatiale.html" />
+  <link rel="alternate" hreflang="en" href="https://merveille.fitigroup.org/en/article-spatial-autocorrelation.html" />
+  <link rel="icon" href="favicon.svg?v=2" type="image/svg+xml" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = { theme: { extend: {
+      colors: { night:'#222B38', navy:'#EE7A5C', steel:'#8A93A3', petrol:'#26303E', lagoon:'#F2A48F', sky:'#F7DCD1', pale:'#F7F5F2' },
+      fontFamily: { sans:['DM Sans','Arial','sans-serif'], display:['Plus Jakarta Sans','Arial','sans-serif'] } } } }
+  </script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    html { scroll-behavior: smooth; }
+    .ref { font-variant-numeric: tabular-nums; }
+    @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col bg-gradient-to-b from-pale via-pale to-sky text-night font-sans antialiased">
+
+  <header class="sticky top-0 z-50 bg-pale/95 backdrop-blur border-b border-navy/20">
+    <div class="max-w-6xl mx-auto px-5 sm:px-8 min-h-16 md:min-h-20 py-2 flex items-center justify-between gap-4">
+      <a href="index.html" class="font-display font-bold text-night text-base sm:text-lg md:text-xl tracking-tight">
+        Merveille <span class="text-navy hidden sm:inline">AGANZE SAMI</span>
+      </a>
+      <nav class="flex flex-wrap justify-end items-center gap-x-4 gap-y-1 sm:gap-x-6 md:gap-x-8 text-xs sm:text-sm md:text-[15px]">
+        <a href="index.html" class="text-night/70 hover:text-navy transition">Accueil</a>
+        <a href="blog.html" class="text-navy font-semibold">Blog</a>
+        <a href="expertises.html" class="text-night/70 hover:text-navy transition">Expertises</a>
+        <a href="projets.html" class="text-night/70 hover:text-navy transition">Projets</a>
+        <a href="en/article-spatial-autocorrelation.html" class="text-[11px] font-semibold border border-navy/40 rounded-full px-3 py-1 text-night/70 hover:text-navy hover:border-navy/60 transition" title="English version">EN</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="flex-1">
+    <section class="max-w-6xl mx-auto px-5 sm:px-8 pt-10 md:pt-14">
+      <div class="bg-gradient-to-br from-petrol to-night rounded-[2rem] md:rounded-[2.5rem] px-6 sm:px-10 md:px-14 py-12 md:py-14 relative overflow-hidden">
+        <div class="absolute -bottom-24 -right-16 w-80 h-80 bg-navy/20 rounded-full blur-2xl"></div>
+        <div class="relative max-w-3xl">
+          <a href="blog.html" class="inline-flex items-center gap-2 text-[#ffffff]/60 text-sm hover:text-lagoon transition mb-6"><i class="fas fa-arrow-left"></i> Retour au blog</a>
+          <div class="flex flex-wrap items-center gap-2 mb-5">
+            <span class="text-[11px] font-semibold uppercase tracking-wider bg-gradient-to-r from-navy to-lagoon text-[#ffffff] rounded-full px-3 py-1">Article</span>
+            <span class="text-[11px] font-medium text-[#ffffff]/50"><i class="fas fa-calendar mr-1.5"></i>27 juillet 2026</span>
+            <span class="text-[11px] font-medium text-[#ffffff]/50"><i class="fas fa-clock mr-1.5"></i>9 min de lecture</span>
+          </div>
+          <h1 class="font-display font-bold text-[#ffffff] text-3xl sm:text-4xl md:text-5xl leading-tight mb-5">Autocorrélation spatiale :<br /><span class="bg-gradient-to-r from-navy to-lagoon bg-clip-text text-transparent">signal ou hasard ?</span></h1>
+          <p class="text-[#ffffff]/60 text-base mb-6">Indice de Moran, LISA et Getis-Ord Gi* — principes, lecture et limites</p>
+          <div class="flex items-center gap-3">
+            <img src="Photomerveille.jpg?v=2" alt="Merveille Aganze Sami" class="w-10 h-10 rounded-full object-cover ring-2 ring-[#ffffff]/30" />
+            <div class="text-sm">
+              <p class="text-[#ffffff] font-semibold">Merveille Aganze Sami</p>
+              <p class="text-[#ffffff]/50">Conseillère MEL &amp; Gestion de Bases de Données</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <article class="max-w-3xl mx-auto px-5 sm:px-8 py-12 md:py-16">
+
+      <figure class="mb-12">
+        <img src="visuels/visuel_2026-07-27_moransi.png" alt="Champ de valeurs standardisées, diagramme de Moran et carte de clusters LISA" class="w-full rounded-2xl shadow-xl ring-1 ring-night/10" />
+        <figcaption class="text-night/60 text-sm mt-3 text-center"><strong class="text-night/70">Figure 1.</strong> Illustration : à gauche le champ de valeurs, au centre le diagramme de Moran, à droite la carte de clusters LISA (HH, LL, anomalies, non significatif).</figcaption>
+      </figure>
+
+      <p class="text-lg md:text-xl leading-9 text-night/80 mb-8">Deux régions peuvent présenter exactement la même moyenne pour un indicateur et décrire pourtant deux réalités géographiques opposées. Dans la première, les valeurs élevées se répartissent de façon homogène ; dans la seconde, elles se concentrent en deux foyers entourés de zones peu dotées. La moyenne, et même une carte choroplèthe, ne permettent pas de distinguer ces deux configurations — alors que la réponse programmatique appropriée n'est pas la même.</p>
+
+      <p class="leading-8 text-night/80 mb-5">L'analyse de l'autocorrélation spatiale fournit un cadre statistique pour trancher. Elle repose sur une intuition formalisée dès 1970 par Waldo Tobler, selon laquelle les entités proches tendent à se ressembler davantage que les entités éloignées <a href="#ref-tobler" class="text-navy hover:underline">(Tobler, 1970)</a>. La question opérationnelle devient alors mesurable : le regroupement observé est-il compatible avec une répartition aléatoire, ou traduit-il une structure ?</p>
+
+      <h2 class="font-display font-bold text-night text-2xl md:text-3xl mb-5">1. La matrice de voisinage : une décision méthodologique préalable</h2>
+
+      <p class="leading-8 text-night/80 mb-5">Toute statistique d'autocorrélation suppose d'avoir défini au préalable ce que « voisin » signifie. Cette définition prend la forme d'une matrice de pondération spatiale W, dont le choix conditionne l'ensemble des résultats. Les conventions les plus courantes reposent sur la contiguïté — deux unités partageant une frontière (critère de la tour) ou seulement un sommet (critère de la reine) — ou sur la distance, par seuil ou par nombre fixe de plus proches voisins.</p>
+
+      <p class="leading-8 text-night/80 mb-5">La matrice est généralement standardisée en ligne, de sorte que la somme des pondérations de chaque unité vaut 1. Ce choix n'est pas neutre : une définition trop large du voisinage dilue les structures locales, une définition trop restrictive isole artificiellement des unités. Documenter ce choix fait partie intégrante de la restitution des résultats <a href="#ref-anselin" class="text-navy hover:underline">(Anselin, 1995)</a>.</p>
+
+      <h2 class="font-display font-bold text-night text-2xl md:text-3xl mb-5">2. L'indice de Moran global : une mesure de synthèse</h2>
+
+      <p class="leading-8 text-night/80 mb-5">Proposé par Patrick Moran en 1950, l'indice I compare la covariance entre chaque unité et ses voisins à la variance totale de la variable <a href="#ref-moran" class="text-navy hover:underline">(Moran, 1950)</a>. Sa valeur se lit sur une échelle allant approximativement de −1 à +1 : une valeur nettement positive indique que les unités semblables se voisinent (regroupement), une valeur proche de zéro une répartition compatible avec le hasard, une valeur négative une configuration en damier où les unités dissemblables s'attirent.</p>
+
+      <p class="leading-8 text-night/80 mb-5">La significativité s'apprécie par comparaison à une distribution de référence obtenue par permutations aléatoires des valeurs sur les unités géographiques. La pseudo p-value qui en résulte indique la fréquence à laquelle une structure au moins aussi marquée apparaîtrait sous l'hypothèse d'indépendance spatiale <a href="#ref-cliff" class="text-navy hover:underline">(Cliff &amp; Ord, 1981)</a>.</p>
+
+      <div class="bg-sky/60 border-l-4 border-navy rounded-r-2xl p-5 md:p-6 mb-10">
+        <p class="leading-7 text-night/80 text-sm md:text-base"><i class="fas fa-circle-info text-navy mr-2"></i><strong class="text-night">Limite à connaître.</strong> L'indice de Moran global produit une valeur unique pour l'ensemble du territoire. Un I global non significatif n'exclut pas l'existence de regroupements localisés qui se compensent mutuellement. Il constitue un point de départ, pas une conclusion.</p>
+      </div>
+
+      <h2 class="font-display font-bold text-night text-2xl md:text-3xl mb-5">3. Les LISA : localiser les structures</h2>
+
+      <p class="leading-8 text-night/80 mb-5">Les indicateurs locaux d'association spatiale, formalisés par Luc Anselin, décomposent l'indice global en contributions individuelles. Chaque unité reçoit une statistique locale et une significativité propre, ce qui permet de la classer dans l'une des quatre catégories du diagramme de Moran <a href="#ref-anselin" class="text-navy hover:underline">(Anselin, 1995)</a> :</p>
+
+      <ul class="space-y-3 text-night/80 leading-7 mb-10">
+        <li class="flex items-start gap-3"><i class="fas fa-circle-check text-navy mt-1.5"></i><span><strong class="text-night">High-High</strong> : unité à valeur élevée entourée d'unités à valeur élevée — foyer de concentration.</span></li>
+        <li class="flex items-start gap-3"><i class="fas fa-circle-check text-navy mt-1.5"></i><span><strong class="text-night">Low-Low</strong> : unité à valeur faible entourée d'unités à valeur faible — zone structurellement en retrait.</span></li>
+        <li class="flex items-start gap-3"><i class="fas fa-circle-check text-navy mt-1.5"></i><span><strong class="text-night">High-Low</strong> et <strong class="text-night">Low-High</strong> : valeurs atypiques au regard de leur voisinage — anomalies spatiales qui méritent une vérification de terrain.</span></li>
+        <li class="flex items-start gap-3"><i class="fas fa-circle-check text-navy mt-1.5"></i><span><strong class="text-night">Non significatif</strong> : configuration compatible avec une distribution aléatoire.</span></li>
+      </ul>
+
+      <p class="leading-8 text-night/80 mb-5">La statistique Gi* de Getis et Ord poursuit un objectif voisin mais avec une logique différente : elle compare la somme des valeurs d'un voisinage à la somme attendue sous hypothèse d'indépendance, et distingue explicitement les agrégats de valeurs fortes des agrégats de valeurs faibles <a href="#ref-getis" class="text-navy hover:underline">(Getis &amp; Ord, 1992)</a>. Les LISA et le Gi* ne sont pas interchangeables : le premier identifie aussi les anomalies isolées, le second se prête mieux à la cartographie de points chauds et froids.</p>
+
+      <h2 class="font-display font-bold text-night text-2xl md:text-3xl mb-5">4. Précautions d'interprétation</h2>
+
+      <p class="leading-8 text-night/80 mb-5">Trois précautions conditionnent la validité des conclusions.</p>
+
+      <ul class="space-y-3.5 text-night/80 leading-7 mb-10">
+        <li class="flex items-start gap-3"><i class="fas fa-circle-exclamation text-navy mt-1.5"></i><span><strong class="text-night">Comparaisons multiples.</strong> Tester simultanément plusieurs centaines d'unités multiplie les faux positifs. Une correction, par exemple selon la procédure de Benjamini-Hochberg, est recommandée avant toute interprétation des cartes de significativité.</span></li>
+        <li class="flex items-start gap-3"><i class="fas fa-circle-exclamation text-navy mt-1.5"></i><span><strong class="text-night">Effet du support spatial.</strong> Les résultats dépendent du découpage administratif retenu. Ce phénomène, connu sous le nom de problème des unités spatiales modifiables, implique qu'une même donnée agrégée différemment peut produire des conclusions divergentes.</span></li>
+        <li class="flex items-start gap-3"><i class="fas fa-circle-exclamation text-navy mt-1.5"></i><span><strong class="text-night">Effets de bord.</strong> Les unités situées en périphérie de la zone d'étude ont mécaniquement moins de voisins, ce qui biaise leur statistique locale.</span></li>
+      </ul>
+
+      <h2 class="font-display font-bold text-night text-2xl md:text-3xl mb-5">5. Portée opérationnelle</h2>
+
+      <p class="leading-8 text-night/80 mb-5">Pour un dispositif de suivi-évaluation, l'apport est direct. L'identification de foyers High-High permet de concentrer les moyens là où une dynamique est déjà engagée ; celle des zones Low-Low signale des territoires dont le retard est structurel plutôt que conjoncturel. Les anomalies isolées, elles, constituent des candidats naturels pour une mission de vérification, dans la mesure où elles suggèrent un facteur local non capté par les données disponibles.</p>
+
+      <p class="leading-8 text-night/80 mb-5">L'analyse transforme ainsi une carte descriptive en instrument de ciblage documenté. Elle fournit surtout un argument défendable : la priorisation ne repose plus sur une lecture visuelle de la carte, mais sur un test statistique dont la méthode, les paramètres et le seuil peuvent être explicités.</p>
+
+      <div class="bg-gradient-to-br from-petrol to-night rounded-2xl p-6 md:p-8 mb-10">
+        <h2 class="font-display font-semibold text-[#ffffff] text-xl mb-4"><i class="fas fa-list-check text-lagoon mr-2"></i>Points essentiels</h2>
+        <ul class="space-y-2.5 text-[#ffffff]/80 leading-7 text-sm md:text-base">
+          <li class="flex items-start gap-3"><i class="fas fa-check text-lagoon mt-1.5"></i>La définition du voisinage (matrice W) conditionne tous les résultats et doit être documentée</li>
+          <li class="flex items-start gap-3"><i class="fas fa-check text-lagoon mt-1.5"></i>L'indice de Moran global résume la structure ; les LISA la localisent</li>
+          <li class="flex items-start gap-3"><i class="fas fa-check text-lagoon mt-1.5"></i>La significativité s'obtient par permutations, avec correction des comparaisons multiples</li>
+          <li class="flex items-start gap-3"><i class="fas fa-check text-lagoon mt-1.5"></i>Gi* privilégie les points chauds et froids, les LISA détectent aussi les anomalies isolées</li>
+          <li class="flex items-start gap-3"><i class="fas fa-check text-lagoon mt-1.5"></i>Les résultats dépendent du découpage spatial retenu (problème des unités modifiables)</li>
+        </ul>
+      </div>
+
+      <div class="bg-white border border-night/10 shadow-sm rounded-2xl p-6 md:p-8 mb-10">
+        <h2 class="font-display font-semibold text-night text-xl mb-5"><i class="fas fa-book text-navy mr-2"></i>Références</h2>
+        <ol class="space-y-4 text-night/75 text-sm leading-6 ref">
+          <li id="ref-anselin">Anselin, L. (1995). Local Indicators of Spatial Association—LISA. <em>Geographical Analysis</em>, 27(2), 93–115. <a href="https://doi.org/10.1111/j.1538-4632.1995.tb00338.x" target="_blank" class="text-navy hover:underline break-all">doi.org/10.1111/j.1538-4632.1995.tb00338.x</a></li>
+          <li id="ref-cliff">Cliff, A. D., &amp; Ord, J. K. (1981). <em>Spatial Processes: Models and Applications</em>. London: Pion.</li>
+          <li id="ref-getis">Getis, A., &amp; Ord, J. K. (1992). The Analysis of Spatial Association by Use of Distance Statistics. <em>Geographical Analysis</em>, 24(3), 189–206. <a href="https://doi.org/10.1111/j.1538-4632.1992.tb00261.x" target="_blank" class="text-navy hover:underline break-all">doi.org/10.1111/j.1538-4632.1992.tb00261.x</a></li>
+          <li id="ref-moran">Moran, P. A. P. (1950). Notes on Continuous Stochastic Phenomena. <em>Biometrika</em>, 37(1/2), 17–23. <a href="https://doi.org/10.2307/2332142" target="_blank" class="text-navy hover:underline break-all">doi.org/10.2307/2332142</a></li>
+          <li id="ref-tobler">Tobler, W. R. (1970). A Computer Movie Simulating Urban Growth in the Detroit Region. <em>Economic Geography</em>, 46, 234–240. <a href="https://doi.org/10.2307/143141" target="_blank" class="text-navy hover:underline break-all">doi.org/10.2307/143141</a></li>
+        </ol>
+      </div>
+
+      <div class="bg-white border border-night/10 shadow-sm rounded-2xl p-6 md:p-7 flex flex-col sm:flex-row items-center gap-5 mb-6">
+        <img src="Photomerveille.jpg?v=2" alt="Merveille Aganze Sami" class="w-20 h-20 rounded-full object-cover ring-2 ring-navy/30" />
+        <div class="text-center sm:text-left">
+          <p class="font-display font-semibold text-night">Merveille Aganze Sami</p>
+          <p class="text-night/70 text-sm leading-6 mt-1">Conseillère MEL &amp; Gestion de Bases de Données. Plus de 9 ans d'expérience en suivi-évaluation, SIG et digitalisation auprès d'organisations internationales (GIZ, Enabel) en RD Congo.</p>
+          <div class="flex justify-center sm:justify-start gap-4 mt-3 text-sm">
+            <a href="https://www.linkedin.com/in/mervag27/?skipRedirect=true" target="_blank" class="text-navy font-medium hover:text-night transition"><i class="fab fa-linkedin mr-1.5"></i>LinkedIn</a>
+            <a href="contact.html" class="text-navy font-medium hover:text-night transition"><i class="fas fa-envelope mr-1.5"></i>Me contacter</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="flex flex-col sm:flex-row items-center justify-between gap-4 bg-sky/60 rounded-2xl p-6">
+        <p class="text-night/80 font-medium text-center sm:text-left">Des indicateurs à analyser dans leur dimension spatiale ?</p>
+        <a href="contact.html" class="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-navy to-lagoon text-[#ffffff] font-semibold px-6 py-2.5 shadow-md hover:-translate-y-0.5 transition whitespace-nowrap">Prendre contact <i class="fas fa-arrow-right"></i></a>
+      </div>
+    </article>
+  </main>
+
+  <footer class="mt-16 bg-gradient-to-br from-petrol to-night text-[#ffffff]">
+    <div class="max-w-6xl mx-auto px-5 sm:px-8 pt-12 md:pt-16 pb-8">
+      <div class="grid gap-10 md:grid-cols-[1.2fr_0.7fr_1.1fr]">
+        <div>
+          <p class="font-display font-bold text-xl mb-3">Merveille <span class="bg-gradient-to-r from-navy to-lagoon bg-clip-text text-transparent">AGANZE SAMI</span></p>
+          <p class="text-[#ffffff]/60 text-sm leading-7 max-w-xs">Conseillère MEL &amp; Gestion de Bases de Données. Données, SIG et digitalisation au service de vos décisions.</p>
+          <div class="flex items-center gap-3 mt-6">
+            <a href="https://www.linkedin.com/in/mervag27/?skipRedirect=true" target="_blank" class="inline-flex items-center justify-center w-10 h-10 rounded-full bg-[#ffffff]/10 hover:bg-navy transition" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+            <a href="https://github.com/MerveAS" target="_blank" class="inline-flex items-center justify-center w-10 h-10 rounded-full bg-[#ffffff]/10 hover:bg-navy transition" aria-label="GitHub"><i class="fab fa-github"></i></a>
+          </div>
+        </div>
+        <div>
+          <h3 class="font-display font-semibold text-xs uppercase tracking-[0.2em] text-[#ffffff]/50 mb-4">Navigation</h3>
+          <ul class="space-y-2.5 text-sm">
+            <li><a href="index.html" class="text-[#ffffff]/70 hover:text-lagoon transition">Accueil</a></li>
+            <li><a href="blog.html" class="text-[#ffffff]/70 hover:text-lagoon transition">Blog</a></li>
+            <li><a href="expertises.html" class="text-[#ffffff]/70 hover:text-lagoon transition">Expertises</a></li>
+            <li><a href="projets.html" class="text-[#ffffff]/70 hover:text-lagoon transition">Projets</a></li>
+            <li><a href="contact.html" class="text-[#ffffff]/70 hover:text-lagoon transition">Contact</a></li>
+          </ul>
+        </div>
+        <div>
+          <h3 class="font-display font-semibold text-xs uppercase tracking-[0.2em] text-[#ffffff]/50 mb-4">Contact</h3>
+          <ul class="space-y-3 text-sm text-[#ffffff]/70">
+            <li class="flex items-center gap-3"><span class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-[#ffffff]/10 text-lagoon text-xs"><i class="fas fa-phone"></i></span>+243 850 012 270</li>
+            <li class="flex items-center gap-3"><span class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-[#ffffff]/10 text-lagoon text-xs"><i class="fas fa-envelope"></i></span><a href="mailto:merveille.aganzesami@fitigroup.org" class="hover:text-lagoon transition break-all">merveille.aganzesami@fitigroup.org</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="mt-10 pt-6 border-t border-[#ffffff]/10 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-[#ffffff]/50">
+        <p>© 2026 Merveille AGANZE SAMI — Tous droits réservés · <span class="text-[#ffffff]/30">v2.2</span></p>
+        <a href="#" onclick="window.scrollTo({top:0,behavior:'smooth'});return false;" class="inline-flex items-center gap-2 hover:text-lagoon transition">Retour en haut <i class="fas fa-arrow-up"></i></a>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>
