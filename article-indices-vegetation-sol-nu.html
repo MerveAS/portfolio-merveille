@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Indices de végétation en milieu semi-aride : au-delà du NDVI | Merveille Aganze Sami</title>
+  <meta name="description" content="Sur un couvert clairsemé, le NDVI répond en partie à la brillance du sol. Les indices ajustés au sol réduisent cette contribution et rendent les taux de reprise comparables entre sites et entre saisons." />
+  <meta property="og:title" content="Indices de végétation en milieu semi-aride : au-delà du NDVI" />
+  <meta property="og:description" content="Sur un couvert clairsemé, le NDVI répond en partie à la brillance du sol. Les indices ajustés au sol réduisent cette contribution et rendent les taux de reprise comparables entre sites et entre saisons." />
+  <meta property="og:image" content="visuels/visuel_2026-07-26_savi.png" />
+  <meta property="og:type" content="article" />
+  <link rel="alternate" hreflang="fr" href="https://merveille.fitigroup.org/article-indices-vegetation-sol-nu.html" />
+  <link rel="alternate" hreflang="en" href="https://merveille.fitigroup.org/en/article-soil-adjusted-vegetation-indices.html" />
+  <link rel="icon" href="favicon.svg?v=2" type="image/svg+xml" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = { theme: { extend: {
+      colors: { night:'#222B38', navy:'#EE7A5C', steel:'#8A93A3', petrol:'#26303E', lagoon:'#F2A48F', sky:'#F7DCD1', pale:'#F7F5F2' },
+      fontFamily: { sans:['DM Sans','Arial','sans-serif'], display:['Plus Jakarta Sans','Arial','sans-serif'] } } } }
+  </script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    html { scroll-behavior: smooth; }
+    .ref { font-variant-numeric: tabular-nums; }
+    @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col bg-gradient-to-b from-pale via-pale to-sky text-night font-sans antialiased">
+
+  <header class="sticky top-0 z-50 bg-pale/95 backdrop-blur border-b border-navy/20">
+    <div class="max-w-6xl mx-auto px-5 sm:px-8 min-h-16 md:min-h-20 py-2 flex items-center justify-between gap-4">
+      <a href="index.html" class="font-display font-bold text-night text-base sm:text-lg md:text-xl tracking-tight">
+        Merveille <span class="text-navy hidden sm:inline">AGANZE SAMI</span>
+      </a>
+      <nav class="flex flex-wrap justify-end items-center gap-x-4 gap-y-1 sm:gap-x-6 md:gap-x-8 text-xs sm:text-sm md:text-[15px]">
+        <a href="index.html" class="text-night/70 hover:text-navy transition">Accueil</a>
+        <a href="blog.html" class="text-navy font-semibold">Blog</a>
+        <a href="expertises.html" class="text-night/70 hover:text-navy transition">Expertises</a>
+        <a href="projets.html" class="text-night/70 hover:text-navy transition">Projets</a>
+        <a href="en/article-soil-adjusted-vegetation-indices.html" class="text-[11px] font-semibold border border-navy/40 rounded-full px-3 py-1 text-night/70 hover:text-navy hover:border-navy/60 transition" title="English version">EN</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="flex-1">
+    <section class="max-w-6xl mx-auto px-5 sm:px-8 pt-10 md:pt-14">
+      <div class="bg-gradient-to-br from-petrol to-night rounded-[2rem] md:rounded-[2.5rem] px-6 sm:px-10 md:px-14 py-12 md:py-14 relative overflow-hidden">
+        <div class="absolute -bottom-24 -right-16 w-80 h-80 bg-navy/20 rounded-full blur-2xl"></div>
+        <div class="relative max-w-3xl">
+          <a href="blog.html" class="inline-flex items-center gap-2 text-[#ffffff]/60 text-sm hover:text-lagoon transition mb-6"><i class="fas fa-arrow-left"></i> Retour au blog</a>
+          <div class="flex flex-wrap items-center gap-2 mb-5">
+            <span class="text-[11px] font-semibold uppercase tracking-wider bg-gradient-to-r from-navy to-lagoon text-[#ffffff] rounded-full px-3 py-1">Article</span>
+            <span class="text-[11px] font-medium text-[#ffffff]/50"><i class="fas fa-calendar mr-1.5"></i>26 juillet 2026</span>
+            <span class="text-[11px] font-medium text-[#ffffff]/50"><i class="fas fa-clock mr-1.5"></i>9 min de lecture</span>
+          </div>
+          <h1 class="font-display font-bold text-[#ffffff] text-3xl sm:text-4xl md:text-5xl leading-tight mb-5">Indices de végétation :<br /><span class="bg-gradient-to-r from-navy to-lagoon bg-clip-text text-transparent">quand le sol parle plus fort que la plante</span></h1>
+          <p class="text-[#ffffff]/60 text-base mb-6">Effet du fond pédologique sur le NDVI, correction par le facteur d'ajustement du SAVI et conséquences pour un indicateur de restauration</p>
+          <div class="flex items-center gap-3">
+            <img src="Photomerveille.jpg?v=2" alt="Merveille Aganze Sami" class="w-10 h-10 rounded-full object-cover ring-2 ring-[#ffffff]/30" />
+            <div class="text-sm">
+              <p class="text-[#ffffff] font-semibold">Merveille Aganze Sami</p>
+              <p class="text-[#ffffff]/50">Conseillère MEL &amp; Gestion de Bases de Données</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <article class="max-w-3xl mx-auto px-5 sm:px-8 py-12 md:py-16">
+
+      <figure class="mb-12">
+        <img src="visuels/visuel_2026-07-26_savi.png" alt="Comparaison NDVI et SAVI le long d'un gradient de couvert végétal sur sol clair" class="w-full rounded-2xl shadow-xl ring-1 ring-night/10" />
+        <figcaption class="text-night/60 text-sm mt-3 text-center"><strong class="text-night/70">Figure 1.</strong> Illustration : réponse du NDVI et du SAVI le long d'un gradient de couvert sur sol clair. L'écart entre les deux courbes est maximal aux faibles taux de recouvrement.</figcaption>
+      </figure>
+
+      <p class="text-lg md:text-xl leading-9 text-night/80 mb-8">Le suivi de la reprise végétale sur un site de restauration s'appuie couramment sur un indice de végétation calculé à partir d'images satellitaires. Le choix le plus fréquent — l'indice de végétation par différence normalisée — présente en milieu semi-aride une limite qui affecte directement l'indicateur produit : sa valeur dépend en partie des propriétés du sol visible entre les plants.</p>
+
+      <p class="leading-8 text-night/80 mb-5">Cette dépendance n'est pas un défaut de mise en œuvre mais une propriété du signal. Lorsque le couvert végétal occupe une fraction minoritaire du pixel, la réflectance mesurée résulte d'un mélange entre végétation et substrat. L'indice répond alors conjointement aux deux composantes.</p>
+
+      <h2 class="font-display font-bold text-night text-2xl md:text-3xl mb-5">1. Ce que mesure le NDVI et où il perd en précision</h2>
+
+      <p class="leading-8 text-night/80 mb-5">L'indice de végétation par différence normalisée combine les réflectances dans le rouge et le proche infrarouge. La végétation chlorophyllienne absorbe fortement dans le rouge et réfléchit fortement dans le proche infrarouge ; le contraste entre ces deux bandes constitue un descripteur robuste de l'activité photosynthétique, établi de longue date pour le suivi du couvert <a href="#ref-tucker" class="text-navy hover:underline">(Tucker, 1979)</a>.</p>
+
+      <p class="leading-8 text-night/80 mb-5">Deux régimes limitent toutefois sa portée. Aux forts taux de recouvrement, l'indice sature : au-delà d'un certain indice foliaire, une augmentation de biomasse ne se traduit plus par une variation mesurable. Aux faibles taux de recouvrement, il devient sensible au fond pédologique : sols clairs et sols sombres produisent, pour un même couvert, des valeurs différentes. Ces deux comportements sont documentés dans les travaux d'analyse de la sensibilité des indices aux paramètres du couvert <a href="#ref-baret" class="text-navy hover:underline">(Baret &amp; Guyot, 1991)</a>.</p>
+
+      <div class="bg-sky/60 border-l-4 border-navy rounded-r-2xl p-5 md:p-6 mb-10">
+        <p class="leading-7 text-night/80 text-sm md:text-base"><i class="fas fa-circle-info text-navy mr-2"></i><strong class="text-night">La ligne des sols.</strong> Dans un plan rouge–proche infrarouge, les sols nus se répartissent le long d'une droite dont la position dépend de leur composition et de leur humidité. Le NDVI n'étant pas construit par rapport à cette droite, un déplacement le long de la ligne des sols se traduit par une variation d'indice, à couvert végétal constant. C'est précisément cette variation que les indices ajustés au sol cherchent à neutraliser.</p>
+      </div>
+
+      <h2 class="font-display font-bold text-night text-2xl md:text-3xl mb-5">2. Le facteur d'ajustement du SAVI</h2>
+
+      <p class="leading-8 text-night/80 mb-5">L'indice de végétation ajusté au sol introduit dans la formulation un terme correctif, généralement noté L, qui déplace l'origine du repère afin de rendre les isolignes de végétation approximativement parallèles à la ligne des sols. La correction est calibrée selon la densité du couvert : une valeur intermédiaire, de l'ordre de 0,5, correspond à un couvert moyen ; une valeur élevée convient aux couverts très clairsemés ; une valeur nulle ramène à la formulation du NDVI <a href="#ref-huete" class="text-navy hover:underline">(Huete, 1988)</a>.</p>
+
+      <p class="leading-8 text-night/80 mb-5">Ce paramètre constitue une hypothèse sur le couvert, ce qui introduit une difficulté opérationnelle : sur un site en cours de restauration, la densité évolue précisément entre le début et la fin du suivi. Fixer L une fois pour toutes revient à appliquer une correction adaptée à un état intermédiaire, plus approximative aux extrémités de la série.</p>
+
+      <h2 class="font-display font-bold text-night text-2xl md:text-3xl mb-5">3. MSAVI : un ajustement calculé par pixel</h2>
+
+      <p class="leading-8 text-night/80 mb-5">La formulation modifiée résout cette difficulté en déterminant le terme d'ajustement de manière analytique, à partir des réflectances observées, plutôt qu'en le fixant a priori. La correction s'adapte ainsi localement à la densité du couvert, ce qui la rend mieux adaptée aux surfaces hétérogènes et aux séries couvrant une évolution importante du recouvrement <a href="#ref-qi" class="text-navy hover:underline">(Qi et al., 1994)</a>.</p>
+
+      <p class="leading-8 text-night/80 mb-5">En contrepartie, l'indice résultant n'a pas de paramètre explicite à documenter, ce qui rend l'interprétation de ses valeurs absolues moins directe. Il se prête bien à une lecture relative — évolution dans le temps, comparaison entre parcelles — moins bien à une comparaison avec des seuils issus de la littérature.</p>
+
+      <h2 class="font-display font-bold text-night text-2xl md:text-3xl mb-5">4. Les autres formulations disponibles</h2>
+
+      <ul class="space-y-3 text-night/80 leading-7 mb-10">
+        <li class="flex items-start gap-3"><i class="fas fa-circle-check text-navy mt-1.5"></i><span><strong class="text-night">Indice optimisé.</strong> Une valeur d'ajustement plus faible, de l'ordre de 0,16, a été proposée à partir d'une optimisation portant sur des couverts agricoles ; elle offre un compromis stable sans nécessiter d'hypothèse forte sur la densité <a href="#ref-rondeaux" class="text-navy hover:underline">(Rondeaux et al., 1996)</a>.</span></li>
+        <li class="flex items-start gap-3"><i class="fas fa-circle-check text-navy mt-1.5"></i><span><strong class="text-night">Indices à forte biomasse.</strong> Pour des couverts denses, où la saturation constitue le problème dominant plutôt que l'effet du sol, des formulations à deux bandes conçues pour améliorer la linéarité aux valeurs élevées sont plus adaptées <a href="#ref-jiang" class="text-navy hover:underline">(Jiang et al., 2008)</a>.</span></li>
+        <li class="flex items-start gap-3"><i class="fas fa-circle-check text-navy mt-1.5"></i><span><strong class="text-night">Indices d'humidité et de sol nu.</strong> Lorsque la question porte sur l'état du substrat lui-même — croûte, érosion, mise à nu — des indices dédiés apportent une information complémentaire que les indices de végétation ne fournissent pas.</span></li>
+      </ul>
+
+      <h2 class="font-display font-bold text-night text-2xl md:text-3xl mb-5">5. Conséquences pour un indicateur de suivi</h2>
+
+      <p class="leading-8 text-night/80 mb-5">Le choix de l'indice n'est pas un paramètre technique sans portée : il détermine la valeur de l'indicateur rapporté et sa comparabilité. Trois conséquences pratiques en découlent.</p>
+
+      <ol class="space-y-4 text-night/80 leading-7 mb-10 list-none">
+        <li class="flex items-start gap-4"><span class="flex-none inline-flex items-center justify-center w-8 h-8 rounded-full bg-gradient-to-br from-navy to-lagoon text-[#ffffff] text-sm font-bold">1</span><span><strong class="text-night">Fixer l'indice dans le protocole.</strong> Une série constituée de valeurs issues d'indices différents n'est pas interprétable. Le choix doit précéder la collecte et figurer dans la fiche de l'indicateur, au même titre que la source d'image et la fenêtre temporelle.</span></li>
+        <li class="flex items-start gap-4"><span class="flex-none inline-flex items-center justify-center w-8 h-8 rounded-full bg-gradient-to-br from-navy to-lagoon text-[#ffffff] text-sm font-bold">2</span><span><strong class="text-night">Documenter le paramètre d'ajustement.</strong> Lorsqu'un facteur L est fixé, sa valeur et sa justification font partie de la définition de l'indicateur.</span></li>
+        <li class="flex items-start gap-4"><span class="flex-none inline-flex items-center justify-center w-8 h-8 rounded-full bg-gradient-to-br from-navy to-lagoon text-[#ffffff] text-sm font-bold">3</span><span><strong class="text-night">Calibrer sur des observations de terrain.</strong> La relation entre valeur d'indice et taux de recouvrement réel varie avec le type de sol et de couvert. Quelques placettes mesurées permettent d'établir cette correspondance localement et de convertir un indice en grandeur interprétable par un partenaire.</span></li>
+      </ol>
+
+      <ul class="space-y-3.5 text-night/80 leading-7 mb-10">
+        <li class="flex items-start gap-3"><i class="fas fa-circle-exclamation text-navy mt-1.5"></i><span><strong class="text-night">Correction atmosphérique.</strong> Les indices ajustés au sol raisonnent sur des réflectances de surface. L'usage de produits non corrigés introduit une variabilité entre dates qui se confond avec le signal de végétation.</span></li>
+        <li class="flex items-start gap-3"><i class="fas fa-circle-exclamation text-navy mt-1.5"></i><span><strong class="text-night">Géométrie d'acquisition.</strong> Angles solaire et de visée modifient la réflectance apparente. Le recours à des dates de même période annuelle limite cet effet.</span></li>
+        <li class="flex items-start gap-3"><i class="fas fa-circle-exclamation text-navy mt-1.5"></i><span><strong class="text-night">Taille des parcelles.</strong> Sur des placettes de restauration de faible superficie, la résolution de 10 à 20 mètres génère des pixels mixtes ; l'indicateur mesure alors autant l'environnement immédiat que la parcelle elle-même.</span></li>
+      </ul>
+
+      <div class="bg-gradient-to-br from-petrol to-night rounded-2xl p-6 md:p-8 mb-10">
+        <h2 class="font-display font-semibold text-[#ffffff] text-xl mb-4"><i class="fas fa-list-check text-lagoon mr-2"></i>Points essentiels</h2>
+        <ul class="space-y-2.5 text-[#ffffff]/80 leading-7 text-sm md:text-base">
+          <li class="flex items-start gap-3"><i class="fas fa-check text-lagoon mt-1.5"></i>Sur couvert clairsemé, le NDVI répond en partie à la brillance du sol</li>
+          <li class="flex items-start gap-3"><i class="fas fa-check text-lagoon mt-1.5"></i>Le SAVI neutralise cette contribution au moyen d'un facteur d'ajustement à documenter</li>
+          <li class="flex items-start gap-3"><i class="fas fa-check text-lagoon mt-1.5"></i>Le MSAVI détermine cet ajustement par pixel, utile quand le couvert évolue fortement</li>
+          <li class="flex items-start gap-3"><i class="fas fa-check text-lagoon mt-1.5"></i>Le choix de l'indice conditionne la comparabilité entre sites et entre saisons</li>
+          <li class="flex items-start gap-3"><i class="fas fa-check text-lagoon mt-1.5"></i>Une calibration sur quelques placettes rend l'indice interprétable par un partenaire</li>
+        </ul>
+      </div>
+
+      <p class="leading-8 text-night/80 mb-5">Un indicateur de restauration fondé sur un indice de végétation n'est pas une mesure neutre du couvert : il résulte d'un choix méthodologique dont les hypothèses doivent être explicites. Documenter ce choix relève de la même exigence que documenter un protocole d'enquête.</p>
+
+      <div class="bg-white border border-night/10 shadow-sm rounded-2xl p-6 md:p-8 mb-10">
+        <h2 class="font-display font-semibold text-night text-xl mb-5"><i class="fas fa-book text-navy mr-2"></i>Références</h2>
+        <ol class="space-y-4 text-night/75 text-sm leading-6 ref">
+          <li id="ref-baret">Baret, F., &amp; Guyot, G. (1991). Potentials and limits of vegetation indices for LAI and APAR assessment. <em>Remote Sensing of Environment</em>, 35(2–3), 161–173. <a href="https://doi.org/10.1016/0034-4257(91)90009-U" target="_blank" class="text-navy hover:underline break-all">doi.org/10.1016/0034-4257(91)90009-U</a></li>
+          <li id="ref-huete">Huete, A. R. (1988). A soil-adjusted vegetation index (SAVI). <em>Remote Sensing of Environment</em>, 25(3), 295–309. <a href="https://doi.org/10.1016/0034-4257(88)90106-X" target="_blank" class="text-navy hover:underline break-all">doi.org/10.1016/0034-4257(88)90106-X</a></li>
+          <li id="ref-jiang">Jiang, Z., Huete, A. R., Didan, K., &amp; Miura, T. (2008). Development of a two-band enhanced vegetation index without a blue band. <em>Remote Sensing of Environment</em>, 112(10), 3833–3845. <a href="https://doi.org/10.1016/j.rse.2008.06.006" target="_blank" class="text-navy hover:underline break-all">doi.org/10.1016/j.rse.2008.06.006</a></li>
+          <li id="ref-qi">Qi, J., Chehbouni, A., Huete, A. R., Kerr, Y. H., &amp; Sorooshian, S. (1994). A modified soil adjusted vegetation index. <em>Remote Sensing of Environment</em>, 48(2), 119–126. <a href="https://doi.org/10.1016/0034-4257(94)90134-1" target="_blank" class="text-navy hover:underline break-all">doi.org/10.1016/0034-4257(94)90134-1</a></li>
+          <li id="ref-rondeaux">Rondeaux, G., Steven, M., &amp; Baret, F. (1996). Optimization of soil-adjusted vegetation indices. <em>Remote Sensing of Environment</em>, 55(2), 95–107. <a href="https://doi.org/10.1016/0034-4257(95)00186-7" target="_blank" class="text-navy hover:underline break-all">doi.org/10.1016/0034-4257(95)00186-7</a></li>
+          <li id="ref-tucker">Tucker, C. J. (1979). Red and photographic infrared linear combinations for monitoring vegetation. <em>Remote Sensing of Environment</em>, 8(2), 127–150. <a href="https://doi.org/10.1016/0034-4257(79)90013-0" target="_blank" class="text-navy hover:underline break-all">doi.org/10.1016/0034-4257(79)90013-0</a></li>
+        </ol>
+      </div>
+
+      <div class="bg-white border border-night/10 shadow-sm rounded-2xl p-6 md:p-7 flex flex-col sm:flex-row items-center gap-5 mb-6">
+        <img src="Photomerveille.jpg?v=2" alt="Merveille Aganze Sami" class="w-20 h-20 rounded-full object-cover ring-2 ring-navy/30" />
+        <div class="text-center sm:text-left">
+          <p class="font-display font-semibold text-night">Merveille Aganze Sami</p>
+          <p class="text-night/70 text-sm leading-6 mt-1">Conseillère MEL &amp; Gestion de Bases de Données. Plus de 9 ans d'expérience en suivi-évaluation, SIG et digitalisation auprès d'organisations internationales (GIZ, Enabel) en RD Congo.</p>
+          <div class="flex justify-center sm:justify-start gap-4 mt-3 text-sm">
+            <a href="https://www.linkedin.com/in/mervag27/?skipRedirect=true" target="_blank" class="text-navy font-medium hover:text-night transition"><i class="fab fa-linkedin mr-1.5"></i>LinkedIn</a>
+            <a href="contact.html" class="text-navy font-medium hover:text-night transition"><i class="fas fa-envelope mr-1.5"></i>Me contacter</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="flex flex-col sm:flex-row items-center justify-between gap-4 bg-sky/60 rounded-2xl p-6">
+        <p class="text-night/80 font-medium text-center sm:text-left">Un suivi de restauration à outiller ?</p>
+        <a href="contact.html" class="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-navy to-lagoon text-[#ffffff] font-semibold px-6 py-2.5 shadow-md hover:-translate-y-0.5 transition whitespace-nowrap">Prendre contact <i class="fas fa-arrow-right"></i></a>
+      </div>
+    </article>
+  </main>
+
+  <footer class="mt-16 bg-gradient-to-br from-petrol to-night text-[#ffffff]">
+    <div class="max-w-6xl mx-auto px-5 sm:px-8 pt-12 md:pt-16 pb-8">
+      <div class="grid gap-10 md:grid-cols-[1.2fr_0.7fr_1.1fr]">
+        <div>
+          <p class="font-display font-bold text-xl mb-3">Merveille <span class="bg-gradient-to-r from-navy to-lagoon bg-clip-text text-transparent">AGANZE SAMI</span></p>
+          <p class="text-[#ffffff]/60 text-sm leading-7 max-w-xs">Conseillère MEL &amp; Gestion de Bases de Données. Données, SIG et digitalisation au service de vos décisions.</p>
+          <div class="flex items-center gap-3 mt-6">
+            <a href="https://www.linkedin.com/in/mervag27/?skipRedirect=true" target="_blank" class="inline-flex items-center justify-center w-10 h-10 rounded-full bg-[#ffffff]/10 hover:bg-navy transition" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+            <a href="https://github.com/MerveAS" target="_blank" class="inline-flex items-center justify-center w-10 h-10 rounded-full bg-[#ffffff]/10 hover:bg-navy transition" aria-label="GitHub"><i class="fab fa-github"></i></a>
+          </div>
+        </div>
+        <div>
+          <h3 class="font-display font-semibold text-xs uppercase tracking-[0.2em] text-[#ffffff]/50 mb-4">Navigation</h3>
+          <ul class="space-y-2.5 text-sm">
+            <li><a href="index.html" class="text-[#ffffff]/70 hover:text-lagoon transition">Accueil</a></li>
+            <li><a href="blog.html" class="text-[#ffffff]/70 hover:text-lagoon transition">Blog</a></li>
+            <li><a href="expertises.html" class="text-[#ffffff]/70 hover:text-lagoon transition">Expertises</a></li>
+            <li><a href="projets.html" class="text-[#ffffff]/70 hover:text-lagoon transition">Projets</a></li>
+            <li><a href="contact.html" class="text-[#ffffff]/70 hover:text-lagoon transition">Contact</a></li>
+          </ul>
+        </div>
+        <div>
+          <h3 class="font-display font-semibold text-xs uppercase tracking-[0.2em] text-[#ffffff]/50 mb-4">Contact</h3>
+          <ul class="space-y-3 text-sm text-[#ffffff]/70">
+            <li class="flex items-center gap-3"><span class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-[#ffffff]/10 text-lagoon text-xs"><i class="fas fa-phone"></i></span>+243 850 012 270</li>
+            <li class="flex items-center gap-3"><span class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-[#ffffff]/10 text-lagoon text-xs"><i class="fas fa-envelope"></i></span><a href="mailto:merveille.aganzesami@fitigroup.org" class="hover:text-lagoon transition break-all">merveille.aganzesami@fitigroup.org</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="mt-10 pt-6 border-t border-[#ffffff]/10 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-[#ffffff]/50">
+        <p>© 2026 Merveille AGANZE SAMI — Tous droits réservés · <span class="text-[#ffffff]/30">v2.2</span></p>
+        <a href="#" onclick="window.scrollTo({top:0,behavior:'smooth'});return false;" class="inline-flex items-center gap-2 hover:text-lagoon transition">Retour en haut <i class="fas fa-arrow-up"></i></a>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>

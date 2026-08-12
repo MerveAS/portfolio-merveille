@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>STL decomposition: separating trend from seasonal rhythm in a monitoring dashboard | Merveille Aganze Sami</title>
+  <meta name="description" content="A 15% monthly drop may reflect the calendar rather than performance. STL decomposition separates trend, seasonality and remainder, and moves the alert onto the component that stays unexplained." />
+  <meta property="og:title" content="STL decomposition: separating trend from seasonal rhythm in a monitoring dashboard" />
+  <meta property="og:description" content="A 15% monthly drop may reflect the calendar rather than performance. STL decomposition separates trend, seasonality and remainder, and moves the alert onto the component that stays unexplained." />
+  <meta property="og:image" content="../visuels/visuel_2026-07-30_stl.png" />
+  <meta property="og:type" content="article" />
+  <link rel="alternate" hreflang="fr" href="https://merveille.fitigroup.org/article-decomposition-stl.html" />
+  <link rel="alternate" hreflang="en" href="https://merveille.fitigroup.org/en/article-stl-decomposition.html" />
+  <link rel="icon" href="../favicon.svg?v=2" type="image/svg+xml" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = { theme: { extend: {
+      colors: { night:'#222B38', navy:'#EE7A5C', steel:'#8A93A3', petrol:'#26303E', lagoon:'#F2A48F', sky:'#F7DCD1', pale:'#F7F5F2' },
+      fontFamily: { sans:['DM Sans','Arial','sans-serif'], display:['Plus Jakarta Sans','Arial','sans-serif'] } } } }
+  </script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    html { scroll-behavior: smooth; }
+    .ref { font-variant-numeric: tabular-nums; }
+    @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col bg-gradient-to-b from-pale via-pale to-sky text-night font-sans antialiased">
+
+  <header class="sticky top-0 z-50 bg-pale/95 backdrop-blur border-b border-navy/20">
+    <div class="max-w-6xl mx-auto px-5 sm:px-8 min-h-16 md:min-h-20 py-2 flex items-center justify-between gap-4">
+      <a href="index.html" class="font-display font-bold text-night text-base sm:text-lg md:text-xl tracking-tight">
+        Merveille <span class="text-navy hidden sm:inline">AGANZE SAMI</span>
+      </a>
+      <nav class="flex flex-wrap justify-end items-center gap-x-4 gap-y-1 sm:gap-x-6 md:gap-x-8 text-xs sm:text-sm md:text-[15px]">
+        <a href="index.html" class="text-night/70 hover:text-navy transition">Home</a>
+        <a href="blog.html" class="text-navy font-semibold">Blog</a>
+        <a href="expertise.html" class="text-night/70 hover:text-navy transition">Expertise</a>
+        <a href="projects.html" class="text-night/70 hover:text-navy transition">Projects</a>
+        <a href="../article-decomposition-stl.html" class="text-[11px] font-semibold border border-navy/40 rounded-full px-3 py-1 text-night/70 hover:text-navy hover:border-navy/60 transition" title="Version française">FR</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="flex-1">
+    <section class="max-w-6xl mx-auto px-5 sm:px-8 pt-10 md:pt-14">
+      <div class="bg-gradient-to-br from-petrol to-night rounded-[2rem] md:rounded-[2.5rem] px-6 sm:px-10 md:px-14 py-12 md:py-14 relative overflow-hidden">
+        <div class="absolute -bottom-24 -right-16 w-80 h-80 bg-navy/20 rounded-full blur-2xl"></div>
+        <div class="relative max-w-3xl">
+          <a href="blog.html" class="inline-flex items-center gap-2 text-[#ffffff]/60 text-sm hover:text-lagoon transition mb-6"><i class="fas fa-arrow-left"></i> Back to blog</a>
+          <div class="flex flex-wrap items-center gap-2 mb-5">
+            <span class="text-[11px] font-semibold uppercase tracking-wider bg-gradient-to-r from-navy to-lagoon text-[#ffffff] rounded-full px-3 py-1">Article</span>
+            <span class="text-[11px] font-medium text-[#ffffff]/50"><i class="fas fa-calendar mr-1.5"></i>30 July 2026</span>
+            <span class="text-[11px] font-medium text-[#ffffff]/50"><i class="fas fa-clock mr-1.5"></i>10 min read</span>
+          </div>
+          <h1 class="font-display font-bold text-[#ffffff] text-3xl sm:text-4xl md:text-5xl leading-tight mb-5">STL decomposition:<br /><span class="bg-gradient-to-r from-navy to-lagoon bg-clip-text text-transparent">reading a series without confusing season and performance</span></h1>
+          <p class="text-[#ffffff]/60 text-base mb-6">The principle of decomposition by local smoothing, parameter choices and setting alert thresholds on the remainder</p>
+          <div class="flex items-center gap-3">
+            <img src="../Photomerveille.jpg?v=2" alt="Merveille Aganze Sami" class="w-10 h-10 rounded-full object-cover ring-2 ring-[#ffffff]/30" />
+            <div class="text-sm">
+              <p class="text-[#ffffff] font-semibold">Merveille Aganze Sami</p>
+              <p class="text-[#ffffff]/50">MEL &amp; Database Management Advisor</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <article class="max-w-3xl mx-auto px-5 sm:px-8 py-12 md:py-16">
+
+      <figure class="mb-12">
+        <img src="../visuels/visuel_2026-07-30_stl.png" alt="Dashboard decomposing a monthly series into three panels: trend, seasonality and remainder" class="w-full rounded-2xl shadow-xl ring-1 ring-night/10" />
+        <figcaption class="text-night/60 text-sm mt-3 text-center"><strong class="text-night/70">Figure 1.</strong> Illustration: a raw monthly series decomposed into three components — trend, seasonality, remainder. Alert thresholds are best placed on the third panel.</figcaption>
+      </figure>
+
+      <p class="text-lg md:text-xl leading-9 text-night/80 mb-8">Monitoring systems most often produce monthly or quarterly series: consultations delivered, households reached, volumes collected, cases notified. These series are frequently presented in raw values, compared with the preceding month. This reading raises an interpretation difficulty: part of the observed variation stems from the calendar rather than from the intervention.</p>
+
+      <p class="leading-8 text-night/80 mb-5">The agricultural lean season, the rainy season, the school calendar, leave periods and disbursement cycles impose a stable periodicity on field series. Comparing one month with the previous one then partly measures the gap between two positions in the annual cycle. Decomposing the series into distinct components allows what belongs to the regular rhythm to be separated from what does not.</p>
+
+      <h2 class="font-display font-bold text-night text-2xl md:text-3xl mb-5">1. The three components</h2>
+
+      <p class="leading-8 text-night/80 mb-5">A seasonal decomposition represents the observed series as a combination of three elements. The <strong class="text-night">trend</strong> describes the underlying evolution once regular oscillations are smoothed out. <strong class="text-night">Seasonality</strong> describes the pattern repeating at a fixed period. The <strong class="text-night">remainder</strong> gathers what neither explains: it is the component carrying new information.</p>
+
+      <p class="leading-8 text-night/80 mb-5">The combination may be additive — the three components add up — or multiplicative, where seasonal amplitude grows with the level of the series, a common situation for activity volumes. In the latter case, a prior logarithmic transformation returns to the additive case.</p>
+
+      <div class="bg-sky/60 border-l-4 border-navy rounded-r-2xl p-5 md:p-6 mb-10">
+        <p class="leading-7 text-night/80 text-sm md:text-base"><i class="fas fa-circle-info text-navy mr-2"></i><strong class="text-night">The principle of the STL method.</strong> Seasonal-trend decomposition by local smoothing rests on the iterative application of a locally weighted regression — the loess method <a href="#ref-cleveland-loess" class="text-navy hover:underline">(Cleveland, 1979)</a>. At each pass, the seasonal component is estimated by smoothing values holding the same position in the cycle, then removed; the trend is smoothed on the series thus corrected. Iteration continues until stabilisation <a href="#ref-cleveland-stl" class="text-navy hover:underline">(Cleveland et al., 1990)</a>.</p>
+      </div>
+
+      <p class="leading-8 text-night/80 mb-5">Compared with moving-average decompositions, this approach has three properties that are useful in monitoring settings: the seasonal pattern may evolve slowly over the years rather than being assumed fixed, the seasonal period is not constrained to a predefined calendar, and a robust variant limits the influence of extreme values on the estimation of the first two components <a href="#ref-hyndman" class="text-navy hover:underline">(Hyndman &amp; Athanasopoulos, 2021)</a>.</p>
+
+      <h2 class="font-display font-bold text-night text-2xl md:text-3xl mb-5">2. The parameters to decide</h2>
+
+      <ol class="space-y-4 text-night/80 leading-7 mb-10 list-none">
+        <li class="flex items-start gap-4"><span class="flex-none inline-flex items-center justify-center w-8 h-8 rounded-full bg-gradient-to-br from-navy to-lagoon text-[#ffffff] text-sm font-bold">1</span><span><strong class="text-night">The seasonal period.</strong> Twelve for monthly data, four for quarterly data. It must match the cycle actually at work: in some settings the relevant cycle is agricultural rather than calendar-based.</span></li>
+        <li class="flex items-start gap-4"><span class="flex-none inline-flex items-center justify-center w-8 h-8 rounded-full bg-gradient-to-br from-navy to-lagoon text-[#ffffff] text-sm font-bold">2</span><span><strong class="text-night">The seasonal window.</strong> It determines whether the pattern is assumed constant from year to year or allowed to drift. A fixed pattern is justified for a short series; gradual evolution suits a context whose conditions are changing.</span></li>
+        <li class="flex items-start gap-4"><span class="flex-none inline-flex items-center justify-center w-8 h-8 rounded-full bg-gradient-to-br from-navy to-lagoon text-[#ffffff] text-sm font-bold">3</span><span><strong class="text-night">The trend window.</strong> A narrow window tracks inflections closely, at the cost of a trend absorbing part of the noise; a wide window produces a readable curve but responds late to genuine change.</span></li>
+        <li class="flex items-start gap-4"><span class="flex-none inline-flex items-center justify-center w-8 h-8 rounded-full bg-gradient-to-br from-navy to-lagoon text-[#ffffff] text-sm font-bold">4</span><span><strong class="text-night">The robust option.</strong> It reduces the weight of atypical points in estimation. Recommended whenever the series contains one-off disruptions — an interrupted collection round, an exceptional event — that should not distort the seasonal pattern.</span></li>
+        <li class="flex items-start gap-4"><span class="flex-none inline-flex items-center justify-center w-8 h-8 rounded-full bg-gradient-to-br from-navy to-lagoon text-[#ffffff] text-sm font-bold">5</span><span><strong class="text-night">Handling of missing values.</strong> It must be explicit and documented. Silent interpolation creates data that were never observed and distorts the estimation of the remainder.</span></li>
+      </ol>
+
+      <h2 class="font-display font-bold text-night text-2xl md:text-3xl mb-5">3. Moving alert thresholds onto the remainder</h2>
+
+      <p class="leading-8 text-night/80 mb-5">The main operational benefit of decomposition lies in this shift. A threshold placed on the raw value triggers each year at the same periods, producing expected alerts and, in time, desensitising teams. A threshold placed on the remainder triggers only when the gap exceeds what trend and season explain.</p>
+
+      <p class="leading-8 text-night/80 mb-5">Building such thresholds falls under statistical process control: the usual dispersion of the remainder is estimated over a reference period, then values departing from it beyond an agreed multiple are flagged. This approach, extensively documented in service quality monitoring, transfers directly to programme indicators <a href="#ref-benneyan" class="text-navy hover:underline">(Benneyan et al., 2003)</a>. It also provides a shared reading rule: what triggers an alert is defined in advance, not judged case by case.</p>
+
+      <h2 class="font-display font-bold text-night text-2xl md:text-3xl mb-5">4. Limitations to document</h2>
+
+      <ul class="space-y-3.5 text-night/80 leading-7 mb-10">
+        <li class="flex items-start gap-3"><i class="fas fa-circle-exclamation text-navy mt-1.5"></i><span><strong class="text-night">Series length.</strong> Estimating a seasonal pattern presupposes several complete cycles; below two to three years of monthly data, the seasonal component is poorly identified and absorbs part of the trend.</span></li>
+        <li class="flex items-start gap-3"><i class="fas fa-circle-exclamation text-navy mt-1.5"></i><span><strong class="text-night">Decomposition does not detect breaks.</strong> It separates components but does not test for a regime change. Where the question concerns the date of a break in trend or seasonality, dedicated methods, developed notably for satellite image time series, are more appropriate <a href="#ref-verbesselt" class="text-navy hover:underline">(Verbesselt et al., 2010)</a>.</span></li>
+        <li class="flex items-start gap-3"><i class="fas fa-circle-exclamation text-navy mt-1.5"></i><span><strong class="text-night">Sensitivity to outliers.</strong> Without the robust option, an erroneous value durably distorts the estimated seasonal pattern and therefore all subsequent remainders. Variants designed for noisy or irregular series exist where this risk is structural <a href="#ref-wen" class="text-navy hover:underline">(Wen et al., 2019)</a>.</span></li>
+        <li class="flex items-start gap-3"><i class="fas fa-circle-exclamation text-navy mt-1.5"></i><span><strong class="text-night">Small counts.</strong> On series of low counts, random variability dominates and the remainder becomes hard to interpret. Aggregation to a higher geographical level is then preferable to site-by-site decomposition.</span></li>
+        <li class="flex items-start gap-3"><i class="fas fa-circle-exclamation text-navy mt-1.5"></i><span><strong class="text-night">Definition changes.</strong> A change in the collection protocol or in the indicator definition creates a discontinuity that the decomposition will attribute to the trend. Such changes must be traced in the series metadata.</span></li>
+      </ul>
+
+      <h2 class="font-display font-bold text-night text-2xl md:text-3xl mb-5">5. Integration into a monitoring system</h2>
+
+      <p class="leading-8 text-night/80 mb-5">Decomposition is best computed automatically at each data refresh rather than produced occasionally for a one-off analysis. Three displays suffice: the raw series, the seasonally adjusted series, and the remainder with its control limits. The third panel becomes the reference view for performance reviews.</p>
+
+      <p class="leading-8 text-night/80 mb-5">One communication caveat is worth anticipating. A seasonally adjusted series differs from the raw series teams are familiar with; keeping both displays side by side, with an explanatory note on the method and the parameters chosen, avoids confusion between observed and adjusted values.</p>
+
+      <div class="bg-gradient-to-br from-petrol to-night rounded-2xl p-6 md:p-8 mb-10">
+        <h2 class="font-display font-semibold text-[#ffffff] text-xl mb-4"><i class="fas fa-list-check text-lagoon mr-2"></i>Key points</h2>
+        <ul class="space-y-2.5 text-[#ffffff]/80 leading-7 text-sm md:text-base">
+          <li class="flex items-start gap-3"><i class="fas fa-check text-lagoon mt-1.5"></i>Part of monthly variation reflects the calendar rather than the performance of the intervention</li>
+          <li class="flex items-start gap-3"><i class="fas fa-check text-lagoon mt-1.5"></i>Decomposition separates trend, seasonality and remainder through iterative local smoothing</li>
+          <li class="flex items-start gap-3"><i class="fas fa-check text-lagoon mt-1.5"></i>Period, windows and the robust option are methodological decisions to document</li>
+          <li class="flex items-start gap-3"><i class="fas fa-check text-lagoon mt-1.5"></i>Alert thresholds placed on the remainder reduce alerts that recur every year</li>
+          <li class="flex items-start gap-3"><i class="fas fa-check text-lagoon mt-1.5"></i>The method does not detect breaks: other approaches are dedicated to that</li>
+        </ul>
+      </div>
+
+      <p class="leading-8 text-night/80 mb-5">An indicator that falls does not necessarily signal a weakening intervention; it may simply follow the calendar. The function of a monitoring tool is to make that distinction explicitly and reproducibly, rather than leaving it to each reader's judgement.</p>
+
+      <div class="bg-white border border-night/10 shadow-sm rounded-2xl p-6 md:p-8 mb-10">
+        <h2 class="font-display font-semibold text-night text-xl mb-5"><i class="fas fa-book text-navy mr-2"></i>References</h2>
+        <ol class="space-y-4 text-night/75 text-sm leading-6 ref">
+          <li id="ref-benneyan">Benneyan, J. C., Lloyd, R. C., &amp; Plsek, P. E. (2003). Statistical process control as a tool for research and healthcare improvement. <em>Quality &amp; Safety in Health Care</em>, 12(6), 458–464. <a href="https://doi.org/10.1136/qhc.12.6.458" target="_blank" class="text-navy hover:underline break-all">doi.org/10.1136/qhc.12.6.458</a></li>
+          <li id="ref-cleveland-loess">Cleveland, W. S. (1979). Robust Locally Weighted Regression and Smoothing Scatterplots. <em>Journal of the American Statistical Association</em>, 74(368), 829–836. <a href="https://doi.org/10.1080/01621459.1979.10481038" target="_blank" class="text-navy hover:underline break-all">doi.org/10.1080/01621459.1979.10481038</a></li>
+          <li id="ref-cleveland-stl">Cleveland, R. B., Cleveland, W. S., McRae, J. E., &amp; Terpenning, I. (1990). STL: A Seasonal-Trend Decomposition Procedure Based on Loess. <em>Journal of Official Statistics</em>, 6(1), 3–73.</li>
+          <li id="ref-hyndman">Hyndman, R. J., &amp; Athanasopoulos, G. (2021). <em>Forecasting: Principles and Practice</em> (3rd ed.). Melbourne: OTexts.</li>
+          <li id="ref-verbesselt">Verbesselt, J., Hyndman, R., Newnham, G., &amp; Culvenor, D. (2010). Detecting trend and seasonal changes in satellite image time series. <em>Remote Sensing of Environment</em>, 114(1), 106–115. <a href="https://doi.org/10.1016/j.rse.2009.08.014" target="_blank" class="text-navy hover:underline break-all">doi.org/10.1016/j.rse.2009.08.014</a></li>
+          <li id="ref-wen">Wen, Q., Gao, J., Song, X., Sun, L., Xu, H., &amp; Zhu, S. (2019). RobustSTL: A Robust Seasonal-Trend Decomposition Algorithm for Long Time Series. <em>Proceedings of the AAAI Conference on Artificial Intelligence</em>, 33(1), 5409–5416. <a href="https://doi.org/10.1609/aaai.v33i01.33015409" target="_blank" class="text-navy hover:underline break-all">doi.org/10.1609/aaai.v33i01.33015409</a></li>
+        </ol>
+      </div>
+
+      <div class="bg-white border border-night/10 shadow-sm rounded-2xl p-6 md:p-7 flex flex-col sm:flex-row items-center gap-5 mb-6">
+        <img src="../Photomerveille.jpg?v=2" alt="Merveille Aganze Sami" class="w-20 h-20 rounded-full object-cover ring-2 ring-navy/30" />
+        <div class="text-center sm:text-left">
+          <p class="font-display font-semibold text-night">Merveille Aganze Sami</p>
+          <p class="text-night/70 text-sm leading-6 mt-1">MEL &amp; Database Management Advisor. 9+ years of experience in monitoring &amp; evaluation, GIS and digitalization with international organizations (GIZ, Enabel) in DR Congo.</p>
+          <div class="flex justify-center sm:justify-start gap-4 mt-3 text-sm">
+            <a href="https://www.linkedin.com/in/mervag27/?skipRedirect=true" target="_blank" class="text-navy font-medium hover:text-night transition"><i class="fab fa-linkedin mr-1.5"></i>LinkedIn</a>
+            <a href="contact.html" class="text-navy font-medium hover:text-night transition"><i class="fas fa-envelope mr-1.5"></i>Contact me</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="flex flex-col sm:flex-row items-center justify-between gap-4 bg-sky/60 rounded-2xl p-6">
+        <p class="text-night/80 font-medium text-center sm:text-left">A monitoring dashboard to make reliable?</p>
+        <a href="contact.html" class="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-navy to-lagoon text-[#ffffff] font-semibold px-6 py-2.5 shadow-md hover:-translate-y-0.5 transition whitespace-nowrap">Get in touch <i class="fas fa-arrow-right"></i></a>
+      </div>
+    </article>
+  </main>
+
+  <footer class="mt-16 bg-gradient-to-br from-petrol to-night text-[#ffffff]">
+    <div class="max-w-6xl mx-auto px-5 sm:px-8 pt-12 md:pt-16 pb-8">
+      <div class="grid gap-10 md:grid-cols-[1.2fr_0.7fr_1.1fr]">
+        <div>
+          <p class="font-display font-bold text-xl mb-3">Merveille <span class="bg-gradient-to-r from-navy to-lagoon bg-clip-text text-transparent">AGANZE SAMI</span></p>
+          <p class="text-[#ffffff]/60 text-sm leading-7 max-w-xs">MEL &amp; Database Management Advisor. Data, GIS and digitalization at the service of your decisions.</p>
+          <div class="flex items-center gap-3 mt-6">
+            <a href="https://www.linkedin.com/in/mervag27/?skipRedirect=true" target="_blank" class="inline-flex items-center justify-center w-10 h-10 rounded-full bg-[#ffffff]/10 hover:bg-navy transition" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+            <a href="https://github.com/MerveAS" target="_blank" class="inline-flex items-center justify-center w-10 h-10 rounded-full bg-[#ffffff]/10 hover:bg-navy transition" aria-label="GitHub"><i class="fab fa-github"></i></a>
+          </div>
+        </div>
+        <div>
+          <h3 class="font-display font-semibold text-xs uppercase tracking-[0.2em] text-[#ffffff]/50 mb-4">Navigation</h3>
+          <ul class="space-y-2.5 text-sm">
+            <li><a href="index.html" class="text-[#ffffff]/70 hover:text-lagoon transition">Home</a></li>
+            <li><a href="blog.html" class="text-[#ffffff]/70 hover:text-lagoon transition">Blog</a></li>
+            <li><a href="expertise.html" class="text-[#ffffff]/70 hover:text-lagoon transition">Expertise</a></li>
+            <li><a href="projects.html" class="text-[#ffffff]/70 hover:text-lagoon transition">Projects</a></li>
+            <li><a href="contact.html" class="text-[#ffffff]/70 hover:text-lagoon transition">Contact</a></li>
+          </ul>
+        </div>
+        <div>
+          <h3 class="font-display font-semibold text-xs uppercase tracking-[0.2em] text-[#ffffff]/50 mb-4">Contact</h3>
+          <ul class="space-y-3 text-sm text-[#ffffff]/70">
+            <li class="flex items-center gap-3"><span class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-[#ffffff]/10 text-lagoon text-xs"><i class="fas fa-phone"></i></span>+243 850 012 270</li>
+            <li class="flex items-center gap-3"><span class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-[#ffffff]/10 text-lagoon text-xs"><i class="fas fa-envelope"></i></span><a href="mailto:merveille.aganzesami@fitigroup.org" class="hover:text-lagoon transition break-all">merveille.aganzesami@fitigroup.org</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="mt-10 pt-6 border-t border-[#ffffff]/10 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-[#ffffff]/50">
+        <p>© 2026 Merveille AGANZE SAMI — All rights reserved · <span class="text-[#ffffff]/30">v2.2</span></p>
+        <a href="#" onclick="window.scrollTo({top:0,behavior:'smooth'});return false;" class="inline-flex items-center gap-2 hover:text-lagoon transition">Back to top <i class="fas fa-arrow-up"></i></a>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>
