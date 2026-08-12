@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cartographier l'eau de surface : pourquoi l'indice de référence échoue en ville | Merveille Aganze Sami</title>
+  <meta name="description" content="En milieu urbain dense, l'indice d'eau classique confond eau et surfaces sombres. Le remplacement de la bande proche infrarouge par l'infrarouge à ondes courtes réduit ces faux positifs." />
+  <meta property="og:title" content="Cartographier l'eau de surface : pourquoi l'indice de référence échoue en ville" />
+  <meta property="og:description" content="En milieu urbain dense, l'indice d'eau classique confond eau et surfaces sombres. Le remplacement de la bande proche infrarouge par l'infrarouge à ondes courtes réduit ces faux positifs." />
+  <meta property="og:image" content="visuels/visuel_2026-06-19_mndwi.png" />
+  <meta property="og:type" content="article" />
+  <link rel="alternate" hreflang="fr" href="https://merveille.fitigroup.org/article-indices-eau-mndwi.html" />
+  <link rel="alternate" hreflang="en" href="https://merveille.fitigroup.org/en/article-water-indices-mndwi.html" />
+  <link rel="icon" href="favicon.svg?v=2" type="image/svg+xml" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = { theme: { extend: {
+      colors: { night:'#222B38', navy:'#EE7A5C', steel:'#8A93A3', petrol:'#26303E', lagoon:'#F2A48F', sky:'#F7DCD1', pale:'#F7F5F2' },
+      fontFamily: { sans:['DM Sans','Arial','sans-serif'], display:['Plus Jakarta Sans','Arial','sans-serif'] } } } }
+  </script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    html { scroll-behavior: smooth; }
+    .ref { font-variant-numeric: tabular-nums; }
+    @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col bg-gradient-to-b from-pale via-pale to-sky text-night font-sans antialiased">
+
+  <header class="sticky top-0 z-50 bg-pale/95 backdrop-blur border-b border-navy/20">
+    <div class="max-w-6xl mx-auto px-5 sm:px-8 min-h-16 md:min-h-20 py-2 flex items-center justify-between gap-4">
+      <a href="index.html" class="font-display font-bold text-night text-base sm:text-lg md:text-xl tracking-tight">
+        Merveille <span class="text-navy hidden sm:inline">AGANZE SAMI</span>
+      </a>
+      <nav class="flex flex-wrap justify-end items-center gap-x-4 gap-y-1 sm:gap-x-6 md:gap-x-8 text-xs sm:text-sm md:text-[15px]">
+        <a href="index.html" class="text-night/70 hover:text-navy transition">Accueil</a>
+        <a href="blog.html" class="text-navy font-semibold">Blog</a>
+        <a href="expertises.html" class="text-night/70 hover:text-navy transition">Expertises</a>
+        <a href="projets.html" class="text-night/70 hover:text-navy transition">Projets</a>
+        <a href="en/article-water-indices-mndwi.html" class="text-[11px] font-semibold border border-navy/40 rounded-full px-3 py-1 text-night/70 hover:text-navy hover:border-navy/60 transition" title="English version">EN</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="flex-1">
+    <section class="max-w-6xl mx-auto px-5 sm:px-8 pt-10 md:pt-14">
+      <div class="bg-gradient-to-br from-petrol to-night rounded-[2rem] md:rounded-[2.5rem] px-6 sm:px-10 md:px-14 py-12 md:py-14 relative overflow-hidden">
+        <div class="absolute -bottom-24 -right-16 w-80 h-80 bg-navy/20 rounded-full blur-2xl"></div>
+        <div class="relative max-w-3xl">
+          <a href="blog.html" class="inline-flex items-center gap-2 text-[#ffffff]/60 text-sm hover:text-lagoon transition mb-6"><i class="fas fa-arrow-left"></i> Retour au blog</a>
+          <div class="flex flex-wrap items-center gap-2 mb-5">
+            <span class="text-[11px] font-semibold uppercase tracking-wider bg-gradient-to-r from-navy to-lagoon text-[#ffffff] rounded-full px-3 py-1">Article</span>
+            <span class="text-[11px] font-medium text-[#ffffff]/50"><i class="fas fa-calendar mr-1.5"></i>19 juin 2026</span>
+            <span class="text-[11px] font-medium text-[#ffffff]/50"><i class="fas fa-clock mr-1.5"></i>9 min de lecture</span>
+          </div>
+          <h1 class="font-display font-bold text-[#ffffff] text-3xl sm:text-4xl md:text-5xl leading-tight mb-5">Eau de surface :<br /><span class="bg-gradient-to-r from-navy to-lagoon bg-clip-text text-transparent">pourquoi l'indice de référence échoue en ville</span></h1>
+          <p class="text-[#ffffff]/60 text-base mb-6">Séparation spectrale entre eau et bâti, choix de la bande infrarouge et seuillage d'une carte d'inondation</p>
+          <div class="flex items-center gap-3">
+            <img src="Photomerveille.jpg?v=2" alt="Merveille Aganze Sami" class="w-10 h-10 rounded-full object-cover ring-2 ring-[#ffffff]/30" />
+            <div class="text-sm">
+              <p class="text-[#ffffff] font-semibold">Merveille Aganze Sami</p>
+              <p class="text-[#ffffff]/50">Conseillère MEL &amp; Gestion de Bases de Données</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <article class="max-w-3xl mx-auto px-5 sm:px-8 py-12 md:py-16">
+
+      <figure class="mb-12">
+        <img src="visuels/visuel_2026-06-19_mndwi.png" alt="Profils de réflectance de l'eau et d'un toit sombre sur les bandes verte, proche infrarouge et infrarouge à ondes courtes" class="w-full rounded-2xl shadow-xl ring-1 ring-night/10" />
+        <figcaption class="text-night/60 text-sm mt-3 text-center"><strong class="text-night/70">Figure 1.</strong> Illustration : profils spectraux de l'eau et d'une surface bâtie sombre. L'écart entre les deux est faible dans le proche infrarouge et net dans l'infrarouge à ondes courtes.</figcaption>
+      </figure>
+
+      <p class="text-lg md:text-xl leading-9 text-night/80 mb-8">La délimitation de l'eau de surface à partir d'images satellitaires repose couramment sur un indice normalisé combinant la bande verte et la bande proche infrarouge. Cette formulation exploite une propriété physique nette : l'eau absorbe fortement dans le proche infrarouge alors que la végétation et les sols y réfléchissent <a href="#ref-mcfeeters" class="text-navy hover:underline">(McFeeters, 1996)</a>.</p>
+
+      <p class="leading-8 text-night/80 mb-5">Le contraste obtenu est excellent sur un plan d'eau isolé, une rivière à découvert ou une zone inondée en milieu rural. Il se dégrade en revanche nettement en milieu urbain dense, où l'indice classe comme eau des surfaces qui n'en sont pas : toitures sombres, revêtements bitumés humides, ombres portées de bâtiments.</p>
+
+      <h2 class="font-display font-bold text-night text-2xl md:text-3xl mb-5">1. L'origine du problème</h2>
+
+      <p class="leading-8 text-night/80 mb-5">La confusion tient à la bande utilisée. Dans le proche infrarouge, l'eau et de nombreuses surfaces artificielles sombres présentent des réflectances voisines. Le rapport normalisé qui les oppose à la bande verte produit alors des valeurs proches, et aucun seuil ne permet de les séparer de façon fiable.</p>
+
+      <p class="leading-8 text-night/80 mb-5">Cette ambiguïté a une conséquence opérationnelle immédiate : elle se concentre précisément dans les zones habitées, c'est-à-dire là où une carte d'inondation détermine des décisions d'alerte ou d'assistance. La sur-détection y est donc particulièrement problématique.</p>
+
+      <h2 class="font-display font-bold text-night text-2xl md:text-3xl mb-5">2. La substitution de bande</h2>
+
+      <div class="bg-sky/60 border-l-4 border-navy rounded-r-2xl p-5 md:p-6 mb-10">
+        <p class="leading-7 text-night/80 text-sm md:text-base"><i class="fas fa-circle-info text-navy mr-2"></i><strong class="text-night">Le principe de la correction.</strong> Le remplacement de la bande proche infrarouge par une bande infrarouge à ondes courtes exploite un comportement spectral différent : l'eau y présente une réflectance très faible, tandis que les surfaces bâties conservent une réflectance sensiblement plus élevée. L'écart entre les deux catégories s'en trouve creusé, ce qui améliore la séparation en contexte urbain <a href="#ref-xu" class="text-navy hover:underline">(Xu, 2006)</a>.</p>
+      </div>
+
+      <p class="leading-8 text-night/80 mb-5">Sur Sentinel-2, cette formulation mobilise les bandes B3 et B11 ; sur Landsat 8/9, les bandes 3 et 6. Une différence de résolution native entre les deux bandes doit être traitée par rééchantillonnage, opération dont la méthode mérite d'être documentée car elle affecte la finesse des limites obtenues.</p>
+
+      <h2 class="font-display font-bold text-night text-2xl md:text-3xl mb-5">3. Les formulations à plusieurs bandes</h2>
+
+      <p class="leading-8 text-night/80 mb-5">Lorsque la scène présente à la fois des surfaces bâties sombres et des zones d'ombre marquées — relief, immeubles élevés — deux bandes ne suffisent pas toujours. Des indices combinant quatre à cinq bandes ont été développés pour améliorer la séparation dans ces configurations, avec des variantes selon que la scène comporte ou non des surfaces artificielles étendues <a href="#ref-feyisa" class="text-navy hover:underline">(Feyisa et al., 2014)</a>.</p>
+
+      <p class="leading-8 text-night/80 mb-5">Les comparaisons systématiques entre méthodes montrent qu'aucune formulation ne domine dans tous les contextes, et que la performance dépend du type de paysage, de la turbidité de l'eau et de la présence de végétation aquatique <a href="#ref-fisher" class="text-navy hover:underline">(Fisher et al., 2016)</a>. Le choix relève donc d'un test local, non d'une préférence de principe.</p>
+
+      <h2 class="font-display font-bold text-night text-2xl md:text-3xl mb-5">4. La question du seuil</h2>
+
+      <p class="leading-8 text-night/80 mb-5">Un indice produit une valeur continue ; la carte d'eau résulte d'un seuillage. Une valeur de zéro est fréquemment retenue par défaut, mais elle n'a pas de fondement universel : la valeur optimale dépend de la turbidité, de la profondeur, de la végétation immergée et des conditions d'éclairement.</p>
+
+      <ul class="space-y-3 text-night/80 leading-7 mb-10">
+        <li class="flex items-start gap-3"><i class="fas fa-circle-check text-navy mt-1.5"></i><span><strong class="text-night">Seuillage adaptatif.</strong> Déterminer le seuil à partir de l'histogramme de chaque image, plutôt que de le fixer une fois pour toutes, améliore la stabilité entre dates.</span></li>
+        <li class="flex items-start gap-3"><i class="fas fa-circle-check text-navy mt-1.5"></i><span><strong class="text-night">Validation sur points de référence.</strong> Quelques dizaines de points d'eau et de non-eau, identifiés sur imagerie à haute résolution, permettent d'estimer les taux d'omission et de commission et de calibrer le seuil.</span></li>
+        <li class="flex items-start gap-3"><i class="fas fa-circle-check text-navy mt-1.5"></i><span><strong class="text-night">Masque des surfaces permanentes.</strong> Distinguer l'eau permanente de l'eau saisonnière requiert une référence multi-annuelle ; des jeux de données globaux fournissent cette base et permettent d'isoler la composante événementielle <a href="#ref-pekel" class="text-navy hover:underline">(Pekel et al., 2016)</a>.</span></li>
+        <li class="flex items-start gap-3"><i class="fas fa-circle-check text-navy mt-1.5"></i><span><strong class="text-night">Cohérence temporelle.</strong> Pour un suivi saisonnier, le seuil et la méthode doivent rester identiques d'une date à l'autre, faute de quoi la variation mesurée reflète en partie un changement de traitement.</span></li>
+      </ul>
+
+      <h2 class="font-display font-bold text-night text-2xl md:text-3xl mb-5">5. Limites de l'approche optique</h2>
+
+      <ul class="space-y-3.5 text-night/80 leading-7 mb-10">
+        <li class="flex items-start gap-3"><i class="fas fa-circle-exclamation text-navy mt-1.5"></i><span><strong class="text-night">Couverture nuageuse.</strong> Les épisodes d'inondation coïncident fréquemment avec des conditions météorologiques défavorables à l'observation optique. Une image utilisable peut n'être disponible que plusieurs jours après le pic, ce qui limite l'usage en réponse d'urgence. L'imagerie radar, insensible aux nuages, répond à cette contrainte — sujet développé dans l'article sur la <a href="article-radar-inondations.html" class="text-navy hover:underline font-medium">cartographie radar des inondations</a>.</span></li>
+        <li class="flex items-start gap-3"><i class="fas fa-circle-exclamation text-navy mt-1.5"></i><span><strong class="text-night">Eau sous couvert végétal.</strong> Une zone inondée sous une canopée dense n'est pas détectée : le signal provient de la végétation, non de la lame d'eau.</span></li>
+        <li class="flex items-start gap-3"><i class="fas fa-circle-exclamation text-navy mt-1.5"></i><span><strong class="text-night">Eaux peu profondes et turbides.</strong> Une faible lame d'eau chargée en sédiments présente une signature intermédiaire entre eau et sol nu, ce qui produit des omissions en zone de crue.</span></li>
+        <li class="flex items-start gap-3"><i class="fas fa-circle-exclamation text-navy mt-1.5"></i><span><strong class="text-night">Pixels mixtes.</strong> À dix ou vingt mètres de résolution, les limites de plans d'eau et les cours d'eau étroits occupent une fraction de pixel. La surface estimée dépend alors fortement du seuil retenu.</span></li>
+      </ul>
+
+      <div class="bg-gradient-to-br from-petrol to-night rounded-2xl p-6 md:p-8 mb-10">
+        <h2 class="font-display font-semibold text-[#ffffff] text-xl mb-4"><i class="fas fa-list-check text-lagoon mr-2"></i>Points essentiels</h2>
+        <ul class="space-y-2.5 text-[#ffffff]/80 leading-7 text-sm md:text-base">
+          <li class="flex items-start gap-3"><i class="fas fa-check text-lagoon mt-1.5"></i>L'indice classique confond eau et surfaces artificielles sombres en milieu urbain</li>
+          <li class="flex items-start gap-3"><i class="fas fa-check text-lagoon mt-1.5"></i>La substitution de l'infrarouge à ondes courtes au proche infrarouge creuse l'écart spectral</li>
+          <li class="flex items-start gap-3"><i class="fas fa-check text-lagoon mt-1.5"></i>Aucune formulation ne domine dans tous les paysages : le choix se teste localement</li>
+          <li class="flex items-start gap-3"><i class="fas fa-check text-lagoon mt-1.5"></i>Le seuil n'est pas une constante ; il se calibre et se documente</li>
+          <li class="flex items-start gap-3"><i class="fas fa-check text-lagoon mt-1.5"></i>L'optique ne voit ni sous les nuages ni sous la canopée : le radar est complémentaire</li>
+        </ul>
+      </div>
+
+      <p class="leading-8 text-night/80 mb-5">Aucun indice spectral n'est optimal indépendamment du paysage observé. Le réflexe utile n'est pas de retenir la formulation la plus citée, mais de vérifier laquelle sépare effectivement les catégories qui importent dans le contexte étudié.</p>
+
+      <div class="bg-white border border-night/10 shadow-sm rounded-2xl p-6 md:p-8 mb-10">
+        <h2 class="font-display font-semibold text-night text-xl mb-5"><i class="fas fa-book text-navy mr-2"></i>Références</h2>
+        <ol class="space-y-4 text-night/75 text-sm leading-6 ref">
+          <li id="ref-feyisa">Feyisa, G. L., Meilby, H., Fensholt, R., &amp; Proud, S. R. (2014). Automated Water Extraction Index: A new technique for surface water mapping using Landsat imagery. <em>Remote Sensing of Environment</em>, 140, 23–35. <a href="https://doi.org/10.1016/j.rse.2013.08.029" target="_blank" class="text-navy hover:underline break-all">doi.org/10.1016/j.rse.2013.08.029</a></li>
+          <li id="ref-fisher">Fisher, A., Flood, N., &amp; Danaher, T. (2016). Comparing Landsat water index methods for automated water classification in eastern Australia. <em>Remote Sensing of Environment</em>, 175, 167–182. <a href="https://doi.org/10.1016/j.rse.2015.12.055" target="_blank" class="text-navy hover:underline break-all">doi.org/10.1016/j.rse.2015.12.055</a></li>
+          <li id="ref-mcfeeters">McFeeters, S. K. (1996). The use of the Normalized Difference Water Index (NDWI) in the delineation of open water features. <em>International Journal of Remote Sensing</em>, 17(7), 1425–1432. <a href="https://doi.org/10.1080/01431169608948714" target="_blank" class="text-navy hover:underline break-all">doi.org/10.1080/01431169608948714</a></li>
+          <li id="ref-pekel">Pekel, J.-F., Cottam, A., Gorelick, N., &amp; Belward, A. S. (2016). High-resolution mapping of global surface water and its long-term changes. <em>Nature</em>, 540, 418–422. <a href="https://doi.org/10.1038/nature20584" target="_blank" class="text-navy hover:underline break-all">doi.org/10.1038/nature20584</a></li>
+          <li id="ref-xu">Xu, H. (2006). Modification of normalised difference water index (NDWI) to enhance open water features in remotely sensed imagery. <em>International Journal of Remote Sensing</em>, 27(14), 3025–3033. <a href="https://doi.org/10.1080/01431160600589179" target="_blank" class="text-navy hover:underline break-all">doi.org/10.1080/01431160600589179</a></li>
+        </ol>
+      </div>
+
+      <div class="bg-white border border-night/10 shadow-sm rounded-2xl p-6 md:p-7 flex flex-col sm:flex-row items-center gap-5 mb-6">
+        <img src="Photomerveille.jpg?v=2" alt="Merveille Aganze Sami" class="w-20 h-20 rounded-full object-cover ring-2 ring-navy/30" />
+        <div class="text-center sm:text-left">
+          <p class="font-display font-semibold text-night">Merveille Aganze Sami</p>
+          <p class="text-night/70 text-sm leading-6 mt-1">Conseillère MEL &amp; Gestion de Bases de Données. Plus de 9 ans d'expérience en suivi-évaluation, SIG et digitalisation auprès d'organisations internationales (GIZ, Enabel) en RD Congo.</p>
+          <div class="flex justify-center sm:justify-start gap-4 mt-3 text-sm">
+            <a href="https://www.linkedin.com/in/mervag27/?skipRedirect=true" target="_blank" class="text-navy font-medium hover:text-night transition"><i class="fab fa-linkedin mr-1.5"></i>LinkedIn</a>
+            <a href="contact.html" class="text-navy font-medium hover:text-night transition"><i class="fas fa-envelope mr-1.5"></i>Me contacter</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="flex flex-col sm:flex-row items-center justify-between gap-4 bg-sky/60 rounded-2xl p-6">
+        <p class="text-night/80 font-medium text-center sm:text-left">Un suivi des inondations à mettre en place ?</p>
+        <a href="contact.html" class="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-navy to-lagoon text-[#ffffff] font-semibold px-6 py-2.5 shadow-md hover:-translate-y-0.5 transition whitespace-nowrap">Prendre contact <i class="fas fa-arrow-right"></i></a>
+      </div>
+    </article>
+  </main>
+
+  <footer class="mt-16 bg-gradient-to-br from-petrol to-night text-[#ffffff]">
+    <div class="max-w-6xl mx-auto px-5 sm:px-8 pt-12 md:pt-16 pb-8">
+      <div class="grid gap-10 md:grid-cols-[1.2fr_0.7fr_1.1fr]">
+        <div>
+          <p class="font-display font-bold text-xl mb-3">Merveille <span class="bg-gradient-to-r from-navy to-lagoon bg-clip-text text-transparent">AGANZE SAMI</span></p>
+          <p class="text-[#ffffff]/60 text-sm leading-7 max-w-xs">Conseillère MEL &amp; Gestion de Bases de Données. Données, SIG et digitalisation au service de vos décisions.</p>
+          <div class="flex items-center gap-3 mt-6">
+            <a href="https://www.linkedin.com/in/mervag27/?skipRedirect=true" target="_blank" class="inline-flex items-center justify-center w-10 h-10 rounded-full bg-[#ffffff]/10 hover:bg-navy transition" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+            <a href="https://github.com/MerveAS" target="_blank" class="inline-flex items-center justify-center w-10 h-10 rounded-full bg-[#ffffff]/10 hover:bg-navy transition" aria-label="GitHub"><i class="fab fa-github"></i></a>
+          </div>
+        </div>
+        <div>
+          <h3 class="font-display font-semibold text-xs uppercase tracking-[0.2em] text-[#ffffff]/50 mb-4">Navigation</h3>
+          <ul class="space-y-2.5 text-sm">
+            <li><a href="index.html" class="text-[#ffffff]/70 hover:text-lagoon transition">Accueil</a></li>
+            <li><a href="blog.html" class="text-[#ffffff]/70 hover:text-lagoon transition">Blog</a></li>
+            <li><a href="expertises.html" class="text-[#ffffff]/70 hover:text-lagoon transition">Expertises</a></li>
+            <li><a href="projets.html" class="text-[#ffffff]/70 hover:text-lagoon transition">Projets</a></li>
+            <li><a href="contact.html" class="text-[#ffffff]/70 hover:text-lagoon transition">Contact</a></li>
+          </ul>
+        </div>
+        <div>
+          <h3 class="font-display font-semibold text-xs uppercase tracking-[0.2em] text-[#ffffff]/50 mb-4">Contact</h3>
+          <ul class="space-y-3 text-sm text-[#ffffff]/70">
+            <li class="flex items-center gap-3"><span class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-[#ffffff]/10 text-lagoon text-xs"><i class="fas fa-phone"></i></span>+243 850 012 270</li>
+            <li class="flex items-center gap-3"><span class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-[#ffffff]/10 text-lagoon text-xs"><i class="fas fa-envelope"></i></span><a href="mailto:merveille.aganzesami@fitigroup.org" class="hover:text-lagoon transition break-all">merveille.aganzesami@fitigroup.org</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="mt-10 pt-6 border-t border-[#ffffff]/10 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-[#ffffff]/50">
+        <p>© 2026 Merveille AGANZE SAMI — Tous droits réservés · <span class="text-[#ffffff]/30">v2.2</span></p>
+        <a href="#" onclick="window.scrollTo({top:0,behavior:'smooth'});return false;" class="inline-flex items-center gap-2 hover:text-lagoon transition">Retour en haut <i class="fas fa-arrow-up"></i></a>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>

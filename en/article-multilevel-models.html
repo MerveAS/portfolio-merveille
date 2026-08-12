@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Multilevel models: handling the nested structure of field data | Merveille Aganze Sami</title>
+  <meta name="description" content="Treating households nested within villages as independent observations produces confidence intervals that are too narrow. Random effects models restore the real level of uncertainty." />
+  <meta property="og:title" content="Multilevel models: handling the nested structure of field data" />
+  <meta property="og:description" content="Treating households nested within villages as independent observations produces confidence intervals that are too narrow. Random effects models restore the real level of uncertainty." />
+  <meta property="og:image" content="../visuels/visuel_2026-06-16_multiniveaux.png" />
+  <meta property="og:type" content="article" />
+  <link rel="alternate" hreflang="fr" href="https://merveille.fitigroup.org/article-modeles-multiniveaux.html" />
+  <link rel="alternate" hreflang="en" href="https://merveille.fitigroup.org/en/article-multilevel-models.html" />
+  <link rel="icon" href="../favicon.svg?v=2" type="image/svg+xml" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = { theme: { extend: {
+      colors: { night:'#222B38', navy:'#EE7A5C', steel:'#8A93A3', petrol:'#26303E', lagoon:'#F2A48F', sky:'#F7DCD1', pale:'#F7F5F2' },
+      fontFamily: { sans:['DM Sans','Arial','sans-serif'], display:['Plus Jakarta Sans','Arial','sans-serif'] } } } }
+  </script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    html { scroll-behavior: smooth; }
+    .ref { font-variant-numeric: tabular-nums; }
+    @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col bg-gradient-to-b from-pale via-pale to-sky text-night font-sans antialiased">
+
+  <header class="sticky top-0 z-50 bg-pale/95 backdrop-blur border-b border-navy/20">
+    <div class="max-w-6xl mx-auto px-5 sm:px-8 min-h-16 md:min-h-20 py-2 flex items-center justify-between gap-4">
+      <a href="index.html" class="font-display font-bold text-night text-base sm:text-lg md:text-xl tracking-tight">
+        Merveille <span class="text-navy hidden sm:inline">AGANZE SAMI</span>
+      </a>
+      <nav class="flex flex-wrap justify-end items-center gap-x-4 gap-y-1 sm:gap-x-6 md:gap-x-8 text-xs sm:text-sm md:text-[15px]">
+        <a href="index.html" class="text-night/70 hover:text-navy transition">Home</a>
+        <a href="blog.html" class="text-navy font-semibold">Blog</a>
+        <a href="expertise.html" class="text-night/70 hover:text-navy transition">Expertise</a>
+        <a href="projects.html" class="text-night/70 hover:text-navy transition">Projects</a>
+        <a href="../article-modeles-multiniveaux.html" class="text-[11px] font-semibold border border-navy/40 rounded-full px-3 py-1 text-night/70 hover:text-navy hover:border-navy/60 transition" title="Version française">FR</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="flex-1">
+    <section class="max-w-6xl mx-auto px-5 sm:px-8 pt-10 md:pt-14">
+      <div class="bg-gradient-to-br from-petrol to-night rounded-[2rem] md:rounded-[2.5rem] px-6 sm:px-10 md:px-14 py-12 md:py-14 relative overflow-hidden">
+        <div class="absolute -bottom-24 -right-16 w-80 h-80 bg-navy/20 rounded-full blur-2xl"></div>
+        <div class="relative max-w-3xl">
+          <a href="blog.html" class="inline-flex items-center gap-2 text-[#ffffff]/60 text-sm hover:text-lagoon transition mb-6"><i class="fas fa-arrow-left"></i> Back to blog</a>
+          <div class="flex flex-wrap items-center gap-2 mb-5">
+            <span class="text-[11px] font-semibold uppercase tracking-wider bg-gradient-to-r from-navy to-lagoon text-[#ffffff] rounded-full px-3 py-1">Article</span>
+            <span class="text-[11px] font-medium text-[#ffffff]/50"><i class="fas fa-calendar mr-1.5"></i>16 June 2026</span>
+            <span class="text-[11px] font-medium text-[#ffffff]/50"><i class="fas fa-clock mr-1.5"></i>10 min read</span>
+          </div>
+          <h1 class="font-display font-bold text-[#ffffff] text-3xl sm:text-4xl md:text-5xl leading-tight mb-5">Multilevel models:<br /><span class="bg-gradient-to-r from-navy to-lagoon bg-clip-text text-transparent">households within villages</span></h1>
+          <p class="text-[#ffffff]/60 text-base mb-6">Design effect, intraclass correlation and separating what belongs to the household from what belongs to the setting</p>
+          <div class="flex items-center gap-3">
+            <img src="../Photomerveille.jpg?v=2" alt="Merveille Aganze Sami" class="w-10 h-10 rounded-full object-cover ring-2 ring-[#ffffff]/30" />
+            <div class="text-sm">
+              <p class="text-[#ffffff] font-semibold">Merveille Aganze Sami</p>
+              <p class="text-[#ffffff]/50">MEL &amp; Database Management Advisor</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <article class="max-w-3xl mx-auto px-5 sm:px-8 py-12 md:py-16">
+
+      <figure class="mb-12">
+        <img src="../visuels/visuel_2026-06-16_multiniveaux.png" alt="Nested structure province-territory-village-household and comparison of two estimate distributions" class="w-full rounded-2xl shadow-xl ring-1 ring-night/10" />
+        <figcaption class="text-night/60 text-sm mt-3 text-center"><strong class="text-night/70">Figure 1.</strong> Illustration: nested structure of observation units and distributions of estimates obtained with and without accounting for that structure.</figcaption>
+      </figure>
+
+      <p class="text-lg md:text-xl leading-9 text-night/80 mb-8">Data produced by a monitoring system almost always have a nested structure: households belong to villages, those villages to territories, those territories to provinces. This organisation is not a presentational convenience; it has a direct statistical consequence.</p>
+
+      <p class="leading-8 text-night/80 mb-5">Two households in the same village share an environment, a market, access to services, often a common history. Their observations are therefore correlated. An analysis treating them as independent implicitly assumes each household contributes an equivalent amount of information, which is not the case: within a homogeneous cluster, each additional observation contributes less than the one before.</p>
+
+      <h2 class="font-display font-bold text-night text-2xl md:text-3xl mb-5">1. The consequence: intervals that are too narrow</h2>
+
+      <p class="leading-8 text-night/80 mb-5">The effect of this correlation is well documented. It translates into a multiplier applied to the variance of the estimator, often called the design effect. Depending on the strength of internal correlation and the number of units per cluster, this factor can reach several units, meaning the real confidence interval is appreciably wider than the one a standard computation produces.</p>
+
+      <p class="leading-8 text-night/80 mb-5">The difficulty is not merely obtaining a wrong figure: it is obtaining a wrong figure accompanied by a stated precision that corresponds to nothing. A difference declared significant may cease to be so once the structure is accounted for.</p>
+
+      <div class="bg-sky/60 border-l-4 border-navy rounded-r-2xl p-5 md:p-6 mb-10">
+        <p class="leading-7 text-night/80 text-sm md:text-base"><i class="fas fa-circle-info text-navy mr-2"></i><strong class="text-night">Intraclass correlation.</strong> This quantity expresses the share of total variability lying <em>between</em> clusters rather than within them. A value near zero indicates that villages resemble one another and that structure matters little; a high value indicates instead that village membership largely determines the observed value. It is the first result to examine, before any interpretation of coefficients <a href="#ref-snijders" class="text-navy hover:underline">(Snijders &amp; Bosker, 2012)</a>.</p>
+      </div>
+
+      <h2 class="font-display font-bold text-night text-2xl md:text-3xl mb-5">2. What a random effects model contributes</h2>
+
+      <p class="leading-8 text-night/80 mb-5">The model introduces, for each level of the hierarchy, a random term representing the departure specific to each unit at that level. It simultaneously estimates common effects — those holding across the population — and dispersion between clusters. Three contributions follow.</p>
+
+      <ul class="space-y-3 text-night/80 leading-7 mb-10">
+        <li class="flex items-start gap-3"><i class="fas fa-circle-check text-navy mt-1.5"></i><span><strong class="text-night">Standard errors consistent with the structure.</strong> Reported uncertainty incorporates within-cluster correlation rather than ignoring it.</span></li>
+        <li class="flex items-start gap-3"><i class="fas fa-circle-check text-navy mt-1.5"></i><span><strong class="text-night">A decomposition of variance.</strong> The model indicates what share of variation is explained by household characteristics and what share by local setting, information an ordinary regression does not provide.</span></li>
+        <li class="flex items-start gap-3"><i class="fas fa-circle-check text-navy mt-1.5"></i><span><strong class="text-night">Stabilised cluster-level estimates.</strong> Village-specific estimates are drawn towards the overall mean the more strongly the fewer observations the cluster holds, limiting extreme values arising from small counts <a href="#ref-gelman" class="text-navy hover:underline">(Gelman &amp; Hill, 2007)</a>.</span></li>
+      </ul>
+
+      <h2 class="font-display font-bold text-night text-2xl md:text-3xl mb-5">3. Implementation conditions</h2>
+
+      <ol class="space-y-4 text-night/80 leading-7 mb-10 list-none">
+        <li class="flex items-start gap-4"><span class="flex-none inline-flex items-center justify-center w-8 h-8 rounded-full bg-gradient-to-br from-navy to-lagoon text-[#ffffff] text-sm font-bold">1</span><span><strong class="text-night">A sufficient number of clusters.</strong> This is the main constraint, and it concerns the number of villages, not the number of households. Below about fifty clusters, estimation of second-level variances and associated standard errors becomes biased <a href="#ref-maas" class="text-navy hover:underline">(Maas &amp; Hox, 2005)</a>. Corrections exist for cases where this threshold cannot be met <a href="#ref-mcneish" class="text-navy hover:underline">(McNeish &amp; Stapleton, 2016)</a>.</span></li>
+        <li class="flex items-start gap-4"><span class="flex-none inline-flex items-center justify-center w-8 h-8 rounded-full bg-gradient-to-br from-navy to-lagoon text-[#ffffff] text-sm font-bold">2</span><span><strong class="text-night">An explicit choice of random effects.</strong> Allowing only the intercept to vary by village, or also the slope of a variable, corresponds to two distinct assumptions: an effect that is identical everywhere, or one whose strength depends on the setting.</span></li>
+        <li class="flex items-start gap-4"><span class="flex-none inline-flex items-center justify-center w-8 h-8 rounded-full bg-gradient-to-br from-navy to-lagoon text-[#ffffff] text-sm font-bold">3</span><span><strong class="text-night">Considered handling of centering.</strong> A household-level variable may be centred on the overall mean or on its village mean. This choice changes the interpretation of the coefficient — departure from the population, or departure from neighbours — and is not neutral <a href="#ref-enders" class="text-navy hover:underline">(Enders &amp; Tofighi, 2007)</a>.</span></li>
+        <li class="flex items-start gap-4"><span class="flex-none inline-flex items-center justify-center w-8 h-8 rounded-full bg-gradient-to-br from-navy to-lagoon text-[#ffffff] text-sm font-bold">4</span><span><strong class="text-night">A distinction between variables at different levels.</strong> Distance to market characterises the village, household size characterises the household. Entering them indiscriminately into one model leads to confused interpretations.</span></li>
+      </ol>
+
+      <h2 class="font-display font-bold text-night text-2xl md:text-3xl mb-5">4. Articulation with the sampling design</h2>
+
+      <p class="leading-8 text-night/80 mb-5">The model's structure should mirror that of the sampling design. Where the survey was built by clusters — as most field surveys are — the primary sampling units are the natural level for random effects. This consistency between design and analysis is a useful checkpoint, developed in the article on <a href="article-spatial-sampling.html" class="text-navy hover:underline font-medium">spatially stratified sampling</a>.</p>
+
+      <p class="leading-8 text-night/80 mb-5">A lighter alternative keeps an ordinary regression while clustering the standard errors. This settles the inference question but provides neither the variance decomposition nor cluster-level estimates. It suits situations where the structure is a nuisance to correct; the full model suits situations where the structure is itself an object of analysis.</p>
+
+      <ul class="space-y-3.5 text-night/80 leading-7 mb-10">
+        <li class="flex items-start gap-3"><i class="fas fa-circle-exclamation text-navy mt-1.5"></i><span><strong class="text-night">Confusing level of analysis with level of conclusion.</strong> An effect estimated at village level does not mechanically apply to a particular household. Transposing one to the other is a classic inferential error.</span></li>
+        <li class="flex items-start gap-3"><i class="fas fa-circle-exclamation text-navy mt-1.5"></i><span><strong class="text-night">Clusters of very unequal size.</strong> A village of three households and one of eighty do not contribute in the same way. Counts per cluster must be reported.</span></li>
+        <li class="flex items-start gap-3"><i class="fas fa-circle-exclamation text-navy mt-1.5"></i><span><strong class="text-night">Convergence of estimates.</strong> Complex models applied to sparse data frequently fail to converge. Simplifying the random structure is preferable to forcing estimation.</span></li>
+        <li class="flex items-start gap-3"><i class="fas fa-circle-exclamation text-navy mt-1.5"></i><span><strong class="text-night">Three levels or more.</strong> Each additional level requires a sufficient number of units at that level. Adding a provincial level with four provinces yields no usable information.</span></li>
+      </ul>
+
+      <div class="bg-gradient-to-br from-petrol to-night rounded-2xl p-6 md:p-8 mb-10">
+        <h2 class="font-display font-semibold text-[#ffffff] text-xl mb-4"><i class="fas fa-list-check text-lagoon mr-2"></i>Key points</h2>
+        <ul class="space-y-2.5 text-[#ffffff]/80 leading-7 text-sm md:text-base">
+          <li class="flex items-start gap-3"><i class="fas fa-check text-lagoon mt-1.5"></i>Field data are almost always nested, which correlates observations within a cluster</li>
+          <li class="flex items-start gap-3"><i class="fas fa-check text-lagoon mt-1.5"></i>Ignoring this structure produces intervals that are too narrow and overstated significance</li>
+          <li class="flex items-start gap-3"><i class="fas fa-check text-lagoon mt-1.5"></i>Intraclass correlation is the first result to examine</li>
+          <li class="flex items-start gap-3"><i class="fas fa-check text-lagoon mt-1.5"></i>The constraint concerns the number of clusters, not the number of observations</li>
+          <li class="flex items-start gap-3"><i class="fas fa-check text-lagoon mt-1.5"></i>The model's structure should mirror that of the sampling design</li>
+        </ul>
+      </div>
+
+      <p class="leading-8 text-night/80 mb-5">The geographic dimension of a monitoring system is not only an object for mapping: it is a statistical assumption. When it is neglected, the error concerns not just the estimate but the confidence placed in it.</p>
+
+      <div class="bg-white border border-night/10 shadow-sm rounded-2xl p-6 md:p-8 mb-10">
+        <h2 class="font-display font-semibold text-night text-xl mb-5"><i class="fas fa-book text-navy mr-2"></i>References</h2>
+        <ol class="space-y-4 text-night/75 text-sm leading-6 ref">
+          <li id="ref-enders">Enders, C. K., &amp; Tofighi, D. (2007). Centering predictor variables in cross-sectional multilevel models: A new look at an old issue. <em>Psychological Methods</em>, 12(2), 121–138. <a href="https://doi.org/10.1037/1082-989X.12.2.121" target="_blank" class="text-navy hover:underline break-all">doi.org/10.1037/1082-989X.12.2.121</a></li>
+          <li id="ref-gelman">Gelman, A., &amp; Hill, J. (2007). <em>Data Analysis Using Regression and Multilevel/Hierarchical Models</em>. New York: Cambridge University Press.</li>
+          <li id="ref-maas">Maas, C. J. M., &amp; Hox, J. J. (2005). Sufficient Sample Sizes for Multilevel Modeling. <em>Methodology</em>, 1(3), 86–92. <a href="https://doi.org/10.1027/1614-2241.1.3.86" target="_blank" class="text-navy hover:underline break-all">doi.org/10.1027/1614-2241.1.3.86</a></li>
+          <li id="ref-mcneish">McNeish, D. M., &amp; Stapleton, L. M. (2016). The Effect of Small Sample Size on Two-Level Model Estimates: A Review and Illustration. <em>Educational Psychology Review</em>, 28(2), 295–314. <a href="https://doi.org/10.1007/s10648-014-9287-x" target="_blank" class="text-navy hover:underline break-all">doi.org/10.1007/s10648-014-9287-x</a></li>
+          <li id="ref-snijders">Snijders, T. A. B., &amp; Bosker, R. J. (2012). <em>Multilevel Analysis: An Introduction to Basic and Advanced Multilevel Modeling</em> (2nd ed.). London: Sage.</li>
+        </ol>
+      </div>
+
+      <div class="bg-white border border-night/10 shadow-sm rounded-2xl p-6 md:p-7 flex flex-col sm:flex-row items-center gap-5 mb-6">
+        <img src="../Photomerveille.jpg?v=2" alt="Merveille Aganze Sami" class="w-20 h-20 rounded-full object-cover ring-2 ring-navy/30" />
+        <div class="text-center sm:text-left">
+          <p class="font-display font-semibold text-night">Merveille Aganze Sami</p>
+          <p class="text-night/70 text-sm leading-6 mt-1">MEL &amp; Database Management Advisor. 9+ years of experience in monitoring &amp; evaluation, GIS and digitalization with international organizations (GIZ, Enabel) in DR Congo.</p>
+          <div class="flex justify-center sm:justify-start gap-4 mt-3 text-sm">
+            <a href="https://www.linkedin.com/in/mervag27/?skipRedirect=true" target="_blank" class="text-navy font-medium hover:text-night transition"><i class="fab fa-linkedin mr-1.5"></i>LinkedIn</a>
+            <a href="contact.html" class="text-navy font-medium hover:text-night transition"><i class="fas fa-envelope mr-1.5"></i>Contact me</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="flex flex-col sm:flex-row items-center justify-between gap-4 bg-sky/60 rounded-2xl p-6">
+        <p class="text-night/80 font-medium text-center sm:text-left">Survey data analysis to make reliable?</p>
+        <a href="contact.html" class="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-navy to-lagoon text-[#ffffff] font-semibold px-6 py-2.5 shadow-md hover:-translate-y-0.5 transition whitespace-nowrap">Get in touch <i class="fas fa-arrow-right"></i></a>
+      </div>
+    </article>
+  </main>
+
+  <footer class="mt-16 bg-gradient-to-br from-petrol to-night text-[#ffffff]">
+    <div class="max-w-6xl mx-auto px-5 sm:px-8 pt-12 md:pt-16 pb-8">
+      <div class="grid gap-10 md:grid-cols-[1.2fr_0.7fr_1.1fr]">
+        <div>
+          <p class="font-display font-bold text-xl mb-3">Merveille <span class="bg-gradient-to-r from-navy to-lagoon bg-clip-text text-transparent">AGANZE SAMI</span></p>
+          <p class="text-[#ffffff]/60 text-sm leading-7 max-w-xs">MEL &amp; Database Management Advisor. Data, GIS and digitalization at the service of your decisions.</p>
+          <div class="flex items-center gap-3 mt-6">
+            <a href="https://www.linkedin.com/in/mervag27/?skipRedirect=true" target="_blank" class="inline-flex items-center justify-center w-10 h-10 rounded-full bg-[#ffffff]/10 hover:bg-navy transition" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+            <a href="https://github.com/MerveAS" target="_blank" class="inline-flex items-center justify-center w-10 h-10 rounded-full bg-[#ffffff]/10 hover:bg-navy transition" aria-label="GitHub"><i class="fab fa-github"></i></a>
+          </div>
+        </div>
+        <div>
+          <h3 class="font-display font-semibold text-xs uppercase tracking-[0.2em] text-[#ffffff]/50 mb-4">Navigation</h3>
+          <ul class="space-y-2.5 text-sm">
+            <li><a href="index.html" class="text-[#ffffff]/70 hover:text-lagoon transition">Home</a></li>
+            <li><a href="blog.html" class="text-[#ffffff]/70 hover:text-lagoon transition">Blog</a></li>
+            <li><a href="expertise.html" class="text-[#ffffff]/70 hover:text-lagoon transition">Expertise</a></li>
+            <li><a href="projects.html" class="text-[#ffffff]/70 hover:text-lagoon transition">Projects</a></li>
+            <li><a href="contact.html" class="text-[#ffffff]/70 hover:text-lagoon transition">Contact</a></li>
+          </ul>
+        </div>
+        <div>
+          <h3 class="font-display font-semibold text-xs uppercase tracking-[0.2em] text-[#ffffff]/50 mb-4">Contact</h3>
+          <ul class="space-y-3 text-sm text-[#ffffff]/70">
+            <li class="flex items-center gap-3"><span class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-[#ffffff]/10 text-lagoon text-xs"><i class="fas fa-phone"></i></span>+243 850 012 270</li>
+            <li class="flex items-center gap-3"><span class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-[#ffffff]/10 text-lagoon text-xs"><i class="fas fa-envelope"></i></span><a href="mailto:merveille.aganzesami@fitigroup.org" class="hover:text-lagoon transition break-all">merveille.aganzesami@fitigroup.org</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="mt-10 pt-6 border-t border-[#ffffff]/10 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-[#ffffff]/50">
+        <p>© 2026 Merveille AGANZE SAMI — All rights reserved · <span class="text-[#ffffff]/30">v2.2</span></p>
+        <a href="#" onclick="window.scrollTo({top:0,behavior:'smooth'});return false;" class="inline-flex items-center gap-2 hover:text-lagoon transition">Back to top <i class="fas fa-arrow-up"></i></a>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>
