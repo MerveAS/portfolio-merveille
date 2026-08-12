@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Échantillonnage spatialement stratifié : décider où regarder avant de collecter | Merveille Aganze Sami</title>
+  <meta name="description" content="Un plan d'échantillonnage construit sur une liste de villages ignore la structure du territoire. La stratification géographique améliore la précision à taille d'échantillon constante et rend les estimations désagrégeables." />
+  <meta property="og:title" content="Échantillonnage spatialement stratifié : décider où regarder avant de collecter" />
+  <meta property="og:description" content="Un plan d'échantillonnage construit sur une liste de villages ignore la structure du territoire. La stratification géographique améliore la précision à taille d'échantillon constante et rend les estimations désagrégeables." />
+  <meta property="og:image" content="visuels/visuel_2026-07-17_echantillonnage.png" />
+  <meta property="og:type" content="article" />
+  <link rel="alternate" hreflang="fr" href="https://merveille.fitigroup.org/article-echantillonnage-spatial.html" />
+  <link rel="alternate" hreflang="en" href="https://merveille.fitigroup.org/en/article-spatial-sampling.html" />
+  <link rel="icon" href="favicon.svg?v=2" type="image/svg+xml" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = { theme: { extend: {
+      colors: { night:'#222B38', navy:'#EE7A5C', steel:'#8A93A3', petrol:'#26303E', lagoon:'#F2A48F', sky:'#F7DCD1', pale:'#F7F5F2' },
+      fontFamily: { sans:['DM Sans','Arial','sans-serif'], display:['Plus Jakarta Sans','Arial','sans-serif'] } } } }
+  </script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    html { scroll-behavior: smooth; }
+    .ref { font-variant-numeric: tabular-nums; }
+    @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col bg-gradient-to-b from-pale via-pale to-sky text-night font-sans antialiased">
+
+  <header class="sticky top-0 z-50 bg-pale/95 backdrop-blur border-b border-navy/20">
+    <div class="max-w-6xl mx-auto px-5 sm:px-8 min-h-16 md:min-h-20 py-2 flex items-center justify-between gap-4">
+      <a href="index.html" class="font-display font-bold text-night text-base sm:text-lg md:text-xl tracking-tight">
+        Merveille <span class="text-navy hidden sm:inline">AGANZE SAMI</span>
+      </a>
+      <nav class="flex flex-wrap justify-end items-center gap-x-4 gap-y-1 sm:gap-x-6 md:gap-x-8 text-xs sm:text-sm md:text-[15px]">
+        <a href="index.html" class="text-night/70 hover:text-navy transition">Accueil</a>
+        <a href="blog.html" class="text-navy font-semibold">Blog</a>
+        <a href="expertises.html" class="text-night/70 hover:text-navy transition">Expertises</a>
+        <a href="projets.html" class="text-night/70 hover:text-navy transition">Projets</a>
+        <a href="en/article-spatial-sampling.html" class="text-[11px] font-semibold border border-navy/40 rounded-full px-3 py-1 text-night/70 hover:text-navy hover:border-navy/60 transition" title="English version">EN</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="flex-1">
+    <section class="max-w-6xl mx-auto px-5 sm:px-8 pt-10 md:pt-14">
+      <div class="bg-gradient-to-br from-petrol to-night rounded-[2rem] md:rounded-[2.5rem] px-6 sm:px-10 md:px-14 py-12 md:py-14 relative overflow-hidden">
+        <div class="absolute -bottom-24 -right-16 w-80 h-80 bg-navy/20 rounded-full blur-2xl"></div>
+        <div class="relative max-w-3xl">
+          <a href="blog.html" class="inline-flex items-center gap-2 text-[#ffffff]/60 text-sm hover:text-lagoon transition mb-6"><i class="fas fa-arrow-left"></i> Retour au blog</a>
+          <div class="flex flex-wrap items-center gap-2 mb-5">
+            <span class="text-[11px] font-semibold uppercase tracking-wider bg-gradient-to-r from-navy to-lagoon text-[#ffffff] rounded-full px-3 py-1">Article</span>
+            <span class="text-[11px] font-medium text-[#ffffff]/50"><i class="fas fa-calendar mr-1.5"></i>17 juillet 2026</span>
+            <span class="text-[11px] font-medium text-[#ffffff]/50"><i class="fas fa-clock mr-1.5"></i>10 min de lecture</span>
+          </div>
+          <h1 class="font-display font-bold text-[#ffffff] text-3xl sm:text-4xl md:text-5xl leading-tight mb-5">Échantillonnage spatial :<br /><span class="bg-gradient-to-r from-navy to-lagoon bg-clip-text text-transparent">décider où regarder avant de collecter</span></h1>
+          <p class="text-[#ffffff]/60 text-base mb-6">Stratification géographique, allocation de l'effort et couverture effective du territoire dans un plan d'enquête</p>
+          <div class="flex items-center gap-3">
+            <img src="Photomerveille.jpg?v=2" alt="Merveille Aganze Sami" class="w-10 h-10 rounded-full object-cover ring-2 ring-[#ffffff]/30" />
+            <div class="text-sm">
+              <p class="text-[#ffffff] font-semibold">Merveille Aganze Sami</p>
+              <p class="text-[#ffffff]/50">Conseillère MEL &amp; Gestion de Bases de Données</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <article class="max-w-3xl mx-auto px-5 sm:px-8 py-12 md:py-16">
+
+      <figure class="mb-12">
+        <img src="visuels/visuel_2026-07-17_echantillonnage.png" alt="Comparaison entre un tirage aléatoire simple et un tirage stratifié proportionnel sur trois strates, avec intervalles de confiance" class="w-full rounded-2xl shadow-xl ring-1 ring-night/10" />
+        <figcaption class="text-night/60 text-sm mt-3 text-center"><strong class="text-night/70">Figure 1.</strong> Illustration : répartition des unités tirées selon un plan aléatoire simple et un plan stratifié proportionnel, et intervalles de confiance associés. À effectif égal, la précision diffère.</figcaption>
+      </figure>
+
+      <p class="text-lg md:text-xl leading-9 text-night/80 mb-8">La conception d'un plan d'échantillonnage s'appuie fréquemment sur une liste d'unités administratives et sur un calcul de taille d'échantillon. Cette démarche traite le territoire comme une collection d'entités interchangeables. Or les zones d'intervention présentent le plus souvent une structure spatiale marquée — gradient écologique, contraste d'accessibilité, hétérogénéité de densité — qui influe directement sur la variable étudiée.</p>
+
+      <p class="leading-8 text-night/80 mb-5">Le tirage aléatoire simple garantit l'absence de biais en espérance, c'est-à-dire en moyenne sur l'ensemble des tirages possibles. Il ne garantit pas, pour un tirage donné, une couverture équilibrée d'un territoire hétérogène. Une zone représentant une fraction minoritaire de la population peut se voir attribuer un effectif trop faible pour produire une estimation exploitable à ce niveau.</p>
+
+      <h2 class="font-display font-bold text-night text-2xl md:text-3xl mb-5">1. Ce qu'apporte la stratification</h2>
+
+      <p class="leading-8 text-night/80 mb-5">La stratification consiste à partitionner la population en sous-ensembles homogènes, puis à tirer indépendamment dans chacun. Sa propriété statistique est établie de longue date : la variance de l'estimateur stratifié ne dépend que de la variabilité <em>à l'intérieur</em> des strates, la variabilité entre strates étant éliminée par construction <a href="#ref-cochran" class="text-navy hover:underline">(Cochran, 1977)</a>.</p>
+
+      <p class="leading-8 text-night/80 mb-5">Il en découle un critère de construction opérationnel : les strates doivent être définies selon les facteurs qui structurent réellement la variance de la variable d'intérêt. Une stratification sur la province administrative n'apporte rien si la variable dépend de l'accessibilité ou de la zone agro-écologique. Le gain de précision est proportionnel à la capacité du critère retenu à séparer des situations contrastées.</p>
+
+      <div class="bg-sky/60 border-l-4 border-navy rounded-r-2xl p-5 md:p-6 mb-10">
+        <p class="leading-7 text-night/80 text-sm md:text-base"><i class="fas fa-circle-info text-navy mr-2"></i><strong class="text-night">Le rôle du SIG dans la conception.</strong> Les couches géographiques disponibles — occupation du sol, réseau routier, densité de population, temps d'accès, zonage agro-écologique — fournissent des variables auxiliaires exploitables <em>avant</em> la collecte pour construire les strates. Le système d'information géographique intervient alors comme instrument de conception du plan, et non seulement comme outil de restitution cartographique des résultats <a href="#ref-wang" class="text-navy hover:underline">(Wang et al., 2012)</a>.</p>
+      </div>
+
+      <h2 class="font-display font-bold text-night text-2xl md:text-3xl mb-5">2. Répartir l'effort entre les strates</h2>
+
+      <p class="leading-8 text-night/80 mb-5">Une fois les strates définies, la répartition de la taille d'échantillon relève d'un arbitrage explicite entre trois objectifs.</p>
+
+      <ol class="space-y-4 text-night/80 leading-7 mb-10 list-none">
+        <li class="flex items-start gap-4"><span class="flex-none inline-flex items-center justify-center w-8 h-8 rounded-full bg-gradient-to-br from-navy to-lagoon text-[#ffffff] text-sm font-bold">1</span><span><strong class="text-night">Allocation proportionnelle.</strong> L'effectif de chaque strate est proportionnel à son poids dans la population. Ce choix est simple, donne des pondérations uniformes et convient lorsque la variabilité interne est comparable d'une strate à l'autre.</span></li>
+        <li class="flex items-start gap-4"><span class="flex-none inline-flex items-center justify-center w-8 h-8 rounded-full bg-gradient-to-br from-navy to-lagoon text-[#ffffff] text-sm font-bold">2</span><span><strong class="text-night">Allocation optimale.</strong> L'effectif est proportionnel au produit du poids de la strate par son écart-type interne, ce qui minimise la variance globale à coût constant. Cette formulation, établie dès les travaux fondateurs sur la méthode représentative, suppose une estimation préalable des variances internes <a href="#ref-neyman" class="text-navy hover:underline">(Neyman, 1934)</a>.</span></li>
+        <li class="flex items-start gap-4"><span class="flex-none inline-flex items-center justify-center w-8 h-8 rounded-full bg-gradient-to-br from-navy to-lagoon text-[#ffffff] text-sm font-bold">3</span><span><strong class="text-night">Allocation avec effectif plancher.</strong> Lorsque des estimations sont attendues strate par strate, un effectif minimal est imposé dans chacune, quitte à s'écarter de l'optimum global. Ce choix privilégie la désagrégation sur la précision de l'estimation nationale.</span></li>
+        <li class="flex items-start gap-4"><span class="flex-none inline-flex items-center justify-center w-8 h-8 rounded-full bg-gradient-to-br from-navy to-lagoon text-[#ffffff] text-sm font-bold">4</span><span><strong class="text-night">Pondération à l'analyse.</strong> Toute allocation non proportionnelle impose l'usage de poids de sondage lors du calcul des estimations. Omettre cette étape produit une estimation biaisée.</span></li>
+      </ol>
+
+      <h2 class="font-display font-bold text-night text-2xl md:text-3xl mb-5">3. Répartition dans l'espace à l'intérieur des strates</h2>
+
+      <p class="leading-8 text-night/80 mb-5">La stratification ne règle pas tout : à l'intérieur d'une strate, un tirage aléatoire peut concentrer les unités sur une portion du territoire. Des plans dits spatialement équilibrés répartissent les unités de façon plus régulière tout en conservant des probabilités d'inclusion connues, ce qui préserve la validité de l'inférence <a href="#ref-grafstrom" class="text-navy hover:underline">(Grafström &amp; Tillé, 2013)</a>.</p>
+
+      <p class="leading-8 text-night/80 mb-5">Ces approches sont particulièrement utiles lorsque la variable présente une structure spatiale continue : deux unités voisines apportant une information partiellement redondante, mieux vaut les éloigner.</p>
+
+      <h2 class="font-display font-bold text-night text-2xl md:text-3xl mb-5">4. L'écart entre plan théorique et collecte réelle</h2>
+
+      <ul class="space-y-3.5 text-night/80 leading-7 mb-10">
+        <li class="flex items-start gap-3"><i class="fas fa-circle-exclamation text-navy mt-1.5"></i><span><strong class="text-night">Substitutions non tracées.</strong> Le remplacement d'une unité inaccessible par une autre, plus commode, modifie le plan sans que l'analyse en tienne compte. Chaque substitution doit être enregistrée avec son motif.</span></li>
+        <li class="flex items-start gap-3"><i class="fas fa-circle-exclamation text-navy mt-1.5"></i><span><strong class="text-night">Non-réponse différentielle.</strong> Lorsque les unités manquantes partagent une caractéristique liée à la variable étudiée — enclavement, éloignement d'un service — le biais introduit ne dépend pas seulement du taux de non-réponse mais de sa corrélation avec la variable d'intérêt <a href="#ref-groves" class="text-navy hover:underline">(Groves, 2006)</a>.</span></li>
+        <li class="flex items-start gap-3"><i class="fas fa-circle-exclamation text-navy mt-1.5"></i><span><strong class="text-night">Base de sondage incomplète.</strong> Une liste de localités obsolète exclut d'emblée des unités de la population cible. Le croisement avec des données d'occupation du sol ou d'imagerie récente permet d'en repérer les principales lacunes.</span></li>
+        <li class="flex items-start gap-3"><i class="fas fa-circle-exclamation text-navy mt-1.5"></i><span><strong class="text-night">Effet de grappe.</strong> Concentrer plusieurs unités par village réduit les coûts mais aussi la quantité d'information effective. Cet effet doit être intégré au calcul de la taille d'échantillon plutôt que découvert au moment de l'analyse <a href="#ref-kish" class="text-navy hover:underline">(Kish, 1965)</a>.</span></li>
+      </ul>
+
+      <h2 class="font-display font-bold text-night text-2xl md:text-3xl mb-5">5. Documenter le plan</h2>
+
+      <p class="leading-8 text-night/80 mb-5">La valeur d'une estimation dépend de la traçabilité du plan qui l'a produite. Quatre éléments méritent de figurer dans la documentation d'enquête : le critère de stratification et sa justification, la règle d'allocation retenue, les probabilités d'inclusion et les poids qui en découlent, et le bilan de la collecte effective par strate — unités prévues, réalisées, substituées, non atteintes.</p>
+
+      <p class="leading-8 text-night/80 mb-5">Ce dernier point est fréquemment omis alors qu'il conditionne l'interprétation. Un taux de réalisation homogène entre strates autorise une lecture directe ; un déficit concentré sur une strate spécifique appelle une mention explicite dans la présentation des résultats.</p>
+
+      <div class="bg-gradient-to-br from-petrol to-night rounded-2xl p-6 md:p-8 mb-10">
+        <h2 class="font-display font-semibold text-[#ffffff] text-xl mb-4"><i class="fas fa-list-check text-lagoon mr-2"></i>Points essentiels</h2>
+        <ul class="space-y-2.5 text-[#ffffff]/80 leading-7 text-sm md:text-base">
+          <li class="flex items-start gap-3"><i class="fas fa-check text-lagoon mt-1.5"></i>Le tirage aléatoire simple ne garantit pas la couverture d'un territoire hétérogène sur un tirage donné</li>
+          <li class="flex items-start gap-3"><i class="fas fa-check text-lagoon mt-1.5"></i>Les strates doivent reposer sur les facteurs qui structurent la variance, non sur le découpage administratif par défaut</li>
+          <li class="flex items-start gap-3"><i class="fas fa-check text-lagoon mt-1.5"></i>L'allocation arbitre entre précision globale et possibilité de désagréger par strate</li>
+          <li class="flex items-start gap-3"><i class="fas fa-check text-lagoon mt-1.5"></i>Toute allocation non proportionnelle impose une pondération à l'analyse</li>
+          <li class="flex items-start gap-3"><i class="fas fa-check text-lagoon mt-1.5"></i>Le bilan de collecte par strate fait partie intégrante de la documentation d'enquête</li>
+        </ul>
+      </div>
+
+      <p class="leading-8 text-night/80 mb-5">Le calcul de la taille d'échantillon détermine combien d'unités observer. La stratification géographique détermine lesquelles. La seconde décision pèse autant que la première sur ce que les données permettront de conclure.</p>
+
+      <div class="bg-white border border-night/10 shadow-sm rounded-2xl p-6 md:p-8 mb-10">
+        <h2 class="font-display font-semibold text-night text-xl mb-5"><i class="fas fa-book text-navy mr-2"></i>Références</h2>
+        <ol class="space-y-4 text-night/75 text-sm leading-6 ref">
+          <li id="ref-cochran">Cochran, W. G. (1977). <em>Sampling Techniques</em> (3rd ed.). New York: John Wiley &amp; Sons.</li>
+          <li id="ref-grafstrom">Grafström, A., &amp; Tillé, Y. (2013). Doubly balanced spatial sampling with spreading and restitution of auxiliary totals. <em>Environmetrics</em>, 24(2), 120–131. <a href="https://doi.org/10.1002/env.2194" target="_blank" class="text-navy hover:underline break-all">doi.org/10.1002/env.2194</a></li>
+          <li id="ref-groves">Groves, R. M. (2006). Nonresponse Rates and Nonresponse Bias in Household Surveys. <em>Public Opinion Quarterly</em>, 70(5), 646–675. <a href="https://doi.org/10.1093/poq/nfl033" target="_blank" class="text-navy hover:underline break-all">doi.org/10.1093/poq/nfl033</a></li>
+          <li id="ref-kish">Kish, L. (1965). <em>Survey Sampling</em>. New York: John Wiley &amp; Sons.</li>
+          <li id="ref-neyman">Neyman, J. (1934). On the Two Different Aspects of the Representative Method. <em>Journal of the Royal Statistical Society</em>, 97(4), 558–625. <a href="https://doi.org/10.2307/2342192" target="_blank" class="text-navy hover:underline break-all">doi.org/10.2307/2342192</a></li>
+          <li id="ref-wang">Wang, J.-F., Stein, A., Gao, B.-B., &amp; Ge, Y. (2012). A review of spatial sampling. <em>Spatial Statistics</em>, 2, 1–14. <a href="https://doi.org/10.1016/j.spasta.2012.08.001" target="_blank" class="text-navy hover:underline break-all">doi.org/10.1016/j.spasta.2012.08.001</a></li>
+        </ol>
+      </div>
+
+      <div class="bg-white border border-night/10 shadow-sm rounded-2xl p-6 md:p-7 flex flex-col sm:flex-row items-center gap-5 mb-6">
+        <img src="Photomerveille.jpg?v=2" alt="Merveille Aganze Sami" class="w-20 h-20 rounded-full object-cover ring-2 ring-navy/30" />
+        <div class="text-center sm:text-left">
+          <p class="font-display font-semibold text-night">Merveille Aganze Sami</p>
+          <p class="text-night/70 text-sm leading-6 mt-1">Conseillère MEL &amp; Gestion de Bases de Données. Plus de 9 ans d'expérience en suivi-évaluation, SIG et digitalisation auprès d'organisations internationales (GIZ, Enabel) en RD Congo.</p>
+          <div class="flex justify-center sm:justify-start gap-4 mt-3 text-sm">
+            <a href="https://www.linkedin.com/in/mervag27/?skipRedirect=true" target="_blank" class="text-navy font-medium hover:text-night transition"><i class="fab fa-linkedin mr-1.5"></i>LinkedIn</a>
+            <a href="contact.html" class="text-navy font-medium hover:text-night transition"><i class="fas fa-envelope mr-1.5"></i>Me contacter</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="flex flex-col sm:flex-row items-center justify-between gap-4 bg-sky/60 rounded-2xl p-6">
+        <p class="text-night/80 font-medium text-center sm:text-left">Un plan d'enquête à concevoir ?</p>
+        <a href="contact.html" class="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-navy to-lagoon text-[#ffffff] font-semibold px-6 py-2.5 shadow-md hover:-translate-y-0.5 transition whitespace-nowrap">Prendre contact <i class="fas fa-arrow-right"></i></a>
+      </div>
+    </article>
+  </main>
+
+  <footer class="mt-16 bg-gradient-to-br from-petrol to-night text-[#ffffff]">
+    <div class="max-w-6xl mx-auto px-5 sm:px-8 pt-12 md:pt-16 pb-8">
+      <div class="grid gap-10 md:grid-cols-[1.2fr_0.7fr_1.1fr]">
+        <div>
+          <p class="font-display font-bold text-xl mb-3">Merveille <span class="bg-gradient-to-r from-navy to-lagoon bg-clip-text text-transparent">AGANZE SAMI</span></p>
+          <p class="text-[#ffffff]/60 text-sm leading-7 max-w-xs">Conseillère MEL &amp; Gestion de Bases de Données. Données, SIG et digitalisation au service de vos décisions.</p>
+          <div class="flex items-center gap-3 mt-6">
+            <a href="https://www.linkedin.com/in/mervag27/?skipRedirect=true" target="_blank" class="inline-flex items-center justify-center w-10 h-10 rounded-full bg-[#ffffff]/10 hover:bg-navy transition" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+            <a href="https://github.com/MerveAS" target="_blank" class="inline-flex items-center justify-center w-10 h-10 rounded-full bg-[#ffffff]/10 hover:bg-navy transition" aria-label="GitHub"><i class="fab fa-github"></i></a>
+          </div>
+        </div>
+        <div>
+          <h3 class="font-display font-semibold text-xs uppercase tracking-[0.2em] text-[#ffffff]/50 mb-4">Navigation</h3>
+          <ul class="space-y-2.5 text-sm">
+            <li><a href="index.html" class="text-[#ffffff]/70 hover:text-lagoon transition">Accueil</a></li>
+            <li><a href="blog.html" class="text-[#ffffff]/70 hover:text-lagoon transition">Blog</a></li>
+            <li><a href="expertises.html" class="text-[#ffffff]/70 hover:text-lagoon transition">Expertises</a></li>
+            <li><a href="projets.html" class="text-[#ffffff]/70 hover:text-lagoon transition">Projets</a></li>
+            <li><a href="contact.html" class="text-[#ffffff]/70 hover:text-lagoon transition">Contact</a></li>
+          </ul>
+        </div>
+        <div>
+          <h3 class="font-display font-semibold text-xs uppercase tracking-[0.2em] text-[#ffffff]/50 mb-4">Contact</h3>
+          <ul class="space-y-3 text-sm text-[#ffffff]/70">
+            <li class="flex items-center gap-3"><span class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-[#ffffff]/10 text-lagoon text-xs"><i class="fas fa-phone"></i></span>+243 850 012 270</li>
+            <li class="flex items-center gap-3"><span class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-[#ffffff]/10 text-lagoon text-xs"><i class="fas fa-envelope"></i></span><a href="mailto:merveille.aganzesami@fitigroup.org" class="hover:text-lagoon transition break-all">merveille.aganzesami@fitigroup.org</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="mt-10 pt-6 border-t border-[#ffffff]/10 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-[#ffffff]/50">
+        <p>© 2026 Merveille AGANZE SAMI — Tous droits réservés · <span class="text-[#ffffff]/30">v2.2</span></p>
+        <a href="#" onclick="window.scrollTo({top:0,behavior:'smooth'});return false;" class="inline-flex items-center gap-2 hover:text-lagoon transition">Retour en haut <i class="fas fa-arrow-up"></i></a>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>
