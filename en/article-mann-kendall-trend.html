@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mann-Kendall test and Sen's slope: establishing a trend rather than perceiving one | Merveille Aganze Sami</title>
+  <meta name="description" content="Concluding degradation from two images or a curve is visual appraisal. A non-parametric test provides a defensible significance level and an annual magnitude." />
+  <meta property="og:title" content="Mann-Kendall test and Sen's slope: establishing a trend rather than perceiving one" />
+  <meta property="og:description" content="Concluding degradation from two images or a curve is visual appraisal. A non-parametric test provides a defensible significance level and an annual magnitude." />
+  <meta property="og:image" content="../visuels/visuel_2026-06-26_mannkendall.png" />
+  <meta property="og:type" content="article" />
+  <link rel="alternate" hreflang="fr" href="https://merveille.fitigroup.org/article-tendance-mann-kendall.html" />
+  <link rel="alternate" hreflang="en" href="https://merveille.fitigroup.org/en/article-mann-kendall-trend.html" />
+  <link rel="icon" href="../favicon.svg?v=2" type="image/svg+xml" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = { theme: { extend: {
+      colors: { night:'#222B38', navy:'#EE7A5C', steel:'#8A93A3', petrol:'#26303E', lagoon:'#F2A48F', sky:'#F7DCD1', pale:'#F7F5F2' },
+      fontFamily: { sans:['DM Sans','Arial','sans-serif'], display:['Plus Jakarta Sans','Arial','sans-serif'] } } } }
+  </script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    html { scroll-behavior: smooth; }
+    .ref { font-variant-numeric: tabular-nums; }
+    @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col bg-gradient-to-b from-pale via-pale to-sky text-night font-sans antialiased">
+
+  <header class="sticky top-0 z-50 bg-pale/95 backdrop-blur border-b border-navy/20">
+    <div class="max-w-6xl mx-auto px-5 sm:px-8 min-h-16 md:min-h-20 py-2 flex items-center justify-between gap-4">
+      <a href="index.html" class="font-display font-bold text-night text-base sm:text-lg md:text-xl tracking-tight">
+        Merveille <span class="text-navy hidden sm:inline">AGANZE SAMI</span>
+      </a>
+      <nav class="flex flex-wrap justify-end items-center gap-x-4 gap-y-1 sm:gap-x-6 md:gap-x-8 text-xs sm:text-sm md:text-[15px]">
+        <a href="index.html" class="text-night/70 hover:text-navy transition">Home</a>
+        <a href="blog.html" class="text-navy font-semibold">Blog</a>
+        <a href="expertise.html" class="text-night/70 hover:text-navy transition">Expertise</a>
+        <a href="projects.html" class="text-night/70 hover:text-navy transition">Projects</a>
+        <a href="../article-tendance-mann-kendall.html" class="text-[11px] font-semibold border border-navy/40 rounded-full px-3 py-1 text-night/70 hover:text-navy hover:border-navy/60 transition" title="Version française">FR</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="flex-1">
+    <section class="max-w-6xl mx-auto px-5 sm:px-8 pt-10 md:pt-14">
+      <div class="bg-gradient-to-br from-petrol to-night rounded-[2rem] md:rounded-[2.5rem] px-6 sm:px-10 md:px-14 py-12 md:py-14 relative overflow-hidden">
+        <div class="absolute -bottom-24 -right-16 w-80 h-80 bg-navy/20 rounded-full blur-2xl"></div>
+        <div class="relative max-w-3xl">
+          <a href="blog.html" class="inline-flex items-center gap-2 text-[#ffffff]/60 text-sm hover:text-lagoon transition mb-6"><i class="fas fa-arrow-left"></i> Back to blog</a>
+          <div class="flex flex-wrap items-center gap-2 mb-5">
+            <span class="text-[11px] font-semibold uppercase tracking-wider bg-gradient-to-r from-navy to-lagoon text-[#ffffff] rounded-full px-3 py-1">Article</span>
+            <span class="text-[11px] font-medium text-[#ffffff]/50"><i class="fas fa-calendar mr-1.5"></i>26 June 2026</span>
+            <span class="text-[11px] font-medium text-[#ffffff]/50"><i class="fas fa-clock mr-1.5"></i>10 min read</span>
+          </div>
+          <h1 class="font-display font-bold text-[#ffffff] text-3xl sm:text-4xl md:text-5xl leading-tight mb-5">Mann-Kendall and Sen's slope:<br /><span class="bg-gradient-to-r from-navy to-lagoon bg-clip-text text-transparent">establishing a trend, not perceiving one</span></h1>
+          <p class="text-[#ffffff]/60 text-base mb-6">Non-parametric monotonic trend testing, robust slope estimation and caveats for satellite index series</p>
+          <div class="flex items-center gap-3">
+            <img src="../Photomerveille.jpg?v=2" alt="Merveille Aganze Sami" class="w-10 h-10 rounded-full object-cover ring-2 ring-[#ffffff]/30" />
+            <div class="text-sm">
+              <p class="text-[#ffffff] font-semibold">Merveille Aganze Sami</p>
+              <p class="text-[#ffffff]/50">MEL &amp; Database Management Advisor</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <article class="max-w-3xl mx-auto px-5 sm:px-8 py-12 md:py-16">
+
+      <figure class="mb-12">
+        <img src="../visuels/visuel_2026-06-26_mannkendall.png" alt="Satellite index series with a misleading visual reading and Sen's slope revealing a monotonic trend" class="w-full rounded-2xl shadow-xl ring-1 ring-night/10" />
+        <figcaption class="text-night/60 text-sm mt-3 text-center"><strong class="text-night/70">Figure 1.</strong> Illustration: the same series read by eye and estimated by Sen's slope. The test provides a significance level that visual appraisal cannot produce.</figcaption>
+      </figure>
+
+      <p class="text-lg md:text-xl leading-9 text-night/80 mb-8">Assessing environmental change from satellite imagery often takes the form of a visual reading: two dates are compared, or an index curve is examined over a few years, and a conclusion is drawn. This approach has a known limitation — the eye struggles to separate an underlying trend from a succession of variations caused by an atypical season, changing acquisition conditions or missing data.</p>
+
+      <p class="leading-8 text-night/80 mb-5">Satellite index series combine precisely the features that make visual appraisal unreliable: strong seasonality, extreme values linked to clouds or shadows, irregular time steps, and sometimes a sensor change mid-series. A statistical test suited to these constraints provides a verifiable answer.</p>
+
+      <h2 class="font-display font-bold text-night text-2xl md:text-3xl mb-5">1. What the Mann-Kendall statistic tests</h2>
+
+      <p class="leading-8 text-night/80 mb-5">The test rests on a simple principle: for each pair of observations in the series, one records whether the later value exceeds or falls below the earlier one. The statistic aggregates these comparisons; a marked excess of increasing or decreasing pairs signals a monotonic trend <a href="#ref-mann" class="text-navy hover:underline">(Mann, 1945)</a>. The general formulation of this type of rank correlation stems from work on non-parametric correlation methods <a href="#ref-kendall" class="text-navy hover:underline">(Kendall, 1975)</a>.</p>
+
+      <p class="leading-8 text-night/80 mb-5">Two properties explain its common use in environmental monitoring. The test assumes no distributional form, which suits bounded and skewed indices. And because it works only on ranks, an isolated outlier has little influence on the result, unlike in ordinary linear regression.</p>
+
+      <p class="leading-8 text-night/80 mb-5">One interpretive point matters: the test detects a <em>monotonic</em> trend, that is, one consistently oriented in the same direction, not necessarily a linear one. A series that degrades then stabilises does not fall within this framework.</p>
+
+      <div class="bg-sky/60 border-l-4 border-navy rounded-r-2xl p-5 md:p-6 mb-10">
+        <p class="leading-7 text-night/80 text-sm md:text-base"><i class="fas fa-circle-info text-navy mr-2"></i><strong class="text-night">Sen's slope.</strong> The test indicates the existence of a trend but does not quantify its magnitude. The associated estimator computes the slope between every pair of observations, then takes the median of all these slopes <a href="#ref-sen" class="text-navy hover:underline">(Sen, 1968)</a>. The result is expressed in the indicator's unit per unit of time — for instance a change in vegetation index per year — and inherits the median's robustness to extreme values.</p>
+      </div>
+
+      <h2 class="font-display font-bold text-night text-2xl md:text-3xl mb-5">2. The independence assumption</h2>
+
+      <p class="leading-8 text-night/80 mb-5">The test assumes observations are independent of one another. Environmental series frequently violate this condition: a monthly value depends largely on the previous one, and seasonality creates a periodic dependence structure. Under positive autocorrelation, the variance of the statistic is understated, leading to trends being declared significant when they are not.</p>
+
+      <p class="leading-8 text-night/80 mb-5">Two corrections are in common use. The first adjusts the variance of the statistic to account for the observed autocorrelation structure <a href="#ref-hamed" class="text-navy hover:underline">(Hamed &amp; Rao, 1998)</a>. The second removes the autocorrelated component before applying the test; this approach is delicate, however, since it also reduces the very trend one seeks to detect and lowers the power of the test <a href="#ref-yue" class="text-navy hover:underline">(Yue et al., 2002)</a>.</p>
+
+      <p class="leading-8 text-night/80 mb-5">For seasonality, a variant applies the test separately to each position in the cycle — all Marches together, for instance — then aggregates the results. An alternative is to work on the trend component from a prior decomposition, an approach presented in the article on <a href="article-stl-decomposition.html" class="text-navy hover:underline font-medium">seasonal decomposition</a>.</p>
+
+      <h2 class="font-display font-bold text-night text-2xl md:text-3xl mb-5">3. Application to satellite index series</h2>
+
+      <p class="leading-8 text-night/80 mb-5">Applying this test pixel by pixel to vegetation index series is established practice for mapping cover dynamics at large scale <a href="#ref-dejong" class="text-navy hover:underline">(de Jong et al., 2011)</a>. It nonetheless calls for specific precautions.</p>
+
+      <ul class="space-y-3.5 text-night/80 leading-7 mb-10">
+        <li class="flex items-start gap-3"><i class="fas fa-circle-exclamation text-navy mt-1.5"></i><span><strong class="text-night">Unequal observation counts across pixels.</strong> After cloud masking, some pixels have markedly shorter series than others. Test power then varies across space, and a significance map partly reflects data availability. The number of valid observations should be mapped alongside.</span></li>
+        <li class="flex items-start gap-3"><i class="fas fa-circle-exclamation text-navy mt-1.5"></i><span><strong class="text-night">Sensor change.</strong> A transition between two instruments within the same series introduces a systematic offset that the test will read as a trend. Prior harmonisation or segmentation of the series is required.</span></li>
+        <li class="flex items-start gap-3"><i class="fas fa-circle-exclamation text-navy mt-1.5"></i><span><strong class="text-night">Multiple testing.</strong> Applying the test to several hundred thousand pixels produces a substantial number of significant results through multiplicity alone. A false discovery rate correction is essential — the principle is detailed in the article on <a href="article-hot-spot-analysis.html" class="text-navy hover:underline font-medium">hot spots</a>.</span></li>
+        <li class="flex items-start gap-3"><i class="fas fa-circle-exclamation text-navy mt-1.5"></i><span><strong class="text-night">Significance and magnitude.</strong> A trend may be significant and negligible, or strong and non-significant on a short series. Both results must be mapped together: the slope map without the significance map, or the reverse, leads to erroneous readings.</span></li>
+      </ul>
+
+      <h2 class="font-display font-bold text-night text-2xl md:text-3xl mb-5">4. What to report</h2>
+
+      <p class="leading-8 text-night/80 mb-5">A usable result contains four elements: the value of the rank correlation statistic and its sign, the associated significance level, the estimated slope expressed in the indicator's unit per year, and the number of observations used. To these are added the period covered, the treatment applied to autocorrelation and seasonality, and the multiple-testing correction rule where relevant.</p>
+
+      <p class="leading-8 text-night/80 mb-5">This information turns an observation of change into a verifiable result. It also allows comparison across sites or periods, which a qualitative appraisal does not.</p>
+
+      <div class="bg-gradient-to-br from-petrol to-night rounded-2xl p-6 md:p-8 mb-10">
+        <h2 class="font-display font-semibold text-[#ffffff] text-xl mb-4"><i class="fas fa-list-check text-lagoon mr-2"></i>Key points</h2>
+        <ul class="space-y-2.5 text-[#ffffff]/80 leading-7 text-sm md:text-base">
+          <li class="flex items-start gap-3"><i class="fas fa-check text-lagoon mt-1.5"></i>The test compares pairs of observations and assumes no distributional form</li>
+          <li class="flex items-start gap-3"><i class="fas fa-check text-lagoon mt-1.5"></i>It detects a monotonic trend, not necessarily linear, and not a break</li>
+          <li class="flex items-start gap-3"><i class="fas fa-check text-lagoon mt-1.5"></i>Sen's slope quantifies annual change robustly against extreme values</li>
+          <li class="flex items-start gap-3"><i class="fas fa-check text-lagoon mt-1.5"></i>Autocorrelation and seasonality must be handled, otherwise significance is overstated</li>
+          <li class="flex items-start gap-3"><i class="fas fa-check text-lagoon mt-1.5"></i>Significance and magnitude are two distinct results that must be reported together</li>
+        </ul>
+      </div>
+
+      <p class="leading-8 text-night/80 mb-5">Satellite imagery supplies the signal; it does not supply the verdict. It is the statistical procedure applied to that signal that establishes whether a change is demonstrated, and of what magnitude.</p>
+
+      <div class="bg-white border border-night/10 shadow-sm rounded-2xl p-6 md:p-8 mb-10">
+        <h2 class="font-display font-semibold text-night text-xl mb-5"><i class="fas fa-book text-navy mr-2"></i>References</h2>
+        <ol class="space-y-4 text-night/75 text-sm leading-6 ref">
+          <li id="ref-dejong">de Jong, R., de Bruin, S., de Wit, A., Schaepman, M. E., &amp; Dent, D. L. (2011). Analysis of monotonic greening and browning trends from global NDVI time-series. <em>Remote Sensing of Environment</em>, 115(2), 692–702. <a href="https://doi.org/10.1016/j.rse.2010.10.011" target="_blank" class="text-navy hover:underline break-all">doi.org/10.1016/j.rse.2010.10.011</a></li>
+          <li id="ref-hamed">Hamed, K. H., &amp; Rao, A. R. (1998). A modified Mann-Kendall trend test for autocorrelated data. <em>Journal of Hydrology</em>, 204(1–4), 182–196. <a href="https://doi.org/10.1016/S0022-1694(97)00125-X" target="_blank" class="text-navy hover:underline break-all">doi.org/10.1016/S0022-1694(97)00125-X</a></li>
+          <li id="ref-kendall">Kendall, M. G. (1975). <em>Rank Correlation Methods</em> (4th ed.). London: Charles Griffin.</li>
+          <li id="ref-mann">Mann, H. B. (1945). Nonparametric Tests Against Trend. <em>Econometrica</em>, 13(3), 245–259. <a href="https://doi.org/10.2307/1907187" target="_blank" class="text-navy hover:underline break-all">doi.org/10.2307/1907187</a></li>
+          <li id="ref-sen">Sen, P. K. (1968). Estimates of the Regression Coefficient Based on Kendall's Tau. <em>Journal of the American Statistical Association</em>, 63(324), 1379–1389. <a href="https://doi.org/10.1080/01621459.1968.10480934" target="_blank" class="text-navy hover:underline break-all">doi.org/10.1080/01621459.1968.10480934</a></li>
+          <li id="ref-yue">Yue, S., Pilon, P., Phinney, B., &amp; Cavadias, G. (2002). The influence of autocorrelation on the ability to detect trend in hydrological series. <em>Hydrological Processes</em>, 16(9), 1807–1829. <a href="https://doi.org/10.1002/hyp.1095" target="_blank" class="text-navy hover:underline break-all">doi.org/10.1002/hyp.1095</a></li>
+        </ol>
+      </div>
+
+      <div class="bg-white border border-night/10 shadow-sm rounded-2xl p-6 md:p-7 flex flex-col sm:flex-row items-center gap-5 mb-6">
+        <img src="../Photomerveille.jpg?v=2" alt="Merveille Aganze Sami" class="w-20 h-20 rounded-full object-cover ring-2 ring-navy/30" />
+        <div class="text-center sm:text-left">
+          <p class="font-display font-semibold text-night">Merveille Aganze Sami</p>
+          <p class="text-night/70 text-sm leading-6 mt-1">MEL &amp; Database Management Advisor. 9+ years of experience in monitoring &amp; evaluation, GIS and digitalization with international organizations (GIZ, Enabel) in DR Congo.</p>
+          <div class="flex justify-center sm:justify-start gap-4 mt-3 text-sm">
+            <a href="https://www.linkedin.com/in/mervag27/?skipRedirect=true" target="_blank" class="text-navy font-medium hover:text-night transition"><i class="fab fa-linkedin mr-1.5"></i>LinkedIn</a>
+            <a href="contact.html" class="text-navy font-medium hover:text-night transition"><i class="fas fa-envelope mr-1.5"></i>Contact me</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="flex flex-col sm:flex-row items-center justify-between gap-4 bg-sky/60 rounded-2xl p-6">
+        <p class="text-night/80 font-medium text-center sm:text-left">Environmental monitoring to ground in evidence?</p>
+        <a href="contact.html" class="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-navy to-lagoon text-[#ffffff] font-semibold px-6 py-2.5 shadow-md hover:-translate-y-0.5 transition whitespace-nowrap">Get in touch <i class="fas fa-arrow-right"></i></a>
+      </div>
+    </article>
+  </main>
+
+  <footer class="mt-16 bg-gradient-to-br from-petrol to-night text-[#ffffff]">
+    <div class="max-w-6xl mx-auto px-5 sm:px-8 pt-12 md:pt-16 pb-8">
+      <div class="grid gap-10 md:grid-cols-[1.2fr_0.7fr_1.1fr]">
+        <div>
+          <p class="font-display font-bold text-xl mb-3">Merveille <span class="bg-gradient-to-r from-navy to-lagoon bg-clip-text text-transparent">AGANZE SAMI</span></p>
+          <p class="text-[#ffffff]/60 text-sm leading-7 max-w-xs">MEL &amp; Database Management Advisor. Data, GIS and digitalization at the service of your decisions.</p>
+          <div class="flex items-center gap-3 mt-6">
+            <a href="https://www.linkedin.com/in/mervag27/?skipRedirect=true" target="_blank" class="inline-flex items-center justify-center w-10 h-10 rounded-full bg-[#ffffff]/10 hover:bg-navy transition" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+            <a href="https://github.com/MerveAS" target="_blank" class="inline-flex items-center justify-center w-10 h-10 rounded-full bg-[#ffffff]/10 hover:bg-navy transition" aria-label="GitHub"><i class="fab fa-github"></i></a>
+          </div>
+        </div>
+        <div>
+          <h3 class="font-display font-semibold text-xs uppercase tracking-[0.2em] text-[#ffffff]/50 mb-4">Navigation</h3>
+          <ul class="space-y-2.5 text-sm">
+            <li><a href="index.html" class="text-[#ffffff]/70 hover:text-lagoon transition">Home</a></li>
+            <li><a href="blog.html" class="text-[#ffffff]/70 hover:text-lagoon transition">Blog</a></li>
+            <li><a href="expertise.html" class="text-[#ffffff]/70 hover:text-lagoon transition">Expertise</a></li>
+            <li><a href="projects.html" class="text-[#ffffff]/70 hover:text-lagoon transition">Projects</a></li>
+            <li><a href="contact.html" class="text-[#ffffff]/70 hover:text-lagoon transition">Contact</a></li>
+          </ul>
+        </div>
+        <div>
+          <h3 class="font-display font-semibold text-xs uppercase tracking-[0.2em] text-[#ffffff]/50 mb-4">Contact</h3>
+          <ul class="space-y-3 text-sm text-[#ffffff]/70">
+            <li class="flex items-center gap-3"><span class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-[#ffffff]/10 text-lagoon text-xs"><i class="fas fa-phone"></i></span>+243 850 012 270</li>
+            <li class="flex items-center gap-3"><span class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-[#ffffff]/10 text-lagoon text-xs"><i class="fas fa-envelope"></i></span><a href="mailto:merveille.aganzesami@fitigroup.org" class="hover:text-lagoon transition break-all">merveille.aganzesami@fitigroup.org</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="mt-10 pt-6 border-t border-[#ffffff]/10 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-[#ffffff]/50">
+        <p>© 2026 Merveille AGANZE SAMI — All rights reserved · <span class="text-[#ffffff]/30">v2.2</span></p>
+        <a href="#" onclick="window.scrollTo({top:0,behavior:'smooth'});return false;" class="inline-flex items-center gap-2 hover:text-lagoon transition">Back to top <i class="fas fa-arrow-up"></i></a>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>
