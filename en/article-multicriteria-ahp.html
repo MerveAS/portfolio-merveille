@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Spatial multicriteria analysis: making a siting decision open to challenge | Merveille Aganze Sami</title>
+  <meta name="description" content="Choosing where to site infrastructure sets several criteria against one another. Multicriteria analysis does not remove the trade-off: it exposes it in a form that can be checked and contested." />
+  <meta property="og:title" content="Spatial multicriteria analysis: making a siting decision open to challenge" />
+  <meta property="og:description" content="Choosing where to site infrastructure sets several criteria against one another. Multicriteria analysis does not remove the trade-off: it exposes it in a form that can be checked and contested." />
+  <meta property="og:image" content="../visuels/visuel_2026-06-25_ahp.png" />
+  <meta property="og:type" content="article" />
+  <link rel="alternate" hreflang="fr" href="https://merveille.fitigroup.org/article-analyse-multicritere-ahp.html" />
+  <link rel="alternate" hreflang="en" href="https://merveille.fitigroup.org/en/article-multicriteria-ahp.html" />
+  <link rel="icon" href="../favicon.svg?v=2" type="image/svg+xml" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = { theme: { extend: {
+      colors: { night:'#222B38', navy:'#EE7A5C', steel:'#8A93A3', petrol:'#26303E', lagoon:'#F2A48F', sky:'#F7DCD1', pale:'#F7F5F2' },
+      fontFamily: { sans:['DM Sans','Arial','sans-serif'], display:['Plus Jakarta Sans','Arial','sans-serif'] } } } }
+  </script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    html { scroll-behavior: smooth; }
+    .ref { font-variant-numeric: tabular-nums; }
+    @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col bg-gradient-to-b from-pale via-pale to-sky text-night font-sans antialiased">
+
+  <header class="sticky top-0 z-50 bg-pale/95 backdrop-blur border-b border-navy/20">
+    <div class="max-w-6xl mx-auto px-5 sm:px-8 min-h-16 md:min-h-20 py-2 flex items-center justify-between gap-4">
+      <a href="index.html" class="font-display font-bold text-night text-base sm:text-lg md:text-xl tracking-tight">
+        Merveille <span class="text-navy hidden sm:inline">AGANZE SAMI</span>
+      </a>
+      <nav class="flex flex-wrap justify-end items-center gap-x-4 gap-y-1 sm:gap-x-6 md:gap-x-8 text-xs sm:text-sm md:text-[15px]">
+        <a href="index.html" class="text-night/70 hover:text-navy transition">Home</a>
+        <a href="blog.html" class="text-navy font-semibold">Blog</a>
+        <a href="expertise.html" class="text-night/70 hover:text-navy transition">Expertise</a>
+        <a href="projects.html" class="text-night/70 hover:text-navy transition">Projects</a>
+        <a href="../article-analyse-multicritere-ahp.html" class="text-[11px] font-semibold border border-navy/40 rounded-full px-3 py-1 text-night/70 hover:text-navy hover:border-navy/60 transition" title="Version française">FR</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="flex-1">
+    <section class="max-w-6xl mx-auto px-5 sm:px-8 pt-10 md:pt-14">
+      <div class="bg-gradient-to-br from-petrol to-night rounded-[2rem] md:rounded-[2.5rem] px-6 sm:px-10 md:px-14 py-12 md:py-14 relative overflow-hidden">
+        <div class="absolute -bottom-24 -right-16 w-80 h-80 bg-navy/20 rounded-full blur-2xl"></div>
+        <div class="relative max-w-3xl">
+          <a href="blog.html" class="inline-flex items-center gap-2 text-[#ffffff]/60 text-sm hover:text-lagoon transition mb-6"><i class="fas fa-arrow-left"></i> Back to blog</a>
+          <div class="flex flex-wrap items-center gap-2 mb-5">
+            <span class="text-[11px] font-semibold uppercase tracking-wider bg-gradient-to-r from-navy to-lagoon text-[#ffffff] rounded-full px-3 py-1">Article</span>
+            <span class="text-[11px] font-medium text-[#ffffff]/50"><i class="fas fa-calendar mr-1.5"></i>25 June 2026</span>
+            <span class="text-[11px] font-medium text-[#ffffff]/50"><i class="fas fa-clock mr-1.5"></i>10 min read</span>
+          </div>
+          <h1 class="font-display font-bold text-[#ffffff] text-3xl sm:text-4xl md:text-5xl leading-tight mb-5">Multicriteria analysis:<br /><span class="bg-gradient-to-r from-navy to-lagoon bg-clip-text text-transparent">making the trade-off explicit</span></h1>
+          <p class="text-[#ffffff]/60 text-base mb-6">Structuring criteria, weighting through pairwise comparison and sensitivity analysis of a suitability map</p>
+          <div class="flex items-center gap-3">
+            <img src="../Photomerveille.jpg?v=2" alt="Merveille Aganze Sami" class="w-10 h-10 rounded-full object-cover ring-2 ring-[#ffffff]/30" />
+            <div class="text-sm">
+              <p class="text-[#ffffff] font-semibold">Merveille Aganze Sami</p>
+              <p class="text-[#ffffff]/50">MEL &amp; Database Management Advisor</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <article class="max-w-3xl mx-auto px-5 sm:px-8 py-12 md:py-16">
+
+      <figure class="mb-12">
+        <img src="../visuels/visuel_2026-06-25_ahp.png" alt="Stacked criterion layers, pairwise comparison matrix and resulting suitability map" class="w-full rounded-2xl shadow-xl ring-1 ring-night/10" />
+        <figcaption class="text-night/60 text-sm mt-3 text-center"><strong class="text-night/70">Figure 1.</strong> Illustration: stacked criterion layers, pairwise comparison matrix with the resulting weights, and the final suitability map.</figcaption>
+      </figure>
+
+      <p class="text-lg md:text-xl leading-9 text-night/80 mb-8">Deciding where to site infrastructure — water points, collection centres, reforestation plots — sets heterogeneous criteria against one another: population served, distance to existing facilities, subsurface characteristics, accessibility, terrain constraints. Each points to different locations.</p>
+
+      <p class="leading-8 text-night/80 mb-5">Without an explicit method, the trade-off between these criteria happens implicitly, in the mind of whoever produces the map. The result may be sound, but it is neither traceable nor contestable. Spatial multicriteria analysis does not remove the element of judgement; it formalises it into a set of parameters that can be examined and challenged <a href="#ref-malczewski2006" class="text-navy hover:underline">(Malczewski, 2006)</a>.</p>
+
+      <h2 class="font-display font-bold text-night text-2xl md:text-3xl mb-5">1. Structure before weighting</h2>
+
+      <p class="leading-8 text-night/80 mb-5">The first step organises the decision into a hierarchy: the objective at the top, criteria below, possibly broken into sub-criteria. This structuring has a practical consequence — it forces a distinction between what is a criterion to optimise and what is a constraint to respect.</p>
+
+      <p class="leading-8 text-night/80 mb-5">Next comes an operation whose importance is frequently underestimated: bringing layers onto a common scale. A distance in kilometres, a slope in degrees and a density in inhabitants per square kilometre are not comparable as they stand. The function chosen to convert each quantity into a suitability score — linear, stepped, with a saturation threshold — determines a substantial part of the final result, as much as the weights do.</p>
+
+      <div class="bg-sky/60 border-l-4 border-navy rounded-r-2xl p-5 md:p-6 mb-10">
+        <p class="leading-7 text-night/80 text-sm md:text-base"><i class="fas fa-circle-info text-navy mr-2"></i><strong class="text-night">Pairwise comparison.</strong> Rather than assigning weights directly, the method elicits relative preference between each pair of criteria on a graded scale. Matrix processing derives a weight vector, and a consistency indicator flags contradictory judgements — preferring A to B, B to C, then C to A. A ratio below 0.10 is conventionally accepted <a href="#ref-saaty1977" class="text-navy hover:underline">(Saaty, 1977)</a> <a href="#ref-saaty1980" class="text-navy hover:underline">(Saaty, 1980)</a>.</p>
+      </div>
+
+      <h2 class="font-display font-bold text-night text-2xl md:text-3xl mb-5">2. Implementation steps</h2>
+
+      <ol class="space-y-4 text-night/80 leading-7 mb-10 list-none">
+        <li class="flex items-start gap-4"><span class="flex-none inline-flex items-center justify-center w-8 h-8 rounded-full bg-gradient-to-br from-navy to-lagoon text-[#ffffff] text-sm font-bold">1</span><span><strong class="text-night">Define the objective and select criteria.</strong> A limited number, of the order of five to seven, keeps pairwise comparisons intelligible. Beyond that, the consistency of judgements degrades.</span></li>
+        <li class="flex items-start gap-4"><span class="flex-none inline-flex items-center justify-center w-8 h-8 rounded-full bg-gradient-to-br from-navy to-lagoon text-[#ffffff] text-sm font-bold">2</span><span><strong class="text-night">Separate constraints from criteria.</strong> A protected area or an excessive slope is an exclusion, not a criterion to weight. These layers apply as a mask, before or after combination.</span></li>
+        <li class="flex items-start gap-4"><span class="flex-none inline-flex items-center justify-center w-8 h-8 rounded-full bg-gradient-to-br from-navy to-lagoon text-[#ffffff] text-sm font-bold">3</span><span><strong class="text-night">Standardise the layers.</strong> Each criterion is converted into a suitability score through an explicit function, itself documented.</span></li>
+        <li class="flex items-start gap-4"><span class="flex-none inline-flex items-center justify-center w-8 h-8 rounded-full bg-gradient-to-br from-navy to-lagoon text-[#ffffff] text-sm font-bold">4</span><span><strong class="text-night">Establish weights and check consistency.</strong> Comparisons are conducted with the people who own the decision, not by the analyst alone. The consistency ratio is reported.</span></li>
+        <li class="flex items-start gap-4"><span class="flex-none inline-flex items-center justify-center w-8 h-8 rounded-full bg-gradient-to-br from-navy to-lagoon text-[#ffffff] text-sm font-bold">5</span><span><strong class="text-night">Combine and map.</strong> Weighted linear combination produces a score per pixel, whose classification into categories is a separate choice.</span></li>
+      </ol>
+
+      <h2 class="font-display font-bold text-night text-2xl md:text-3xl mb-5">3. Compensatory combination or not</h2>
+
+      <p class="leading-8 text-night/80 mb-5">Weighted summation has a property worth making explicit: it is compensatory. A very low score on one criterion can be offset by high scores on the others, and the site will still appear favourable. Where such compensation is not acceptable — an unusable aquifer is not redeemed by good road access — the constraint must be treated as an exclusion, or a combination rule limiting compensation must be adopted.</p>
+
+      <p class="leading-8 text-night/80 mb-5">This point deserves an explicit decision with those responsible. It determines whether the map identifies sites that are acceptable overall or sites acceptable on every dimension — two different questions.</p>
+
+      <h2 class="font-display font-bold text-night text-2xl md:text-3xl mb-5">4. Limitations and caveats</h2>
+
+      <ul class="space-y-3.5 text-night/80 leading-7 mb-10">
+        <li class="flex items-start gap-3"><i class="fas fa-circle-exclamation text-navy mt-1.5"></i><span><strong class="text-night">Critiques of the weighting procedure.</strong> The method has been the subject of methodological debate, notably on the interpretation of the comparison scale and on the fact that adding or removing an option can change the ranking of the others <a href="#ref-dyer" class="text-navy hover:underline">(Dyer, 1990)</a>. These reservations do not invalidate its use in suitability mapping, but they caution against presenting the resulting weights as objective measurements.</span></li>
+        <li class="flex items-start gap-3"><i class="fas fa-circle-exclamation text-navy mt-1.5"></i><span><strong class="text-night">Sensitivity to weights.</strong> A moderate change in weights can appreciably shift the areas ranked most favourable. A sensitivity analysis — varying each weight and observing the stability of the ranking — should systematically accompany the map produced <a href="#ref-chen" class="text-navy hover:underline">(Chen et al., 2010)</a>.</span></li>
+        <li class="flex items-start gap-3"><i class="fas fa-circle-exclamation text-navy mt-1.5"></i><span><strong class="text-night">Origin of the judgements.</strong> Weights reflect the preferences of those consulted. Weighting established by the technical team alone produces a technically coherent map lacking legitimacy with stakeholders. The composition of the judging group is part of the result.</span></li>
+        <li class="flex items-start gap-3"><i class="fas fa-circle-exclamation text-navy mt-1.5"></i><span><strong class="text-night">Quality of input layers.</strong> An imprecise or outdated layer propagates its error into the final score without leaving a trace. The date and source of each layer must accompany the map.</span></li>
+        <li class="flex items-start gap-3"><i class="fas fa-circle-exclamation text-navy mt-1.5"></i><span><strong class="text-night">Apparent precision.</strong> A continuous score between 0 and 1 suggests a fineness the data generally do not support. Presentation in a few classes, together with an uncertainty map, is more honest.</span></li>
+      </ul>
+
+      <h2 class="font-display font-bold text-night text-2xl md:text-3xl mb-5">5. What makes the map defensible</h2>
+
+      <p class="leading-8 text-night/80 mb-5">The value of the exercise lies not in the map itself but in the documentation accompanying it: the list of criteria and the reason for their selection, the standardisation functions, the comparison matrix and consistency ratio, the composition of the group that provided the judgements, the combination rule, and the results of the sensitivity analysis <a href="#ref-malczewski2015" class="text-navy hover:underline">(Malczewski &amp; Rinner, 2015)</a>.</p>
+
+      <p class="leading-8 text-night/80 mb-5">Together these allow a third party to reproduce the exercise, to contest a specific parameter, and to measure the effect of that contestation. This is what distinguishes decision support from cartographic justification.</p>
+
+      <div class="bg-gradient-to-br from-petrol to-night rounded-2xl p-6 md:p-8 mb-10">
+        <h2 class="font-display font-semibold text-[#ffffff] text-xl mb-4"><i class="fas fa-list-check text-lagoon mr-2"></i>Key points</h2>
+        <ul class="space-y-2.5 text-[#ffffff]/80 leading-7 text-sm md:text-base">
+          <li class="flex items-start gap-3"><i class="fas fa-check text-lagoon mt-1.5"></i>Multicriteria analysis does not remove the trade-off: it makes it explicit and verifiable</li>
+          <li class="flex items-start gap-3"><i class="fas fa-check text-lagoon mt-1.5"></i>Layer standardisation weighs as heavily on the result as the weights themselves</li>
+          <li class="flex items-start gap-3"><i class="fas fa-check text-lagoon mt-1.5"></i>The consistency ratio detects contradictory judgements, not mistaken ones</li>
+          <li class="flex items-start gap-3"><i class="fas fa-check text-lagoon mt-1.5"></i>Weighted summation is compensatory: non-negotiable criteria must be handled as exclusions</li>
+          <li class="flex items-start gap-3"><i class="fas fa-check text-lagoon mt-1.5"></i>Weight sensitivity analysis is part of the deliverable, not exploratory work</li>
+        </ul>
+      </div>
+
+      <p class="leading-8 text-night/80 mb-5">A geographic information system does not indicate where to act. It allows trade-offs to be stated in a form others can examine and discuss — which is precisely the condition for a shared decision.</p>
+
+      <div class="bg-white border border-night/10 shadow-sm rounded-2xl p-6 md:p-8 mb-10">
+        <h2 class="font-display font-semibold text-night text-xl mb-5"><i class="fas fa-book text-navy mr-2"></i>References</h2>
+        <ol class="space-y-4 text-night/75 text-sm leading-6 ref">
+          <li id="ref-chen">Chen, Y., Yu, J., &amp; Khan, S. (2010). Spatial sensitivity analysis of multi-criteria weights in GIS-based land suitability evaluation. <em>Environmental Modelling &amp; Software</em>, 25(12), 1582–1591. <a href="https://doi.org/10.1016/j.envsoft.2010.06.001" target="_blank" class="text-navy hover:underline break-all">doi.org/10.1016/j.envsoft.2010.06.001</a></li>
+          <li id="ref-dyer">Dyer, J. S. (1990). Remarks on the Analytic Hierarchy Process. <em>Management Science</em>, 36(3), 249–258. <a href="https://doi.org/10.1287/mnsc.36.3.249" target="_blank" class="text-navy hover:underline break-all">doi.org/10.1287/mnsc.36.3.249</a></li>
+          <li id="ref-malczewski2006">Malczewski, J. (2006). GIS-based multicriteria decision analysis: a survey of the literature. <em>International Journal of Geographical Information Science</em>, 20(7), 703–726. <a href="https://doi.org/10.1080/13658810600661508" target="_blank" class="text-navy hover:underline break-all">doi.org/10.1080/13658810600661508</a></li>
+          <li id="ref-malczewski2015">Malczewski, J., &amp; Rinner, C. (2015). <em>Multicriteria Decision Analysis in Geographic Information Science</em>. Berlin: Springer.</li>
+          <li id="ref-saaty1977">Saaty, T. L. (1977). A scaling method for priorities in hierarchical structures. <em>Journal of Mathematical Psychology</em>, 15(3), 234–281. <a href="https://doi.org/10.1016/0022-2496(77)90033-5" target="_blank" class="text-navy hover:underline break-all">doi.org/10.1016/0022-2496(77)90033-5</a></li>
+          <li id="ref-saaty1980">Saaty, T. L. (1980). <em>The Analytic Hierarchy Process</em>. New York: McGraw-Hill.</li>
+        </ol>
+      </div>
+
+      <div class="bg-white border border-night/10 shadow-sm rounded-2xl p-6 md:p-7 flex flex-col sm:flex-row items-center gap-5 mb-6">
+        <img src="../Photomerveille.jpg?v=2" alt="Merveille Aganze Sami" class="w-20 h-20 rounded-full object-cover ring-2 ring-navy/30" />
+        <div class="text-center sm:text-left">
+          <p class="font-display font-semibold text-night">Merveille Aganze Sami</p>
+          <p class="text-night/70 text-sm leading-6 mt-1">MEL &amp; Database Management Advisor. 9+ years of experience in monitoring &amp; evaluation, GIS and digitalization with international organizations (GIZ, Enabel) in DR Congo.</p>
+          <div class="flex justify-center sm:justify-start gap-4 mt-3 text-sm">
+            <a href="https://www.linkedin.com/in/mervag27/?skipRedirect=true" target="_blank" class="text-navy font-medium hover:text-night transition"><i class="fab fa-linkedin mr-1.5"></i>LinkedIn</a>
+            <a href="contact.html" class="text-navy font-medium hover:text-night transition"><i class="fas fa-envelope mr-1.5"></i>Contact me</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="flex flex-col sm:flex-row items-center justify-between gap-4 bg-sky/60 rounded-2xl p-6">
+        <p class="text-night/80 font-medium text-center sm:text-left">A siting decision to ground in evidence?</p>
+        <a href="contact.html" class="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-navy to-lagoon text-[#ffffff] font-semibold px-6 py-2.5 shadow-md hover:-translate-y-0.5 transition whitespace-nowrap">Get in touch <i class="fas fa-arrow-right"></i></a>
+      </div>
+    </article>
+  </main>
+
+  <footer class="mt-16 bg-gradient-to-br from-petrol to-night text-[#ffffff]">
+    <div class="max-w-6xl mx-auto px-5 sm:px-8 pt-12 md:pt-16 pb-8">
+      <div class="grid gap-10 md:grid-cols-[1.2fr_0.7fr_1.1fr]">
+        <div>
+          <p class="font-display font-bold text-xl mb-3">Merveille <span class="bg-gradient-to-r from-navy to-lagoon bg-clip-text text-transparent">AGANZE SAMI</span></p>
+          <p class="text-[#ffffff]/60 text-sm leading-7 max-w-xs">MEL &amp; Database Management Advisor. Data, GIS and digitalization at the service of your decisions.</p>
+          <div class="flex items-center gap-3 mt-6">
+            <a href="https://www.linkedin.com/in/mervag27/?skipRedirect=true" target="_blank" class="inline-flex items-center justify-center w-10 h-10 rounded-full bg-[#ffffff]/10 hover:bg-navy transition" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+            <a href="https://github.com/MerveAS" target="_blank" class="inline-flex items-center justify-center w-10 h-10 rounded-full bg-[#ffffff]/10 hover:bg-navy transition" aria-label="GitHub"><i class="fab fa-github"></i></a>
+          </div>
+        </div>
+        <div>
+          <h3 class="font-display font-semibold text-xs uppercase tracking-[0.2em] text-[#ffffff]/50 mb-4">Navigation</h3>
+          <ul class="space-y-2.5 text-sm">
+            <li><a href="index.html" class="text-[#ffffff]/70 hover:text-lagoon transition">Home</a></li>
+            <li><a href="blog.html" class="text-[#ffffff]/70 hover:text-lagoon transition">Blog</a></li>
+            <li><a href="expertise.html" class="text-[#ffffff]/70 hover:text-lagoon transition">Expertise</a></li>
+            <li><a href="projects.html" class="text-[#ffffff]/70 hover:text-lagoon transition">Projects</a></li>
+            <li><a href="contact.html" class="text-[#ffffff]/70 hover:text-lagoon transition">Contact</a></li>
+          </ul>
+        </div>
+        <div>
+          <h3 class="font-display font-semibold text-xs uppercase tracking-[0.2em] text-[#ffffff]/50 mb-4">Contact</h3>
+          <ul class="space-y-3 text-sm text-[#ffffff]/70">
+            <li class="flex items-center gap-3"><span class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-[#ffffff]/10 text-lagoon text-xs"><i class="fas fa-phone"></i></span>+243 850 012 270</li>
+            <li class="flex items-center gap-3"><span class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-[#ffffff]/10 text-lagoon text-xs"><i class="fas fa-envelope"></i></span><a href="mailto:merveille.aganzesami@fitigroup.org" class="hover:text-lagoon transition break-all">merveille.aganzesami@fitigroup.org</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="mt-10 pt-6 border-t border-[#ffffff]/10 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-[#ffffff]/50">
+        <p>© 2026 Merveille AGANZE SAMI — All rights reserved · <span class="text-[#ffffff]/30">v2.2</span></p>
+        <a href="#" onclick="window.scrollTo({top:0,behavior:'smooth'});return false;" class="inline-flex items-center gap-2 hover:text-lagoon transition">Back to top <i class="fas fa-arrow-up"></i></a>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>
