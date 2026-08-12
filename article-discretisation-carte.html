@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Discrétisation des cartes choroplèthes : un choix méthodologique rarement explicité | Merveille Aganze Sami</title>
+  <meta name="description" content="Une même donnée classée par trois méthodes produit trois cartes différentes. Comparaison des méthodes de discrétisation et règles de documentation." />
+  <meta property="og:title" content="Discrétisation des cartes choroplèthes : un choix méthodologique rarement explicité" />
+  <meta property="og:description" content="Une même donnée classée par trois méthodes produit trois cartes différentes. Comparaison des méthodes de discrétisation et règles de documentation." />
+  <meta property="og:image" content="visuels/visuel_2026-08-05_jenks.png" />
+  <meta property="og:type" content="article" />
+  <link rel="alternate" hreflang="fr" href="https://merveille.fitigroup.org/article-discretisation-carte.html" />
+  <link rel="alternate" hreflang="en" href="https://merveille.fitigroup.org/en/article-map-classification.html" />
+  <link rel="icon" href="favicon.svg?v=2" type="image/svg+xml" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = { theme: { extend: {
+      colors: { night:'#222B38', navy:'#EE7A5C', steel:'#8A93A3', petrol:'#26303E', lagoon:'#F2A48F', sky:'#F7DCD1', pale:'#F7F5F2' },
+      fontFamily: { sans:['DM Sans','Arial','sans-serif'], display:['Plus Jakarta Sans','Arial','sans-serif'] } } } }
+  </script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    html { scroll-behavior: smooth; }
+    .ref { font-variant-numeric: tabular-nums; }
+    @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col bg-gradient-to-b from-pale via-pale to-sky text-night font-sans antialiased">
+
+  <header class="sticky top-0 z-50 bg-pale/95 backdrop-blur border-b border-navy/20">
+    <div class="max-w-6xl mx-auto px-5 sm:px-8 min-h-16 md:min-h-20 py-2 flex items-center justify-between gap-4">
+      <a href="index.html" class="font-display font-bold text-night text-base sm:text-lg md:text-xl tracking-tight">
+        Merveille <span class="text-navy hidden sm:inline">AGANZE SAMI</span>
+      </a>
+      <nav class="flex flex-wrap justify-end items-center gap-x-4 gap-y-1 sm:gap-x-6 md:gap-x-8 text-xs sm:text-sm md:text-[15px]">
+        <a href="index.html" class="text-night/70 hover:text-navy transition">Accueil</a>
+        <a href="blog.html" class="text-navy font-semibold">Blog</a>
+        <a href="expertises.html" class="text-night/70 hover:text-navy transition">Expertises</a>
+        <a href="projets.html" class="text-night/70 hover:text-navy transition">Projets</a>
+        <a href="en/article-map-classification.html" class="text-[11px] font-semibold border border-navy/40 rounded-full px-3 py-1 text-night/70 hover:text-navy hover:border-navy/60 transition" title="English version">EN</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="flex-1">
+    <section class="max-w-6xl mx-auto px-5 sm:px-8 pt-10 md:pt-14">
+      <div class="bg-gradient-to-br from-petrol to-night rounded-[2rem] md:rounded-[2.5rem] px-6 sm:px-10 md:px-14 py-12 md:py-14 relative overflow-hidden">
+        <div class="absolute -bottom-24 -right-16 w-80 h-80 bg-navy/20 rounded-full blur-2xl"></div>
+        <div class="relative max-w-3xl">
+          <a href="blog.html" class="inline-flex items-center gap-2 text-[#ffffff]/60 text-sm hover:text-lagoon transition mb-6"><i class="fas fa-arrow-left"></i> Retour au blog</a>
+          <div class="flex flex-wrap items-center gap-2 mb-5">
+            <span class="text-[11px] font-semibold uppercase tracking-wider bg-gradient-to-r from-navy to-lagoon text-[#ffffff] rounded-full px-3 py-1">Article</span>
+            <span class="text-[11px] font-medium text-[#ffffff]/50"><i class="fas fa-calendar mr-1.5"></i>5 août 2026</span>
+            <span class="text-[11px] font-medium text-[#ffffff]/50"><i class="fas fa-clock mr-1.5"></i>9 min de lecture</span>
+          </div>
+          <h1 class="font-display font-bold text-[#ffffff] text-3xl sm:text-4xl md:text-5xl leading-tight mb-5">Discrétisation :<br /><span class="bg-gradient-to-r from-navy to-lagoon bg-clip-text text-transparent">le choix invisible d'une carte</span></h1>
+          <p class="text-[#ffffff]/60 text-base mb-6">Intervalles égaux, quantiles et seuils naturels de Jenks — effets comparés et règles de restitution</p>
+          <div class="flex items-center gap-3">
+            <img src="Photomerveille.jpg?v=2" alt="Merveille Aganze Sami" class="w-10 h-10 rounded-full object-cover ring-2 ring-[#ffffff]/30" />
+            <div class="text-sm">
+              <p class="text-[#ffffff] font-semibold">Merveille Aganze Sami</p>
+              <p class="text-[#ffffff]/50">Conseillère MEL &amp; Gestion de Bases de Données</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <article class="max-w-3xl mx-auto px-5 sm:px-8 py-12 md:py-16">
+
+      <figure class="mb-12">
+        <img src="visuels/visuel_2026-08-05_jenks.png" alt="Une même variable cartographiée selon trois méthodes de discrétisation : intervalles égaux, quantiles et seuils naturels de Jenks" class="w-full rounded-2xl shadow-xl ring-1 ring-night/10" />
+        <figcaption class="text-night/60 text-sm mt-3 text-center"><strong class="text-night/70">Figure 1.</strong> Illustration : une même variable classée en intervalles égaux, en quantiles et par seuils naturels. La hiérarchie des zones prioritaires diffère selon la méthode retenue.</figcaption>
+      </figure>
+
+      <p class="text-lg md:text-xl leading-9 text-night/80 mb-8">Une carte choroplèthe est fréquemment perçue comme une restitution neutre des données. Elle repose pourtant sur une décision méthodologique prise en amont de tout choix graphique : la manière dont les valeurs continues sont regroupées en classes. Cette opération, appelée discrétisation, détermine largement le message que la carte transmet.</p>
+
+      <p class="leading-8 text-night/80 mb-5">L'exercice est aisé à reproduire. En classant un même indicateur, sur un même fond de carte et avec une même rampe de couleurs, successivement en intervalles égaux, en quantiles, puis par seuils naturels, on obtient trois représentations dont les hiérarchies diffèrent. Une unité classée en catégorie supérieure selon une méthode peut relever de la catégorie médiane selon une autre. Le lecteur, lui, n'a généralement accès à aucune de ces informations.</p>
+
+      <h2 class="font-display font-bold text-night text-2xl md:text-3xl mb-5">1. Trois familles de méthodes, trois logiques</h2>
+
+      <p class="leading-8 text-night/80 mb-5">Les méthodes de discrétisation les plus employées répondent à des objectifs distincts, ce qui explique qu'aucune ne soit universellement préférable <a href="#ref-slocum" class="text-navy hover:underline">(Slocum et al., 2022)</a>.</p>
+
+      <ul class="space-y-3 text-night/80 leading-7 mb-10">
+        <li class="flex items-start gap-3"><i class="fas fa-circle-check text-navy mt-1.5"></i><span><strong class="text-night">Intervalles égaux.</strong> L'étendue des valeurs est divisée en classes de même amplitude. La méthode est simple à expliquer et conserve la métrique originale, mais elle produit des classes très inégalement peuplées lorsque la distribution est asymétrique — cas fréquent pour les indicateurs socio-économiques.</span></li>
+        <li class="flex items-start gap-3"><i class="fas fa-circle-check text-navy mt-1.5"></i><span><strong class="text-night">Quantiles.</strong> Chaque classe reçoit un effectif identique d'unités. La carte est visuellement équilibrée et se prête aux comparaisons de rang, mais les bornes peuvent séparer des valeurs quasi identiques ou regrouper des valeurs très éloignées.</span></li>
+        <li class="flex items-start gap-3"><i class="fas fa-circle-check text-navy mt-1.5"></i><span><strong class="text-night">Seuils naturels (Jenks).</strong> La méthode recherche le découpage minimisant la variance intra-classe et maximisant la variance inter-classe. Elle place les limites aux discontinuités effectives de la distribution <a href="#ref-jenks" class="text-navy hover:underline">(Jenks, 1967)</a>.</span></li>
+        <li class="flex items-start gap-3"><i class="fas fa-circle-check text-navy mt-1.5"></i><span><strong class="text-night">Écarts-types.</strong> Les bornes se définissent par rapport à la moyenne. Cette approche convient aux distributions symétriques et met en évidence les écarts à la norme plutôt que les niveaux absolus.</span></li>
+      </ul>
+
+      <p class="leading-8 text-night/80 mb-5">L'algorithme sous-jacent aux seuils naturels correspond au partitionnement optimal en une dimension formalisé par Fisher, dont Jenks a proposé l'application cartographique <a href="#ref-fisher" class="text-navy hover:underline">(Fisher, 1958)</a>. Sa qualité d'ajustement peut être quantifiée par la fraction de variance expliquée par le découpage, ce qui permet une comparaison objective entre nombres de classes.</p>
+
+      <h2 class="font-display font-bold text-night text-2xl md:text-3xl mb-5">2. Ce que le choix modifie concrètement</h2>
+
+      <p class="leading-8 text-night/80 mb-5">L'effet de la discrétisation ne se limite pas à l'esthétique. Il porte sur trois dimensions de l'usage d'une carte.</p>
+
+      <p class="leading-8 text-night/80 mb-5">La <strong class="text-night">priorisation</strong> d'abord : lorsqu'une carte sert à désigner des zones d'intervention, le passage d'une méthode à l'autre déplace la frontière entre catégories et modifie donc la liste des unités retenues. La <strong class="text-night">comparabilité</strong> ensuite : deux cartes produites à des dates différentes avec des bornes recalculées ne sont pas comparables, puisque la même couleur ne recouvre plus les mêmes valeurs. La <strong class="text-night">perception</strong> enfin : les travaux sur la lecture des cartes montrent que le nombre de classes et le contraste des teintes influencent l'estimation des valeurs par le lecteur <a href="#ref-brewer" class="text-navy hover:underline">(Brewer &amp; Pickle, 2002)</a>.</p>
+
+      <div class="bg-sky/60 border-l-4 border-navy rounded-r-2xl p-5 md:p-6 mb-10">
+        <p class="leading-7 text-night/80 text-sm md:text-base"><i class="fas fa-circle-info text-navy mr-2"></i><strong class="text-night">Cas particulier des taux.</strong> Cartographier des effectifs bruts en choroplèthe induit une lecture erronée, la surface des unités étant confondue avec l'intensité du phénomène. Les valeurs doivent être normalisées — par la population, la superficie ou une autre grandeur de référence — avant toute discrétisation.</p>
+      </div>
+
+      <h2 class="font-display font-bold text-night text-2xl md:text-3xl mb-5">3. Une règle de restitution</h2>
+
+      <p class="leading-8 text-night/80 mb-5">La difficulté principale n'est pas de choisir une méthode, mais de laisser ce choix implicite. Une carte destinée à une décision ou à un rapport devrait indiquer, dans sa légende ou sa note de méthode, quatre éléments : la méthode de discrétisation retenue, le nombre de classes, les bornes effectives, et la variable de normalisation lorsqu'il s'agit d'un taux.</p>
+
+      <p class="leading-8 text-night/80 mb-5">Cette documentation présente deux avantages pratiques. Elle rend la carte reproductible, donc vérifiable. Et elle prépare la réponse à la question que pose tôt ou tard un partenaire ou un bailleur : sur quelle base ce seuil a-t-il été fixé ?</p>
+
+      <h2 class="font-display font-bold text-night text-2xl md:text-3xl mb-5">4. Recommandations d'usage</h2>
+
+      <ul class="space-y-3 text-night/80 leading-7 mb-10">
+        <li class="flex items-start gap-3"><i class="fas fa-circle-check text-navy mt-1.5"></i><span>Pour une <strong class="text-night">série temporelle</strong> ou une comparaison entre territoires, fixer les bornes une fois pour toutes et les conserver, quitte à perdre en finesse sur chaque carte prise isolément.</span></li>
+        <li class="flex items-start gap-3"><i class="fas fa-circle-check text-navy mt-1.5"></i><span>Pour une <strong class="text-night">exploration</strong> d'un jeu de données nouveau, les seuils naturels révèlent efficacement la structure de la distribution.</span></li>
+        <li class="flex items-start gap-3"><i class="fas fa-circle-check text-navy mt-1.5"></i><span>Pour une <strong class="text-night">carte de rang</strong> ou de priorisation relative, les quantiles restent lisibles et faciles à justifier.</span></li>
+        <li class="flex items-start gap-3"><i class="fas fa-circle-check text-navy mt-1.5"></i><span>Limiter le nombre de classes à cinq ou sept : au-delà, la discrimination visuelle des teintes devient peu fiable.</span></li>
+        <li class="flex items-start gap-3"><i class="fas fa-circle-check text-navy mt-1.5"></i><span>Examiner systématiquement l'histogramme de la variable avant de choisir : la forme de la distribution oriente le choix mieux qu'une règle générale.</span></li>
+      </ul>
+
+      <div class="bg-gradient-to-br from-petrol to-night rounded-2xl p-6 md:p-8 mb-10">
+        <h2 class="font-display font-semibold text-[#ffffff] text-xl mb-4"><i class="fas fa-list-check text-lagoon mr-2"></i>Points essentiels</h2>
+        <ul class="space-y-2.5 text-[#ffffff]/80 leading-7 text-sm md:text-base">
+          <li class="flex items-start gap-3"><i class="fas fa-check text-lagoon mt-1.5"></i>La discrétisation est une décision méthodologique, prise avant tout choix graphique</li>
+          <li class="flex items-start gap-3"><i class="fas fa-check text-lagoon mt-1.5"></i>Intervalles égaux, quantiles et seuils naturels répondent à des objectifs différents</li>
+          <li class="flex items-start gap-3"><i class="fas fa-check text-lagoon mt-1.5"></i>La méthode retenue modifie la liste des zones classées prioritaires</li>
+          <li class="flex items-start gap-3"><i class="fas fa-check text-lagoon mt-1.5"></i>Des bornes recalculées à chaque édition rendent les cartes non comparables dans le temps</li>
+          <li class="flex items-start gap-3"><i class="fas fa-check text-lagoon mt-1.5"></i>Méthode, nombre de classes, bornes et normalisation doivent figurer dans la restitution</li>
+        </ul>
+      </div>
+
+      <p class="leading-8 text-night/80 mb-5">Une carte ne déforme pas les données. Mais le découpage en classes, lorsqu'il reste implicite, oriente la lecture sans que le lecteur puisse en juger.</p>
+
+      <div class="bg-white border border-night/10 shadow-sm rounded-2xl p-6 md:p-8 mb-10">
+        <h2 class="font-display font-semibold text-night text-xl mb-5"><i class="fas fa-book text-navy mr-2"></i>Références</h2>
+        <ol class="space-y-4 text-night/75 text-sm leading-6 ref">
+          <li id="ref-brewer">Brewer, C. A., &amp; Pickle, L. (2002). Evaluation of Methods for Classifying Epidemiological Data on Choropleth Maps in Series. <em>Annals of the Association of American Geographers</em>, 92(4), 662–681. <a href="https://doi.org/10.1111/1467-8306.00310" target="_blank" class="text-navy hover:underline break-all">doi.org/10.1111/1467-8306.00310</a></li>
+          <li id="ref-fisher">Fisher, W. D. (1958). On Grouping for Maximum Homogeneity. <em>Journal of the American Statistical Association</em>, 53(284), 789–798. <a href="https://doi.org/10.1080/01621459.1958.10501479" target="_blank" class="text-navy hover:underline break-all">doi.org/10.1080/01621459.1958.10501479</a></li>
+          <li id="ref-jenks">Jenks, G. F. (1967). The Data Model Concept in Statistical Mapping. <em>International Yearbook of Cartography</em>, 7, 186–190.</li>
+          <li id="ref-slocum">Slocum, T. A., McMaster, R. B., Kessler, F. C., &amp; Howard, H. H. (2022). <em>Thematic Cartography and Geovisualization</em> (4th ed.). Boca Raton: CRC Press. <a href="https://doi.org/10.1201/9781003150527" target="_blank" class="text-navy hover:underline break-all">doi.org/10.1201/9781003150527</a></li>
+        </ol>
+      </div>
+
+      <div class="bg-white border border-night/10 shadow-sm rounded-2xl p-6 md:p-7 flex flex-col sm:flex-row items-center gap-5 mb-6">
+        <img src="Photomerveille.jpg?v=2" alt="Merveille Aganze Sami" class="w-20 h-20 rounded-full object-cover ring-2 ring-navy/30" />
+        <div class="text-center sm:text-left">
+          <p class="font-display font-semibold text-night">Merveille Aganze Sami</p>
+          <p class="text-night/70 text-sm leading-6 mt-1">Conseillère MEL &amp; Gestion de Bases de Données. Plus de 9 ans d'expérience en suivi-évaluation, SIG et digitalisation auprès d'organisations internationales (GIZ, Enabel) en RD Congo.</p>
+          <div class="flex justify-center sm:justify-start gap-4 mt-3 text-sm">
+            <a href="https://www.linkedin.com/in/mervag27/?skipRedirect=true" target="_blank" class="text-navy font-medium hover:text-night transition"><i class="fab fa-linkedin mr-1.5"></i>LinkedIn</a>
+            <a href="contact.html" class="text-navy font-medium hover:text-night transition"><i class="fas fa-envelope mr-1.5"></i>Me contacter</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="flex flex-col sm:flex-row items-center justify-between gap-4 bg-sky/60 rounded-2xl p-6">
+        <p class="text-night/80 font-medium text-center sm:text-left">Des cartes de priorisation à rendre défendables ?</p>
+        <a href="contact.html" class="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-navy to-lagoon text-[#ffffff] font-semibold px-6 py-2.5 shadow-md hover:-translate-y-0.5 transition whitespace-nowrap">Prendre contact <i class="fas fa-arrow-right"></i></a>
+      </div>
+    </article>
+  </main>
+
+  <footer class="mt-16 bg-gradient-to-br from-petrol to-night text-[#ffffff]">
+    <div class="max-w-6xl mx-auto px-5 sm:px-8 pt-12 md:pt-16 pb-8">
+      <div class="grid gap-10 md:grid-cols-[1.2fr_0.7fr_1.1fr]">
+        <div>
+          <p class="font-display font-bold text-xl mb-3">Merveille <span class="bg-gradient-to-r from-navy to-lagoon bg-clip-text text-transparent">AGANZE SAMI</span></p>
+          <p class="text-[#ffffff]/60 text-sm leading-7 max-w-xs">Conseillère MEL &amp; Gestion de Bases de Données. Données, SIG et digitalisation au service de vos décisions.</p>
+          <div class="flex items-center gap-3 mt-6">
+            <a href="https://www.linkedin.com/in/mervag27/?skipRedirect=true" target="_blank" class="inline-flex items-center justify-center w-10 h-10 rounded-full bg-[#ffffff]/10 hover:bg-navy transition" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+            <a href="https://github.com/MerveAS" target="_blank" class="inline-flex items-center justify-center w-10 h-10 rounded-full bg-[#ffffff]/10 hover:bg-navy transition" aria-label="GitHub"><i class="fab fa-github"></i></a>
+          </div>
+        </div>
+        <div>
+          <h3 class="font-display font-semibold text-xs uppercase tracking-[0.2em] text-[#ffffff]/50 mb-4">Navigation</h3>
+          <ul class="space-y-2.5 text-sm">
+            <li><a href="index.html" class="text-[#ffffff]/70 hover:text-lagoon transition">Accueil</a></li>
+            <li><a href="blog.html" class="text-[#ffffff]/70 hover:text-lagoon transition">Blog</a></li>
+            <li><a href="expertises.html" class="text-[#ffffff]/70 hover:text-lagoon transition">Expertises</a></li>
+            <li><a href="projets.html" class="text-[#ffffff]/70 hover:text-lagoon transition">Projets</a></li>
+            <li><a href="contact.html" class="text-[#ffffff]/70 hover:text-lagoon transition">Contact</a></li>
+          </ul>
+        </div>
+        <div>
+          <h3 class="font-display font-semibold text-xs uppercase tracking-[0.2em] text-[#ffffff]/50 mb-4">Contact</h3>
+          <ul class="space-y-3 text-sm text-[#ffffff]/70">
+            <li class="flex items-center gap-3"><span class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-[#ffffff]/10 text-lagoon text-xs"><i class="fas fa-phone"></i></span>+243 850 012 270</li>
+            <li class="flex items-center gap-3"><span class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-[#ffffff]/10 text-lagoon text-xs"><i class="fas fa-envelope"></i></span><a href="mailto:merveille.aganzesami@fitigroup.org" class="hover:text-lagoon transition break-all">merveille.aganzesami@fitigroup.org</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="mt-10 pt-6 border-t border-[#ffffff]/10 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-[#ffffff]/50">
+        <p>© 2026 Merveille AGANZE SAMI — Tous droits réservés · <span class="text-[#ffffff]/30">v2.2</span></p>
+        <a href="#" onclick="window.scrollTo({top:0,behavior:'smooth'});return false;" class="inline-flex items-center gap-2 hover:text-lagoon transition">Retour en haut <i class="fas fa-arrow-up"></i></a>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>

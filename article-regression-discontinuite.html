@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>La régression sur discontinuité : exploiter un seuil d'éligibilité pour estimer un effet causal | Merveille Aganze Sami</title>
+  <meta name="description" content="Autour d'un seuil administratif d'éligibilité, les unités situées de part et d'autre sont comparables. Le RDD exploite cette configuration pour estimer un effet causal local." />
+  <meta property="og:title" content="La régression sur discontinuité : exploiter un seuil d'éligibilité pour estimer un effet causal" />
+  <meta property="og:description" content="Autour d'un seuil administratif d'éligibilité, les unités situées de part et d'autre sont comparables. Le RDD exploite cette configuration pour estimer un effet causal local." />
+  <meta property="og:image" content="visuels/visuel_2026-07-28_rdd.png" />
+  <meta property="og:type" content="article" />
+  <link rel="alternate" hreflang="fr" href="https://merveille.fitigroup.org/article-regression-discontinuite.html" />
+  <link rel="alternate" hreflang="en" href="https://merveille.fitigroup.org/en/article-regression-discontinuity.html" />
+  <link rel="icon" href="favicon.svg?v=2" type="image/svg+xml" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = { theme: { extend: {
+      colors: { night:'#222B38', navy:'#EE7A5C', steel:'#8A93A3', petrol:'#26303E', lagoon:'#F2A48F', sky:'#F7DCD1', pale:'#F7F5F2' },
+      fontFamily: { sans:['DM Sans','Arial','sans-serif'], display:['Plus Jakarta Sans','Arial','sans-serif'] } } } }
+  </script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    html { scroll-behavior: smooth; }
+    .ref { font-variant-numeric: tabular-nums; }
+    @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col bg-gradient-to-b from-pale via-pale to-sky text-night font-sans antialiased">
+
+  <header class="sticky top-0 z-50 bg-pale/95 backdrop-blur border-b border-navy/20">
+    <div class="max-w-6xl mx-auto px-5 sm:px-8 min-h-16 md:min-h-20 py-2 flex items-center justify-between gap-4">
+      <a href="index.html" class="font-display font-bold text-night text-base sm:text-lg md:text-xl tracking-tight">
+        Merveille <span class="text-navy hidden sm:inline">AGANZE SAMI</span>
+      </a>
+      <nav class="flex flex-wrap justify-end items-center gap-x-4 gap-y-1 sm:gap-x-6 md:gap-x-8 text-xs sm:text-sm md:text-[15px]">
+        <a href="index.html" class="text-night/70 hover:text-navy transition">Accueil</a>
+        <a href="blog.html" class="text-navy font-semibold">Blog</a>
+        <a href="expertises.html" class="text-night/70 hover:text-navy transition">Expertises</a>
+        <a href="projets.html" class="text-night/70 hover:text-navy transition">Projets</a>
+        <a href="en/article-regression-discontinuity.html" class="text-[11px] font-semibold border border-navy/40 rounded-full px-3 py-1 text-night/70 hover:text-navy hover:border-navy/60 transition" title="English version">EN</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="flex-1">
+    <section class="max-w-6xl mx-auto px-5 sm:px-8 pt-10 md:pt-14">
+      <div class="bg-gradient-to-br from-petrol to-night rounded-[2rem] md:rounded-[2.5rem] px-6 sm:px-10 md:px-14 py-12 md:py-14 relative overflow-hidden">
+        <div class="absolute -bottom-24 -right-16 w-80 h-80 bg-navy/20 rounded-full blur-2xl"></div>
+        <div class="relative max-w-3xl">
+          <a href="blog.html" class="inline-flex items-center gap-2 text-[#ffffff]/60 text-sm hover:text-lagoon transition mb-6"><i class="fas fa-arrow-left"></i> Retour au blog</a>
+          <div class="flex flex-wrap items-center gap-2 mb-5">
+            <span class="text-[11px] font-semibold uppercase tracking-wider bg-gradient-to-r from-navy to-lagoon text-[#ffffff] rounded-full px-3 py-1">Article</span>
+            <span class="text-[11px] font-medium text-[#ffffff]/50"><i class="fas fa-calendar mr-1.5"></i>28 juillet 2026</span>
+            <span class="text-[11px] font-medium text-[#ffffff]/50"><i class="fas fa-clock mr-1.5"></i>10 min de lecture</span>
+          </div>
+          <h1 class="font-display font-bold text-[#ffffff] text-3xl sm:text-4xl md:text-5xl leading-tight mb-5">Régression sur discontinuité :<br /><span class="bg-gradient-to-r from-navy to-lagoon bg-clip-text text-transparent">quand un seuil devient une expérience</span></h1>
+          <p class="text-[#ffffff]/60 text-base mb-6">Principe, conditions de validité et tests de robustesse d'un design quasi expérimental</p>
+          <div class="flex items-center gap-3">
+            <img src="Photomerveille.jpg?v=2" alt="Merveille Aganze Sami" class="w-10 h-10 rounded-full object-cover ring-2 ring-[#ffffff]/30" />
+            <div class="text-sm">
+              <p class="text-[#ffffff] font-semibold">Merveille Aganze Sami</p>
+              <p class="text-[#ffffff]/50">Conseillère MEL &amp; Gestion de Bases de Données</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <article class="max-w-3xl mx-auto px-5 sm:px-8 py-12 md:py-16">
+
+      <figure class="mb-12">
+        <img src="visuels/visuel_2026-07-28_rdd.png" alt="Nuage de points de l'indicateur en fonction de la variable d'assignation, avec ajustements locaux de part et d'autre du seuil et estimation du saut" class="w-full rounded-2xl shadow-xl ring-1 ring-night/10" />
+        <figcaption class="text-night/60 text-sm mt-3 text-center"><strong class="text-night/70">Figure 1.</strong> Illustration : ajustements locaux de part et d'autre du point de coupure. La discontinuité estimée au seuil correspond à l'effet causal local.</figcaption>
+      </figure>
+
+      <p class="text-lg md:text-xl leading-9 text-night/80 mb-8">La plupart des programmes de développement attribuent leurs bénéfices selon des règles explicites : une superficie exploitée inférieure à un certain nombre d'hectares, un score de vulnérabilité en deçà d'un seuil, un revenu sous un plafond. Ces règles administratives, conçues pour des raisons de gestion, constituent une ressource méthodologique souvent inexploitée pour l'évaluation d'impact.</p>
+
+      <p class="leading-8 text-night/80 mb-5">La comparaison directe entre bénéficiaires et non-bénéficiaires reste en effet exposée au biais de sélection : les deux groupes diffèrent généralement dès le départ, et l'écart observé mêle l'effet du programme à ces différences initiales. La régression sur discontinuité, introduite en psychologie de l'éducation par Thistlethwaite et Campbell, propose une solution qui repose entièrement sur la règle d'attribution <a href="#ref-thistle" class="text-navy hover:underline">(Thistlethwaite &amp; Campbell, 1960)</a>.</p>
+
+      <h2 class="font-display font-bold text-night text-2xl md:text-3xl mb-5">1. Le principe : une quasi-expérience au voisinage du seuil</h2>
+
+      <p class="leading-8 text-night/80 mb-5">L'argument central est le suivant. Considérons deux ménages dont le score de vulnérabilité vaut respectivement 39 et 41, pour un seuil d'éligibilité fixé à 40. Sur l'ensemble des caractéristiques observables et inobservables, ces deux ménages sont vraisemblablement très semblables : la différence d'un ou deux points relève largement de la mesure ou du hasard. Pourtant, l'un bénéficie du programme et l'autre non.</p>
+
+      <p class="leading-8 text-night/80 mb-5">Au voisinage immédiat du seuil, l'assignation au traitement se rapproche donc d'un tirage aléatoire. Il devient possible d'estimer l'effet du programme comme la discontinuité — le saut — de l'indicateur de résultat au point de coupure, une fois pris en compte la relation continue entre cet indicateur et la variable d'assignation <a href="#ref-imbens" class="text-navy hover:underline">(Imbens &amp; Lemieux, 2008)</a>.</p>
+
+      <div class="bg-sky/60 border-l-4 border-navy rounded-r-2xl p-5 md:p-6 mb-10">
+        <p class="leading-7 text-night/80 text-sm md:text-base"><i class="fas fa-circle-info text-navy mr-2"></i><strong class="text-night">Deux variantes.</strong> Lorsque le franchissement du seuil détermine strictement l'accès au programme, on parle de RDD net (<em>sharp</em>). Lorsqu'il modifie seulement la probabilité d'accès — un ciblage appliqué avec des exceptions — on recourt au RDD flou (<em>fuzzy</em>), qui s'estime par variables instrumentales.</p>
+      </div>
+
+      <h2 class="font-display font-bold text-night text-2xl md:text-3xl mb-5">2. Conditions de validité</h2>
+
+      <p class="leading-8 text-night/80 mb-5">La crédibilité de l'estimation repose sur des hypothèses vérifiables, dont la plus importante est l'absence de manipulation de la variable d'assignation.</p>
+
+      <ul class="space-y-3.5 text-night/80 leading-7 mb-10">
+        <li class="flex items-start gap-3"><i class="fas fa-circle-exclamation text-navy mt-1.5"></i><span><strong class="text-night">Absence de manipulation.</strong> Si les ménages ou les agents peuvent ajuster le score déclaré pour franchir le seuil, la comparabilité locale disparaît. Le test de McCrary examine la continuité de la densité de la variable d'assignation au voisinage du seuil : une accumulation anormale d'observations juste en dessous ou juste au-dessus constitue un signal d'alerte <a href="#ref-mccrary" class="text-navy hover:underline">(McCrary, 2008)</a>.</span></li>
+        <li class="flex items-start gap-3"><i class="fas fa-circle-exclamation text-navy mt-1.5"></i><span><strong class="text-night">Continuité des covariables.</strong> Les caractéristiques observées avant l'intervention ne doivent présenter aucun saut au seuil. Un test appliqué à chacune d'elles, avec la même spécification que pour l'indicateur de résultat, permet de le vérifier.</span></li>
+        <li class="flex items-start gap-3"><i class="fas fa-circle-exclamation text-navy mt-1.5"></i><span><strong class="text-night">Absence de seuil concurrent.</strong> Si une autre politique utilise la même valeur de coupure, l'effet estimé agrège les deux dispositifs et ne peut être attribué au programme étudié.</span></li>
+        <li class="flex items-start gap-3"><i class="fas fa-circle-exclamation text-navy mt-1.5"></i><span><strong class="text-night">Effectifs suffisants au voisinage.</strong> L'estimation ne mobilise que les observations proches du seuil. Un échantillon global important ne garantit pas une puissance statistique suffisante localement.</span></li>
+      </ul>
+
+      <h2 class="font-display font-bold text-night text-2xl md:text-3xl mb-5">3. Choix d'estimation</h2>
+
+      <p class="leading-8 text-night/80 mb-5">Deux décisions techniques influencent fortement le résultat et doivent être justifiées.</p>
+
+      <p class="leading-8 text-night/80 mb-5">La <strong class="text-night">fenêtre d'estimation</strong> détermine quelles observations entrent dans l'analyse. Une fenêtre étroite améliore la comparabilité mais réduit la précision ; une fenêtre large produit l'effet inverse. Les procédures de sélection automatique fondées sur un critère d'erreur quadratique moyenne fournissent un point de départ documenté <a href="#ref-calonico" class="text-navy hover:underline">(Calonico et al., 2014)</a>.</p>
+
+      <p class="leading-8 text-night/80 mb-5">La <strong class="text-night">forme fonctionnelle</strong> ensuite. La pratique actuelle privilégie les ajustements polynomiaux locaux de degré faible — linéaires ou quadratiques — estimés séparément de chaque côté du seuil. Les polynômes de degré élevé sont déconseillés : ils produisent des estimations instables et des intervalles de confiance trompeurs aux bornes de l'intervalle <a href="#ref-gelman" class="text-navy hover:underline">(Gelman &amp; Imbens, 2019)</a>.</p>
+
+      <h2 class="font-display font-bold text-night text-2xl md:text-3xl mb-5">4. Tests de robustesse</h2>
+
+      <p class="leading-8 text-night/80 mb-5">Trois vérifications complètent l'analyse principale. Le déplacement du seuil vers des valeurs fictives, où aucun effet n'est attendu, ne doit révéler aucune discontinuité significative. La variation de la fenêtre d'estimation doit produire des résultats stables en ordre de grandeur. L'exclusion des observations les plus proches du seuil permet enfin de tester la sensibilité à une éventuelle manipulation résiduelle.</p>
+
+      <h2 class="font-display font-bold text-night text-2xl md:text-3xl mb-5">5. Portée et limite</h2>
+
+      <p class="leading-8 text-night/80 mb-5">L'effet estimé par un RDD est un effet local au voisinage du seuil. Il renseigne sur ce qu'aurait produit le programme pour des unités situées à la marge de l'éligibilité — information souvent pertinente lorsqu'il s'agit d'ajuster un critère de ciblage, mais qui ne s'extrapole pas aux bénéficiaires éloignés du seuil.</p>
+
+      <p class="leading-8 text-night/80 mb-5">Cette restriction constitue à la fois la force et la limite de la méthode. La rigueur de l'identification causale se paie par une portée réduite. Il convient donc d'énoncer explicitement, dans toute restitution, que la conclusion vaut au voisinage du point de coupure et non pour l'ensemble de la population bénéficiaire <a href="#ref-lee" class="text-navy hover:underline">(Lee &amp; Lemieux, 2010)</a>.</p>
+
+      <div class="bg-gradient-to-br from-petrol to-night rounded-2xl p-6 md:p-8 mb-10">
+        <h2 class="font-display font-semibold text-[#ffffff] text-xl mb-4"><i class="fas fa-list-check text-lagoon mr-2"></i>Points essentiels</h2>
+        <ul class="space-y-2.5 text-[#ffffff]/80 leading-7 text-sm md:text-base">
+          <li class="flex items-start gap-3"><i class="fas fa-check text-lagoon mt-1.5"></i>Un seuil administratif d'éligibilité crée une quasi-expérience à son voisinage</li>
+          <li class="flex items-start gap-3"><i class="fas fa-check text-lagoon mt-1.5"></i>L'effet se lit comme la discontinuité de l'indicateur au point de coupure</li>
+          <li class="flex items-start gap-3"><i class="fas fa-check text-lagoon mt-1.5"></i>Le test de McCrary vérifie l'absence de manipulation de la variable d'assignation</li>
+          <li class="flex items-start gap-3"><i class="fas fa-check text-lagoon mt-1.5"></i>Privilégier les polynômes locaux de degré faible ; éviter les degrés élevés</li>
+          <li class="flex items-start gap-3"><i class="fas fa-check text-lagoon mt-1.5"></i>L'effet estimé est local : il ne s'extrapole pas aux unités éloignées du seuil</li>
+        </ul>
+      </div>
+
+      <div class="bg-white border border-night/10 shadow-sm rounded-2xl p-6 md:p-8 mb-10">
+        <h2 class="font-display font-semibold text-night text-xl mb-5"><i class="fas fa-book text-navy mr-2"></i>Références</h2>
+        <ol class="space-y-4 text-night/75 text-sm leading-6 ref">
+          <li id="ref-calonico">Calonico, S., Cattaneo, M. D., &amp; Titiunik, R. (2014). Robust Nonparametric Confidence Intervals for Regression-Discontinuity Designs. <em>Econometrica</em>, 82(6), 2295–2326. <a href="https://doi.org/10.3982/ECTA11757" target="_blank" class="text-navy hover:underline break-all">doi.org/10.3982/ECTA11757</a></li>
+          <li id="ref-gelman">Gelman, A., &amp; Imbens, G. (2019). Why High-Order Polynomials Should Not Be Used in Regression Discontinuity Designs. <em>Journal of Business &amp; Economic Statistics</em>, 37(3), 447–456. <a href="https://doi.org/10.1080/07350015.2017.1366909" target="_blank" class="text-navy hover:underline break-all">doi.org/10.1080/07350015.2017.1366909</a></li>
+          <li id="ref-imbens">Imbens, G. W., &amp; Lemieux, T. (2008). Regression discontinuity designs: A guide to practice. <em>Journal of Econometrics</em>, 142(2), 615–635. <a href="https://doi.org/10.1016/j.jeconom.2007.05.001" target="_blank" class="text-navy hover:underline break-all">doi.org/10.1016/j.jeconom.2007.05.001</a></li>
+          <li id="ref-lee">Lee, D. S., &amp; Lemieux, T. (2010). Regression Discontinuity Designs in Economics. <em>Journal of Economic Literature</em>, 48(2), 281–355. <a href="https://doi.org/10.1257/jel.48.2.281" target="_blank" class="text-navy hover:underline break-all">doi.org/10.1257/jel.48.2.281</a></li>
+          <li id="ref-mccrary">McCrary, J. (2008). Manipulation of the running variable in the regression discontinuity design: A density test. <em>Journal of Econometrics</em>, 142(2), 698–714. <a href="https://doi.org/10.1016/j.jeconom.2007.05.005" target="_blank" class="text-navy hover:underline break-all">doi.org/10.1016/j.jeconom.2007.05.005</a></li>
+          <li id="ref-thistle">Thistlethwaite, D. L., &amp; Campbell, D. T. (1960). Regression-discontinuity analysis: An alternative to the ex post facto experiment. <em>Journal of Educational Psychology</em>, 51(6), 309–317. <a href="https://doi.org/10.1037/h0044319" target="_blank" class="text-navy hover:underline break-all">doi.org/10.1037/h0044319</a></li>
+        </ol>
+      </div>
+
+      <div class="bg-white border border-night/10 shadow-sm rounded-2xl p-6 md:p-7 flex flex-col sm:flex-row items-center gap-5 mb-6">
+        <img src="Photomerveille.jpg?v=2" alt="Merveille Aganze Sami" class="w-20 h-20 rounded-full object-cover ring-2 ring-navy/30" />
+        <div class="text-center sm:text-left">
+          <p class="font-display font-semibold text-night">Merveille Aganze Sami</p>
+          <p class="text-night/70 text-sm leading-6 mt-1">Conseillère MEL &amp; Gestion de Bases de Données. Plus de 9 ans d'expérience en suivi-évaluation, SIG et digitalisation auprès d'organisations internationales (GIZ, Enabel) en RD Congo.</p>
+          <div class="flex justify-center sm:justify-start gap-4 mt-3 text-sm">
+            <a href="https://www.linkedin.com/in/mervag27/?skipRedirect=true" target="_blank" class="text-navy font-medium hover:text-night transition"><i class="fab fa-linkedin mr-1.5"></i>LinkedIn</a>
+            <a href="contact.html" class="text-navy font-medium hover:text-night transition"><i class="fas fa-envelope mr-1.5"></i>Me contacter</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="flex flex-col sm:flex-row items-center justify-between gap-4 bg-sky/60 rounded-2xl p-6">
+        <p class="text-night/80 font-medium text-center sm:text-left">Une évaluation d'impact à concevoir sans randomisation ?</p>
+        <a href="contact.html" class="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-navy to-lagoon text-[#ffffff] font-semibold px-6 py-2.5 shadow-md hover:-translate-y-0.5 transition whitespace-nowrap">Prendre contact <i class="fas fa-arrow-right"></i></a>
+      </div>
+    </article>
+  </main>
+
+  <footer class="mt-16 bg-gradient-to-br from-petrol to-night text-[#ffffff]">
+    <div class="max-w-6xl mx-auto px-5 sm:px-8 pt-12 md:pt-16 pb-8">
+      <div class="grid gap-10 md:grid-cols-[1.2fr_0.7fr_1.1fr]">
+        <div>
+          <p class="font-display font-bold text-xl mb-3">Merveille <span class="bg-gradient-to-r from-navy to-lagoon bg-clip-text text-transparent">AGANZE SAMI</span></p>
+          <p class="text-[#ffffff]/60 text-sm leading-7 max-w-xs">Conseillère MEL &amp; Gestion de Bases de Données. Données, SIG et digitalisation au service de vos décisions.</p>
+          <div class="flex items-center gap-3 mt-6">
+            <a href="https://www.linkedin.com/in/mervag27/?skipRedirect=true" target="_blank" class="inline-flex items-center justify-center w-10 h-10 rounded-full bg-[#ffffff]/10 hover:bg-navy transition" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+            <a href="https://github.com/MerveAS" target="_blank" class="inline-flex items-center justify-center w-10 h-10 rounded-full bg-[#ffffff]/10 hover:bg-navy transition" aria-label="GitHub"><i class="fab fa-github"></i></a>
+          </div>
+        </div>
+        <div>
+          <h3 class="font-display font-semibold text-xs uppercase tracking-[0.2em] text-[#ffffff]/50 mb-4">Navigation</h3>
+          <ul class="space-y-2.5 text-sm">
+            <li><a href="index.html" class="text-[#ffffff]/70 hover:text-lagoon transition">Accueil</a></li>
+            <li><a href="blog.html" class="text-[#ffffff]/70 hover:text-lagoon transition">Blog</a></li>
+            <li><a href="expertises.html" class="text-[#ffffff]/70 hover:text-lagoon transition">Expertises</a></li>
+            <li><a href="projets.html" class="text-[#ffffff]/70 hover:text-lagoon transition">Projets</a></li>
+            <li><a href="contact.html" class="text-[#ffffff]/70 hover:text-lagoon transition">Contact</a></li>
+          </ul>
+        </div>
+        <div>
+          <h3 class="font-display font-semibold text-xs uppercase tracking-[0.2em] text-[#ffffff]/50 mb-4">Contact</h3>
+          <ul class="space-y-3 text-sm text-[#ffffff]/70">
+            <li class="flex items-center gap-3"><span class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-[#ffffff]/10 text-lagoon text-xs"><i class="fas fa-phone"></i></span>+243 850 012 270</li>
+            <li class="flex items-center gap-3"><span class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-[#ffffff]/10 text-lagoon text-xs"><i class="fas fa-envelope"></i></span><a href="mailto:merveille.aganzesami@fitigroup.org" class="hover:text-lagoon transition break-all">merveille.aganzesami@fitigroup.org</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="mt-10 pt-6 border-t border-[#ffffff]/10 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-[#ffffff]/50">
+        <p>© 2026 Merveille AGANZE SAMI — Tous droits réservés · <span class="text-[#ffffff]/30">v2.2</span></p>
+        <a href="#" onclick="window.scrollTo({top:0,behavior:'smooth'});return false;" class="inline-flex items-center gap-2 hover:text-lagoon transition">Retour en haut <i class="fas fa-arrow-up"></i></a>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>
