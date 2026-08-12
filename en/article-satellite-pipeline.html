@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Automating satellite monitoring: from image archive to alert system | Merveille Aganze Sami</title>
+  <meta name="description" content="The limiting factor in environmental monitoring is not image availability but the manual chain separating images from decisions. Architecture of an automated pipeline." />
+  <meta property="og:title" content="Automating satellite monitoring: from image archive to alert system" />
+  <meta property="og:description" content="The limiting factor in environmental monitoring is not image availability but the manual chain separating images from decisions. Architecture of an automated pipeline." />
+  <meta property="og:image" content="../visuels/visuel_2026-07-29_pipeline_gee.png" />
+  <meta property="og:type" content="article" />
+  <link rel="alternate" hreflang="fr" href="https://merveille.fitigroup.org/article-pipeline-satellitaire.html" />
+  <link rel="alternate" hreflang="en" href="https://merveille.fitigroup.org/en/article-satellite-pipeline.html" />
+  <link rel="icon" href="../favicon.svg?v=2" type="image/svg+xml" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = { theme: { extend: {
+      colors: { night:'#222B38', navy:'#EE7A5C', steel:'#8A93A3', petrol:'#26303E', lagoon:'#F2A48F', sky:'#F7DCD1', pale:'#F7F5F2' },
+      fontFamily: { sans:['DM Sans','Arial','sans-serif'], display:['Plus Jakarta Sans','Arial','sans-serif'] } } } }
+  </script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    html { scroll-behavior: smooth; }
+    .ref { font-variant-numeric: tabular-nums; }
+    @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col bg-gradient-to-b from-pale via-pale to-sky text-night font-sans antialiased">
+
+  <header class="sticky top-0 z-50 bg-pale/95 backdrop-blur border-b border-navy/20">
+    <div class="max-w-6xl mx-auto px-5 sm:px-8 min-h-16 md:min-h-20 py-2 flex items-center justify-between gap-4">
+      <a href="index.html" class="font-display font-bold text-night text-base sm:text-lg md:text-xl tracking-tight">
+        Merveille <span class="text-navy hidden sm:inline">AGANZE SAMI</span>
+      </a>
+      <nav class="flex flex-wrap justify-end items-center gap-x-4 gap-y-1 sm:gap-x-6 md:gap-x-8 text-xs sm:text-sm md:text-[15px]">
+        <a href="index.html" class="text-night/70 hover:text-navy transition">Home</a>
+        <a href="blog.html" class="text-navy font-semibold">Blog</a>
+        <a href="expertise.html" class="text-night/70 hover:text-navy transition">Expertise</a>
+        <a href="projects.html" class="text-night/70 hover:text-navy transition">Projects</a>
+        <a href="../article-pipeline-satellitaire.html" class="text-[11px] font-semibold border border-navy/40 rounded-full px-3 py-1 text-night/70 hover:text-navy hover:border-navy/60 transition" title="Version française">FR</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="flex-1">
+    <section class="max-w-6xl mx-auto px-5 sm:px-8 pt-10 md:pt-14">
+      <div class="bg-gradient-to-br from-petrol to-night rounded-[2rem] md:rounded-[2.5rem] px-6 sm:px-10 md:px-14 py-12 md:py-14 relative overflow-hidden">
+        <div class="absolute -bottom-24 -right-16 w-80 h-80 bg-navy/20 rounded-full blur-2xl"></div>
+        <div class="relative max-w-3xl">
+          <a href="blog.html" class="inline-flex items-center gap-2 text-[#ffffff]/60 text-sm hover:text-lagoon transition mb-6"><i class="fas fa-arrow-left"></i> Back to blog</a>
+          <div class="flex flex-wrap items-center gap-2 mb-5">
+            <span class="text-[11px] font-semibold uppercase tracking-wider bg-gradient-to-r from-navy to-lagoon text-[#ffffff] rounded-full px-3 py-1">Article</span>
+            <span class="text-[11px] font-medium text-[#ffffff]/50"><i class="fas fa-calendar mr-1.5"></i>29 July 2026</span>
+            <span class="text-[11px] font-medium text-[#ffffff]/50"><i class="fas fa-clock mr-1.5"></i>10 min read</span>
+          </div>
+          <h1 class="font-display font-bold text-[#ffffff] text-3xl sm:text-4xl md:text-5xl leading-tight mb-5">Automating satellite monitoring:<br /><span class="bg-gradient-to-r from-navy to-lagoon bg-clip-text text-transparent">from archive to alert system</span></h1>
+          <p class="text-[#ffffff]/60 text-base mb-6">Architecture of a scheduled processing chain, quality controls and reliability conditions</p>
+          <div class="flex items-center gap-3">
+            <img src="../Photomerveille.jpg?v=2" alt="Merveille Aganze Sami" class="w-10 h-10 rounded-full object-cover ring-2 ring-[#ffffff]/30" />
+            <div class="text-sm">
+              <p class="text-[#ffffff] font-semibold">Merveille Aganze Sami</p>
+              <p class="text-[#ffffff]/50">MEL &amp; Database Management Advisor</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <article class="max-w-3xl mx-auto px-5 sm:px-8 py-12 md:py-16">
+
+      <figure class="mb-12">
+        <img src="../visuels/visuel_2026-07-29_pipeline_gee.png" alt="Diagram of an automated satellite pipeline: acquisition, server-side index computation, export to database, dashboard and alert" class="w-full rounded-2xl shadow-xl ring-1 ring-night/10" />
+        <figcaption class="text-night/60 text-sm mt-3 text-center"><strong class="text-night/70">Figure 1.</strong> Illustration: architecture of a scheduled chain, from acquisition of a new scene to alert triggering.</figcaption>
+      </figure>
+
+      <p class="text-lg md:text-xl leading-9 text-night/80 mb-8">Environmental monitoring of intervention areas frequently rests on a one-off exercise: when a report is due, an analyst downloads a few images, computes an index and produces a map. Between exercises, developments — forest cover loss, retreat of a water body, catchment degradation — go unobserved.</p>
+
+      <p class="leading-8 text-night/80 mb-5">The limiting factor, however, is not data availability. The Sentinel and Landsat archives are open and continuously updated, with revisits of a few days; the opening of the Landsat archive in 2008 was itself a turning point for multi-temporal analysis <a href="#ref-woodcock" class="text-navy hover:underline">(Woodcock et al., 2008)</a>. The constraint lies in the manual processing chain separating the image from the decision. Automating that chain changes the nature of the system: from an archive consulted periodically, it becomes a continuous detection mechanism.</p>
+
+      <h2 class="font-display font-bold text-night text-2xl md:text-3xl mb-5">1. The principle of server-side processing</h2>
+
+      <p class="leading-8 text-night/80 mb-5">Cloud-based geospatial computing platforms, of which Google Earth Engine is the most documented, rest on an inversion of the usual logic: instead of bringing images to the analyst's machine, computation is executed on the infrastructure hosting the archives <a href="#ref-gorelick" class="text-navy hover:underline">(Gorelick et al., 2017)</a>. Only aggregated results — zonal statistics, time series, final maps — travel across the network.</p>
+
+      <p class="leading-8 text-night/80 mb-5">This architecture removes the two classic bottlenecks in low-connectivity settings: download volume and local computing power. It makes accessible multi-temporal analyses over long series that would be difficult to perform on a workstation.</p>
+
+      <h2 class="font-display font-bold text-night text-2xl md:text-3xl mb-5">2. Architecture of a scheduled chain</h2>
+
+      <p class="leading-8 text-night/80 mb-5">An operational chain is organised around five components.</p>
+
+      <ol class="space-y-4 text-night/80 leading-7 mb-10 list-none">
+        <li class="flex items-start gap-4"><span class="flex-none inline-flex items-center justify-center w-8 h-8 rounded-full bg-gradient-to-br from-navy to-lagoon text-[#ffffff] text-sm font-bold">1</span><span><strong class="text-night">Definition of extent and filters.</strong> Intervention footprints, image collection, time range and maximum cloud cover criterion are fixed once and for all. This stability conditions the comparability of successive measurements.</span></li>
+        <li class="flex items-start gap-4"><span class="flex-none inline-flex items-center justify-center w-8 h-8 rounded-full bg-gradient-to-br from-navy to-lagoon text-[#ffffff] text-sm font-bold">2</span><span><strong class="text-night">Pre-processing and masking.</strong> Application of cloud and shadow masks using the quality bands supplied with the products, then radiometric harmonisation where several sensors are combined.</span></li>
+        <li class="flex items-start gap-4"><span class="flex-none inline-flex items-center justify-center w-8 h-8 rounded-full bg-gradient-to-br from-navy to-lagoon text-[#ffffff] text-sm font-bold">3</span><span><strong class="text-night">Indicator computation.</strong> Spectral index, zonal statistic or change detection, depending on the object of monitoring. The computation code is versioned: it is what guarantees that the March and September measurements are commensurable.</span></li>
+        <li class="flex items-start gap-4"><span class="flex-none inline-flex items-center justify-center w-8 h-8 rounded-full bg-gradient-to-br from-navy to-lagoon text-[#ffffff] text-sm font-bold">4</span><span><strong class="text-night">Export and persistence.</strong> Results are written to a database — PostGIS for spatial data — rather than kept in scattered files. The database becomes the single source feeding all outputs.</span></li>
+        <li class="flex items-start gap-4"><span class="flex-none inline-flex items-center justify-center w-8 h-8 rounded-full bg-gradient-to-br from-navy to-lagoon text-[#ffffff] text-sm font-bold">5</span><span><strong class="text-night">Reporting and alerting.</strong> A dashboard exposes series and maps; a threshold rule triggers a notification when the indicator crosses a defined value.</span></li>
+      </ol>
+
+      <div class="bg-sky/60 border-l-4 border-navy rounded-r-2xl p-5 md:p-6 mb-10">
+        <p class="leading-7 text-night/80 text-sm md:text-base"><i class="fas fa-circle-info text-navy mr-2"></i><strong class="text-night">On task scheduling.</strong> Periodic execution is not provided by the computing platform itself but by an external scheduler — a scheduled task, an automation service or a workflow orchestrator — that invokes the processing at regular intervals. This component, often overlooked at design stage, determines the effective regularity of monitoring.</p>
+      </div>
+
+      <h2 class="font-display font-bold text-night text-2xl md:text-3xl mb-5">3. Designing usable alert rules</h2>
+
+      <p class="leading-8 text-night/80 mb-5">A threshold applied to a raw value produces a high number of false alerts, since seasonal variability and acquisition noise often exceed the magnitude of the change sought. Three precautions markedly improve the signal-to-noise ratio.</p>
+
+      <ul class="space-y-3 text-night/80 leading-7 mb-10">
+        <li class="flex items-start gap-3"><i class="fas fa-circle-check text-navy mt-1.5"></i><span>Compare each observation with a <strong class="text-night">same-season reference</strong> rather than with the previous date, so as to neutralise phenology. Continuous change detection approaches use all available acquisitions to model this seasonality before identifying a break <a href="#ref-zhu" class="text-navy hover:underline">(Zhu &amp; Woodcock, 2014)</a>.</span></li>
+        <li class="flex items-start gap-3"><i class="fas fa-circle-check text-navy mt-1.5"></i><span>Require <strong class="text-night">confirmation across several successive acquisitions</strong> before triggering an alert, a principle adopted by operational forest disturbance detection systems <a href="#ref-reiche" class="text-navy hover:underline">(Reiche et al., 2021)</a>.</span></li>
+        <li class="flex items-start gap-3"><i class="fas fa-circle-check text-navy mt-1.5"></i><span>Define a <strong class="text-night">minimum detection area</strong>, consistent with sensor resolution, to exclude variations at the scale of an isolated pixel.</span></li>
+      </ul>
+
+      <h2 class="font-display font-bold text-night text-2xl md:text-3xl mb-5">4. Essential quality controls</h2>
+
+      <ul class="space-y-3.5 text-night/80 leading-7 mb-10">
+        <li class="flex items-start gap-3"><i class="fas fa-circle-exclamation text-navy mt-1.5"></i><span><strong class="text-night">Number of valid observations.</strong> After cloud masking, a period may contain no usable image. The pipeline must record this, failing which an absence of data is read as an absence of change.</span></li>
+        <li class="flex items-start gap-3"><i class="fas fa-circle-exclamation text-navy mt-1.5"></i><span><strong class="text-night">Series continuity.</strong> A change in product version or masking algorithm introduces artificial breaks. Documenting the version of collections used is part of traceability.</span></li>
+        <li class="flex items-start gap-3"><i class="fas fa-circle-exclamation text-navy mt-1.5"></i><span><strong class="text-night">Field validation.</strong> An automated alert remains a hypothesis. A verification protocol, however light, must be planned from the design stage, and its feedback used to recalibrate thresholds.</span></li>
+        <li class="flex items-start gap-3"><i class="fas fa-circle-exclamation text-navy mt-1.5"></i><span><strong class="text-night">Logging.</strong> Record for each run the date, parameters and number of observations processed: without such a log, an aberrant result cannot be diagnosed after the fact.</span></li>
+      </ul>
+
+      <h2 class="font-display font-bold text-night text-2xl md:text-3xl mb-5">5. What automation actually delivers</h2>
+
+      <p class="leading-8 text-night/80 mb-5">The gain in frequency is the most visible: quarterly monitoring becomes weekly or ten-daily depending on sensor revisit. The methodological gain matters more still. Fixed, versioned computation rules make successive measurements comparable and the chain auditable — a third party can reproduce the result from the code and parameters.</p>
+
+      <p class="leading-8 text-night/80 mb-5">The displacement of workload finally deserves anticipation. Automation does not remove analytical work; it shifts it from repetitive execution towards design, threshold calibration and alert interpretation. A pipeline with no one to act on its signals produces notifications that nobody handles.</p>
+
+      <div class="bg-gradient-to-br from-petrol to-night rounded-2xl p-6 md:p-8 mb-10">
+        <h2 class="font-display font-semibold text-[#ffffff] text-xl mb-4"><i class="fas fa-list-check text-lagoon mr-2"></i>Key points</h2>
+        <ul class="space-y-2.5 text-[#ffffff]/80 leading-7 text-sm md:text-base">
+          <li class="flex items-start gap-3"><i class="fas fa-check text-lagoon mt-1.5"></i>Server-side computation removes volume and local processing constraints</li>
+          <li class="flex items-start gap-3"><i class="fas fa-check text-lagoon mt-1.5"></i>Five components: extent, pre-processing, computation, persistence, reporting</li>
+          <li class="flex items-start gap-3"><i class="fas fa-check text-lagoon mt-1.5"></i>The external scheduler determines the effective regularity of monitoring</li>
+          <li class="flex items-start gap-3"><i class="fas fa-check text-lagoon mt-1.5"></i>Seasonal reference, multi-date confirmation and minimum area reduce false alerts</li>
+          <li class="flex items-start gap-3"><i class="fas fa-check text-lagoon mt-1.5"></i>Record the number of valid observations: absence of data is not absence of change</li>
+        </ul>
+      </div>
+
+      <div class="bg-white border border-night/10 shadow-sm rounded-2xl p-6 md:p-8 mb-10">
+        <h2 class="font-display font-semibold text-night text-xl mb-5"><i class="fas fa-book text-navy mr-2"></i>References</h2>
+        <ol class="space-y-4 text-night/75 text-sm leading-6 ref">
+          <li id="ref-gorelick">Gorelick, N., Hancher, M., Dixon, M., Ilyushchenko, S., Thau, D., &amp; Moore, R. (2017). Google Earth Engine: Planetary-scale geospatial analysis for everyone. <em>Remote Sensing of Environment</em>, 202, 18–27. <a href="https://doi.org/10.1016/j.rse.2017.06.031" target="_blank" class="text-navy hover:underline break-all">doi.org/10.1016/j.rse.2017.06.031</a></li>
+          <li id="ref-reiche">Reiche, J., Mullissa, A., Slagter, B., Gou, Y., Tsendbazar, N.-E., Odongo-Braun, C., et al. (2021). Forest disturbance alerts for the Congo Basin using Sentinel-1. <em>Environmental Research Letters</em>, 16(2), 024005. <a href="https://doi.org/10.1088/1748-9326/abd0a8" target="_blank" class="text-navy hover:underline break-all">doi.org/10.1088/1748-9326/abd0a8</a></li>
+          <li id="ref-woodcock">Woodcock, C. E., Allen, R., Anderson, M., Belward, A., Bindschadler, R., Cohen, W., et al. (2008). Free Access to Landsat Imagery. <em>Science</em>, 320(5879), 1011. <a href="https://doi.org/10.1126/science.320.5879.1011a" target="_blank" class="text-navy hover:underline break-all">doi.org/10.1126/science.320.5879.1011a</a></li>
+          <li id="ref-zhu">Zhu, Z., &amp; Woodcock, C. E. (2014). Continuous change detection and classification of land cover using all available Landsat data. <em>Remote Sensing of Environment</em>, 144, 152–171. <a href="https://doi.org/10.1016/j.rse.2014.01.011" target="_blank" class="text-navy hover:underline break-all">doi.org/10.1016/j.rse.2014.01.011</a></li>
+        </ol>
+      </div>
+
+      <div class="bg-white border border-night/10 shadow-sm rounded-2xl p-6 md:p-7 flex flex-col sm:flex-row items-center gap-5 mb-6">
+        <img src="../Photomerveille.jpg?v=2" alt="Merveille Aganze Sami" class="w-20 h-20 rounded-full object-cover ring-2 ring-navy/30" />
+        <div class="text-center sm:text-left">
+          <p class="font-display font-semibold text-night">Merveille Aganze Sami</p>
+          <p class="text-night/70 text-sm leading-6 mt-1">MEL &amp; Database Management Advisor. 9+ years of experience in monitoring &amp; evaluation, GIS and digitalization with international organizations (GIZ, Enabel) in DR Congo.</p>
+          <div class="flex justify-center sm:justify-start gap-4 mt-3 text-sm">
+            <a href="https://www.linkedin.com/in/mervag27/?skipRedirect=true" target="_blank" class="text-navy font-medium hover:text-night transition"><i class="fab fa-linkedin mr-1.5"></i>LinkedIn</a>
+            <a href="contact.html" class="text-navy font-medium hover:text-night transition"><i class="fas fa-envelope mr-1.5"></i>Contact me</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="flex flex-col sm:flex-row items-center justify-between gap-4 bg-sky/60 rounded-2xl p-6">
+        <p class="text-night/80 font-medium text-center sm:text-left">Environmental monitoring to automate?</p>
+        <a href="contact.html" class="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-navy to-lagoon text-[#ffffff] font-semibold px-6 py-2.5 shadow-md hover:-translate-y-0.5 transition whitespace-nowrap">Get in touch <i class="fas fa-arrow-right"></i></a>
+      </div>
+    </article>
+  </main>
+
+  <footer class="mt-16 bg-gradient-to-br from-petrol to-night text-[#ffffff]">
+    <div class="max-w-6xl mx-auto px-5 sm:px-8 pt-12 md:pt-16 pb-8">
+      <div class="grid gap-10 md:grid-cols-[1.2fr_0.7fr_1.1fr]">
+        <div>
+          <p class="font-display font-bold text-xl mb-3">Merveille <span class="bg-gradient-to-r from-navy to-lagoon bg-clip-text text-transparent">AGANZE SAMI</span></p>
+          <p class="text-[#ffffff]/60 text-sm leading-7 max-w-xs">MEL &amp; Database Management Advisor. Data, GIS and digitalization at the service of your decisions.</p>
+          <div class="flex items-center gap-3 mt-6">
+            <a href="https://www.linkedin.com/in/mervag27/?skipRedirect=true" target="_blank" class="inline-flex items-center justify-center w-10 h-10 rounded-full bg-[#ffffff]/10 hover:bg-navy transition" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+            <a href="https://github.com/MerveAS" target="_blank" class="inline-flex items-center justify-center w-10 h-10 rounded-full bg-[#ffffff]/10 hover:bg-navy transition" aria-label="GitHub"><i class="fab fa-github"></i></a>
+          </div>
+        </div>
+        <div>
+          <h3 class="font-display font-semibold text-xs uppercase tracking-[0.2em] text-[#ffffff]/50 mb-4">Navigation</h3>
+          <ul class="space-y-2.5 text-sm">
+            <li><a href="index.html" class="text-[#ffffff]/70 hover:text-lagoon transition">Home</a></li>
+            <li><a href="blog.html" class="text-[#ffffff]/70 hover:text-lagoon transition">Blog</a></li>
+            <li><a href="expertise.html" class="text-[#ffffff]/70 hover:text-lagoon transition">Expertise</a></li>
+            <li><a href="projects.html" class="text-[#ffffff]/70 hover:text-lagoon transition">Projects</a></li>
+            <li><a href="contact.html" class="text-[#ffffff]/70 hover:text-lagoon transition">Contact</a></li>
+          </ul>
+        </div>
+        <div>
+          <h3 class="font-display font-semibold text-xs uppercase tracking-[0.2em] text-[#ffffff]/50 mb-4">Contact</h3>
+          <ul class="space-y-3 text-sm text-[#ffffff]/70">
+            <li class="flex items-center gap-3"><span class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-[#ffffff]/10 text-lagoon text-xs"><i class="fas fa-phone"></i></span>+243 850 012 270</li>
+            <li class="flex items-center gap-3"><span class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-[#ffffff]/10 text-lagoon text-xs"><i class="fas fa-envelope"></i></span><a href="mailto:merveille.aganzesami@fitigroup.org" class="hover:text-lagoon transition break-all">merveille.aganzesami@fitigroup.org</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="mt-10 pt-6 border-t border-[#ffffff]/10 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-[#ffffff]/50">
+        <p>© 2026 Merveille AGANZE SAMI — All rights reserved · <span class="text-[#ffffff]/30">v2.2</span></p>
+        <a href="#" onclick="window.scrollTo({top:0,behavior:'smooth'});return false;" class="inline-flex items-center gap-2 hover:text-lagoon transition">Back to top <i class="fas fa-arrow-up"></i></a>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>

@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Kernel density estimation: converting a point pattern into a measured surface | Merveille Aganze Sami</title>
+  <meta name="description" content="A dot map leaves concentration to visual perception. Kernel density estimation measures it, provided the bandwidth is made explicit." />
+  <meta property="og:title" content="Kernel density estimation: converting a point pattern into a measured surface" />
+  <meta property="og:description" content="A dot map leaves concentration to visual perception. Kernel density estimation measures it, provided the bandwidth is made explicit." />
+  <meta property="og:image" content="../visuels/visuel_2026-07-24_kde.png" />
+  <meta property="og:type" content="article" />
+  <link rel="alternate" hreflang="fr" href="https://merveille.fitigroup.org/article-densite-noyau.html" />
+  <link rel="alternate" hreflang="en" href="https://merveille.fitigroup.org/en/article-kernel-density.html" />
+  <link rel="icon" href="../favicon.svg?v=2" type="image/svg+xml" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = { theme: { extend: {
+      colors: { night:'#222B38', navy:'#EE7A5C', steel:'#8A93A3', petrol:'#26303E', lagoon:'#F2A48F', sky:'#F7DCD1', pale:'#F7F5F2' },
+      fontFamily: { sans:['DM Sans','Arial','sans-serif'], display:['Plus Jakarta Sans','Arial','sans-serif'] } } } }
+  </script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    html { scroll-behavior: smooth; }
+    .ref { font-variant-numeric: tabular-nums; }
+    @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col bg-gradient-to-b from-pale via-pale to-sky text-night font-sans antialiased">
+
+  <header class="sticky top-0 z-50 bg-pale/95 backdrop-blur border-b border-navy/20">
+    <div class="max-w-6xl mx-auto px-5 sm:px-8 min-h-16 md:min-h-20 py-2 flex items-center justify-between gap-4">
+      <a href="index.html" class="font-display font-bold text-night text-base sm:text-lg md:text-xl tracking-tight">
+        Merveille <span class="text-navy hidden sm:inline">AGANZE SAMI</span>
+      </a>
+      <nav class="flex flex-wrap justify-end items-center gap-x-4 gap-y-1 sm:gap-x-6 md:gap-x-8 text-xs sm:text-sm md:text-[15px]">
+        <a href="index.html" class="text-night/70 hover:text-navy transition">Home</a>
+        <a href="blog.html" class="text-navy font-semibold">Blog</a>
+        <a href="expertise.html" class="text-night/70 hover:text-navy transition">Expertise</a>
+        <a href="projects.html" class="text-night/70 hover:text-navy transition">Projects</a>
+        <a href="../article-densite-noyau.html" class="text-[11px] font-semibold border border-navy/40 rounded-full px-3 py-1 text-night/70 hover:text-navy hover:border-navy/60 transition" title="Version française">FR</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="flex-1">
+    <section class="max-w-6xl mx-auto px-5 sm:px-8 pt-10 md:pt-14">
+      <div class="bg-gradient-to-br from-petrol to-night rounded-[2rem] md:rounded-[2.5rem] px-6 sm:px-10 md:px-14 py-12 md:py-14 relative overflow-hidden">
+        <div class="absolute -bottom-24 -right-16 w-80 h-80 bg-navy/20 rounded-full blur-2xl"></div>
+        <div class="relative max-w-3xl">
+          <a href="blog.html" class="inline-flex items-center gap-2 text-[#ffffff]/60 text-sm hover:text-lagoon transition mb-6"><i class="fas fa-arrow-left"></i> Back to blog</a>
+          <div class="flex flex-wrap items-center gap-2 mb-5">
+            <span class="text-[11px] font-semibold uppercase tracking-wider bg-gradient-to-r from-navy to-lagoon text-[#ffffff] rounded-full px-3 py-1">Article</span>
+            <span class="text-[11px] font-medium text-[#ffffff]/50"><i class="fas fa-calendar mr-1.5"></i>24 July 2026</span>
+            <span class="text-[11px] font-medium text-[#ffffff]/50"><i class="fas fa-clock mr-1.5"></i>9 min read</span>
+          </div>
+          <h1 class="font-display font-bold text-[#ffffff] text-3xl sm:text-4xl md:text-5xl leading-tight mb-5">Kernel density estimation:<br /><span class="bg-gradient-to-r from-navy to-lagoon bg-clip-text text-transparent">from point pattern to measurement</span></h1>
+          <p class="text-[#ffffff]/60 text-base mb-6">KDE principles, the decisive role of bandwidth and interpretation caveats</p>
+          <div class="flex items-center gap-3">
+            <img src="../Photomerveille.jpg?v=2" alt="Merveille Aganze Sami" class="w-10 h-10 rounded-full object-cover ring-2 ring-[#ffffff]/30" />
+            <div class="text-sm">
+              <p class="text-[#ffffff] font-semibold">Merveille Aganze Sami</p>
+              <p class="text-[#ffffff]/50">MEL &amp; Database Management Advisor</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <article class="max-w-3xl mx-auto px-5 sm:px-8 py-12 md:py-16">
+
+      <figure class="mb-12">
+        <img src="../visuels/visuel_2026-07-24_kde.png" alt="Point pattern and density surfaces obtained with three different bandwidths" class="w-full rounded-2xl shadow-xl ring-1 ring-night/10" />
+        <figcaption class="text-night/60 text-sm mt-3 text-center"><strong class="text-night/70">Figure 1.</strong> Illustration: the same point pattern and the density surfaces obtained for three bandwidths. The number and extent of clusters vary with this parameter.</figcaption>
+      </figure>
+
+      <p class="text-lg md:text-xl leading-9 text-night/80 mb-8">Representing geolocated events — incidents, complaints, beneficiary households, reported cases — frequently takes the form of a point pattern on a base map. This representation has a structural limitation: it delegates the estimation of concentration to visual perception, when concentration ought to be a matter of measurement.</p>
+
+      <p class="leading-8 text-night/80 mb-5">Three biases compound this. Overlapping points conceal their own count. Densely populated areas dominate visually, regardless of the relative intensity of the phenomenon. And two readers examining the same map rarely identify the same clusters.</p>
+
+      <p class="leading-8 text-night/80 mb-5">Kernel density estimation, developed within the framework of non-parametric density estimation <a href="#ref-rosenblatt" class="text-navy hover:underline">(Rosenblatt, 1956)</a> <a href="#ref-parzen" class="text-navy hover:underline">(Parzen, 1962)</a>, replaces this appraisal with a computed and reproducible quantity.</p>
+
+      <h2 class="font-display font-bold text-night text-2xl md:text-3xl mb-5">1. Principle</h2>
+
+      <p class="leading-8 text-night/80 mb-5">The method replaces each point observation with a weighting function — the kernel — centred on that point and decreasing with distance. Summing these contributions at every location produces a continuous surface whose value expresses an intensity, generally in events per unit area.</p>
+
+      <p class="leading-8 text-night/80 mb-5">Two parameters define the estimate. The <strong class="text-night">kernel shape</strong> (Gaussian, quartic, triangular) determines how influence decays; its effect on the result is moderate. <strong class="text-night">Bandwidth</strong>, by contrast, strongly conditions the output: it sets the radius of influence of each observation <a href="#ref-silverman" class="text-navy hover:underline">(Silverman, 1986)</a>.</p>
+
+      <div class="bg-sky/60 border-l-4 border-navy rounded-r-2xl p-5 md:p-6 mb-10">
+        <p class="leading-7 text-night/80 text-sm md:text-base"><i class="fas fa-circle-info text-navy mr-2"></i><strong class="text-night">The decisive parameter.</strong> A narrow bandwidth produces a fragmented surface in which every isolated point appears as a cluster; a wide one smooths the structure to the point of erasing real concentrations. The choice of this parameter therefore determines the number and extent of identified hot spots — it is a methodological decision in its own right, not a display setting.</p>
+      </div>
+
+      <h2 class="font-display font-bold text-night text-2xl md:text-3xl mb-5">2. Choosing and justifying the bandwidth</h2>
+
+      <p class="leading-8 text-night/80 mb-5">Several approaches allow this choice to be grounded rather than left to the software default.</p>
+
+      <ul class="space-y-3 text-night/80 leading-7 mb-10">
+        <li class="flex items-start gap-3"><i class="fas fa-circle-check text-navy mt-1.5"></i><span><strong class="text-night">Automatic rules.</strong> Estimators based on data dispersion provide an objective starting value; they nonetheless assume a near-normal distribution and tend to over-smooth multimodal patterns <a href="#ref-silverman" class="text-navy hover:underline">(Silverman, 1986)</a>.</span></li>
+        <li class="flex items-start gap-3"><i class="fas fa-circle-check text-navy mt-1.5"></i><span><strong class="text-night">Cross-validation.</strong> Bandwidth is selected so as to optimise a goodness-of-fit criterion, providing explicit statistical justification <a href="#ref-diggle" class="text-navy hover:underline">(Diggle, 2013)</a>.</span></li>
+        <li class="flex items-start gap-3"><i class="fas fa-circle-check text-navy mt-1.5"></i><span><strong class="text-night">Thematic criterion.</strong> Bandwidth may be set from a distance with operational meaning — the catchment radius of a health centre, an acceptable walking distance, the reach of an intervention zone. This approach is often the most defensible before a partner.</span></li>
+        <li class="flex items-start gap-3"><i class="fas fa-circle-check text-navy mt-1.5"></i><span><strong class="text-night">Adaptive kernel.</strong> Where density varies strongly across space, a variable bandwidth, narrower in dense areas, improves the rendering of local structures.</span></li>
+      </ul>
+
+      <h2 class="font-display font-bold text-night text-2xl md:text-3xl mb-5">3. Raw density or relative risk</h2>
+
+      <p class="leading-8 text-night/80 mb-5">A major caveat concerns interpretation. A raw density surface partly reflects the underlying population distribution: populated areas mechanically generate more events. Inferring priority need from high density then amounts to mapping demography.</p>
+
+      <p class="leading-8 text-night/80 mb-5">Where the question concerns relative intensity — a rate rather than a volume — a ratio between case density and that of a reference population should be estimated. This relative-risk approach is formalised in the spatial epidemiology literature and applies equally to project data <a href="#ref-kelsall" class="text-navy hover:underline">(Kelsall &amp; Diggle, 1995)</a>.</p>
+
+      <h2 class="font-display font-bold text-night text-2xl md:text-3xl mb-5">4. Further limitations to document</h2>
+
+      <ul class="space-y-3.5 text-night/80 leading-7 mb-10">
+        <li class="flex items-start gap-3"><i class="fas fa-circle-exclamation text-navy mt-1.5"></i><span><strong class="text-night">Edge effects.</strong> At the boundaries of the study area, part of the kernel extends outside the domain, underestimating density at the periphery. Corrections exist and should be applied where boundaries concentrate issues.</span></li>
+        <li class="flex items-start gap-3"><i class="fas fa-circle-exclamation text-navy mt-1.5"></i><span><strong class="text-night">Physical barriers.</strong> The kernel diffuses in Euclidean distance, disregarding rivers, terrain or administrative limits. For phenomena constrained by a network, network-based density is more appropriate.</span></li>
+        <li class="flex items-start gap-3"><i class="fas fa-circle-exclamation text-navy mt-1.5"></i><span><strong class="text-night">Temporal comparability.</strong> Two maps produced with different bandwidths or colour scales are not comparable. These parameters must be fixed for any longitudinal monitoring.</span></li>
+        <li class="flex items-start gap-3"><i class="fas fa-circle-exclamation text-navy mt-1.5"></i><span><strong class="text-night">No test.</strong> KDE describes an intensity but does not test the significance of a cluster. Where the question is whether a concentration exceeds what chance would explain, it must be complemented by a dedicated statistic.</span></li>
+      </ul>
+
+      <h2 class="font-display font-bold text-night text-2xl md:text-3xl mb-5">5. Operational use</h2>
+
+      <p class="leading-8 text-night/80 mb-5">Properly parameterised and documented, the density surface turns an illustration into a targeting instrument. It delineates priority areas according to an explicit criterion, comparable from one period to another, whose construction can be reproduced by a third party — a condition for prioritisation that is defensible before a partner or donor.</p>
+
+      <div class="bg-gradient-to-br from-petrol to-night rounded-2xl p-6 md:p-8 mb-10">
+        <h2 class="font-display font-semibold text-[#ffffff] text-xl mb-4"><i class="fas fa-list-check text-lagoon mr-2"></i>Key points</h2>
+        <ul class="space-y-2.5 text-[#ffffff]/80 leading-7 text-sm md:text-base">
+          <li class="flex items-start gap-3"><i class="fas fa-check text-lagoon mt-1.5"></i>KDE replaces visual appraisal of a point pattern with a computed intensity</li>
+          <li class="flex items-start gap-3"><i class="fas fa-check text-lagoon mt-1.5"></i>Bandwidth is the determining parameter: it sets the number and extent of clusters</li>
+          <li class="flex items-start gap-3"><i class="fas fa-check text-lagoon mt-1.5"></i>A bandwidth based on an operational distance is often the most defensible</li>
+          <li class="flex items-start gap-3"><i class="fas fa-check text-lagoon mt-1.5"></i>Raw density partly reflects population: for a rate, estimate relative risk</li>
+          <li class="flex items-start gap-3"><i class="fas fa-check text-lagoon mt-1.5"></i>Fix bandwidth and colour scale for any comparative monitoring</li>
+        </ul>
+      </div>
+
+      <p class="leading-8 text-night/80 mb-5">A point pattern shows where events were recorded. A density surface shows where they concentrate. These two pieces of information do not call for the same decision.</p>
+
+      <div class="bg-white border border-night/10 shadow-sm rounded-2xl p-6 md:p-8 mb-10">
+        <h2 class="font-display font-semibold text-night text-xl mb-5"><i class="fas fa-book text-navy mr-2"></i>References</h2>
+        <ol class="space-y-4 text-night/75 text-sm leading-6 ref">
+          <li id="ref-diggle">Diggle, P. J. (2013). <em>Statistical Analysis of Spatial and Spatio-Temporal Point Patterns</em> (3rd ed.). Boca Raton: CRC Press. <a href="https://doi.org/10.1201/b15326" target="_blank" class="text-navy hover:underline break-all">doi.org/10.1201/b15326</a></li>
+          <li id="ref-kelsall">Kelsall, J. E., &amp; Diggle, P. J. (1995). Kernel estimation of relative risk. <em>Bernoulli</em>, 1(1–2), 3–16. <a href="https://doi.org/10.2307/3318678" target="_blank" class="text-navy hover:underline break-all">doi.org/10.2307/3318678</a></li>
+          <li id="ref-parzen">Parzen, E. (1962). On Estimation of a Probability Density Function and Mode. <em>The Annals of Mathematical Statistics</em>, 33(3), 1065–1076. <a href="https://doi.org/10.1214/aoms/1177704472" target="_blank" class="text-navy hover:underline break-all">doi.org/10.1214/aoms/1177704472</a></li>
+          <li id="ref-rosenblatt">Rosenblatt, M. (1956). Remarks on Some Nonparametric Estimates of a Density Function. <em>The Annals of Mathematical Statistics</em>, 27(3), 832–837. <a href="https://doi.org/10.1214/aoms/1177728190" target="_blank" class="text-navy hover:underline break-all">doi.org/10.1214/aoms/1177728190</a></li>
+          <li id="ref-silverman">Silverman, B. W. (1986). <em>Density Estimation for Statistics and Data Analysis</em>. London: Chapman &amp; Hall. <a href="https://doi.org/10.1201/9781315140919" target="_blank" class="text-navy hover:underline break-all">doi.org/10.1201/9781315140919</a></li>
+        </ol>
+      </div>
+
+      <div class="bg-white border border-night/10 shadow-sm rounded-2xl p-6 md:p-7 flex flex-col sm:flex-row items-center gap-5 mb-6">
+        <img src="../Photomerveille.jpg?v=2" alt="Merveille Aganze Sami" class="w-20 h-20 rounded-full object-cover ring-2 ring-navy/30" />
+        <div class="text-center sm:text-left">
+          <p class="font-display font-semibold text-night">Merveille Aganze Sami</p>
+          <p class="text-night/70 text-sm leading-6 mt-1">MEL &amp; Database Management Advisor. 9+ years of experience in monitoring &amp; evaluation, GIS and digitalization with international organizations (GIZ, Enabel) in DR Congo.</p>
+          <div class="flex justify-center sm:justify-start gap-4 mt-3 text-sm">
+            <a href="https://www.linkedin.com/in/mervag27/?skipRedirect=true" target="_blank" class="text-navy font-medium hover:text-night transition"><i class="fab fa-linkedin mr-1.5"></i>LinkedIn</a>
+            <a href="contact.html" class="text-navy font-medium hover:text-night transition"><i class="fas fa-envelope mr-1.5"></i>Contact me</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="flex flex-col sm:flex-row items-center justify-between gap-4 bg-sky/60 rounded-2xl p-6">
+        <p class="text-night/80 font-medium text-center sm:text-left">Geolocated field data to exploit?</p>
+        <a href="contact.html" class="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-navy to-lagoon text-[#ffffff] font-semibold px-6 py-2.5 shadow-md hover:-translate-y-0.5 transition whitespace-nowrap">Get in touch <i class="fas fa-arrow-right"></i></a>
+      </div>
+    </article>
+  </main>
+
+  <footer class="mt-16 bg-gradient-to-br from-petrol to-night text-[#ffffff]">
+    <div class="max-w-6xl mx-auto px-5 sm:px-8 pt-12 md:pt-16 pb-8">
+      <div class="grid gap-10 md:grid-cols-[1.2fr_0.7fr_1.1fr]">
+        <div>
+          <p class="font-display font-bold text-xl mb-3">Merveille <span class="bg-gradient-to-r from-navy to-lagoon bg-clip-text text-transparent">AGANZE SAMI</span></p>
+          <p class="text-[#ffffff]/60 text-sm leading-7 max-w-xs">MEL &amp; Database Management Advisor. Data, GIS and digitalization at the service of your decisions.</p>
+          <div class="flex items-center gap-3 mt-6">
+            <a href="https://www.linkedin.com/in/mervag27/?skipRedirect=true" target="_blank" class="inline-flex items-center justify-center w-10 h-10 rounded-full bg-[#ffffff]/10 hover:bg-navy transition" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+            <a href="https://github.com/MerveAS" target="_blank" class="inline-flex items-center justify-center w-10 h-10 rounded-full bg-[#ffffff]/10 hover:bg-navy transition" aria-label="GitHub"><i class="fab fa-github"></i></a>
+          </div>
+        </div>
+        <div>
+          <h3 class="font-display font-semibold text-xs uppercase tracking-[0.2em] text-[#ffffff]/50 mb-4">Navigation</h3>
+          <ul class="space-y-2.5 text-sm">
+            <li><a href="index.html" class="text-[#ffffff]/70 hover:text-lagoon transition">Home</a></li>
+            <li><a href="blog.html" class="text-[#ffffff]/70 hover:text-lagoon transition">Blog</a></li>
+            <li><a href="expertise.html" class="text-[#ffffff]/70 hover:text-lagoon transition">Expertise</a></li>
+            <li><a href="projects.html" class="text-[#ffffff]/70 hover:text-lagoon transition">Projects</a></li>
+            <li><a href="contact.html" class="text-[#ffffff]/70 hover:text-lagoon transition">Contact</a></li>
+          </ul>
+        </div>
+        <div>
+          <h3 class="font-display font-semibold text-xs uppercase tracking-[0.2em] text-[#ffffff]/50 mb-4">Contact</h3>
+          <ul class="space-y-3 text-sm text-[#ffffff]/70">
+            <li class="flex items-center gap-3"><span class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-[#ffffff]/10 text-lagoon text-xs"><i class="fas fa-phone"></i></span>+243 850 012 270</li>
+            <li class="flex items-center gap-3"><span class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-[#ffffff]/10 text-lagoon text-xs"><i class="fas fa-envelope"></i></span><a href="mailto:merveille.aganzesami@fitigroup.org" class="hover:text-lagoon transition break-all">merveille.aganzesami@fitigroup.org</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="mt-10 pt-6 border-t border-[#ffffff]/10 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-[#ffffff]/50">
+        <p>© 2026 Merveille AGANZE SAMI — All rights reserved · <span class="text-[#ffffff]/30">v2.2</span></p>
+        <a href="#" onclick="window.scrollTo({top:0,behavior:'smooth'});return false;" class="inline-flex items-center gap-2 hover:text-lagoon transition">Back to top <i class="fas fa-arrow-up"></i></a>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>
