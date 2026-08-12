@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Propensity score matching: building a counterfactual without a randomised trial | Merveille Aganze Sami</title>
+  <meta name="description" content="Comparing beneficiaries with non-beneficiaries does not measure a programme effect as long as the two groups differ at baseline. Propensity score matching reduces that initial gap on observed variables." />
+  <meta property="og:title" content="Propensity score matching: building a counterfactual without a randomised trial" />
+  <meta property="og:description" content="Comparing beneficiaries with non-beneficiaries does not measure a programme effect as long as the two groups differ at baseline. Propensity score matching reduces that initial gap on observed variables." />
+  <meta property="og:image" content="../visuels/visuel_2026-07-19_psm.png" />
+  <meta property="og:type" content="article" />
+  <link rel="alternate" hreflang="fr" href="https://merveille.fitigroup.org/article-appariement-score-propension.html" />
+  <link rel="alternate" hreflang="en" href="https://merveille.fitigroup.org/en/article-propensity-score-matching.html" />
+  <link rel="icon" href="../favicon.svg?v=2" type="image/svg+xml" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = { theme: { extend: {
+      colors: { night:'#222B38', navy:'#EE7A5C', steel:'#8A93A3', petrol:'#26303E', lagoon:'#F2A48F', sky:'#F7DCD1', pale:'#F7F5F2' },
+      fontFamily: { sans:['DM Sans','Arial','sans-serif'], display:['Plus Jakarta Sans','Arial','sans-serif'] } } } }
+  </script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    html { scroll-behavior: smooth; }
+    .ref { font-variant-numeric: tabular-nums; }
+    @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col bg-gradient-to-b from-pale via-pale to-sky text-night font-sans antialiased">
+
+  <header class="sticky top-0 z-50 bg-pale/95 backdrop-blur border-b border-navy/20">
+    <div class="max-w-6xl mx-auto px-5 sm:px-8 min-h-16 md:min-h-20 py-2 flex items-center justify-between gap-4">
+      <a href="index.html" class="font-display font-bold text-night text-base sm:text-lg md:text-xl tracking-tight">
+        Merveille <span class="text-navy hidden sm:inline">AGANZE SAMI</span>
+      </a>
+      <nav class="flex flex-wrap justify-end items-center gap-x-4 gap-y-1 sm:gap-x-6 md:gap-x-8 text-xs sm:text-sm md:text-[15px]">
+        <a href="index.html" class="text-night/70 hover:text-navy transition">Home</a>
+        <a href="blog.html" class="text-navy font-semibold">Blog</a>
+        <a href="expertise.html" class="text-night/70 hover:text-navy transition">Expertise</a>
+        <a href="projects.html" class="text-night/70 hover:text-navy transition">Projects</a>
+        <a href="../article-appariement-score-propension.html" class="text-[11px] font-semibold border border-navy/40 rounded-full px-3 py-1 text-night/70 hover:text-navy hover:border-navy/60 transition" title="Version française">FR</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="flex-1">
+    <section class="max-w-6xl mx-auto px-5 sm:px-8 pt-10 md:pt-14">
+      <div class="bg-gradient-to-br from-petrol to-night rounded-[2rem] md:rounded-[2.5rem] px-6 sm:px-10 md:px-14 py-12 md:py-14 relative overflow-hidden">
+        <div class="absolute -bottom-24 -right-16 w-80 h-80 bg-navy/20 rounded-full blur-2xl"></div>
+        <div class="relative max-w-3xl">
+          <a href="blog.html" class="inline-flex items-center gap-2 text-[#ffffff]/60 text-sm hover:text-lagoon transition mb-6"><i class="fas fa-arrow-left"></i> Back to blog</a>
+          <div class="flex flex-wrap items-center gap-2 mb-5">
+            <span class="text-[11px] font-semibold uppercase tracking-wider bg-gradient-to-r from-navy to-lagoon text-[#ffffff] rounded-full px-3 py-1">Article</span>
+            <span class="text-[11px] font-medium text-[#ffffff]/50"><i class="fas fa-calendar mr-1.5"></i>19 July 2026</span>
+            <span class="text-[11px] font-medium text-[#ffffff]/50"><i class="fas fa-clock mr-1.5"></i>10 min read</span>
+          </div>
+          <h1 class="font-display font-bold text-[#ffffff] text-3xl sm:text-4xl md:text-5xl leading-tight mb-5">Propensity score matching:<br /><span class="bg-gradient-to-r from-navy to-lagoon bg-clip-text text-transparent">building a credible counterfactual</span></h1>
+          <p class="text-[#ffffff]/60 text-base mb-6">Matching principles, balance diagnostics and the limitations to document in an evaluation report</p>
+          <div class="flex items-center gap-3">
+            <img src="../Photomerveille.jpg?v=2" alt="Merveille Aganze Sami" class="w-10 h-10 rounded-full object-cover ring-2 ring-[#ffffff]/30" />
+            <div class="text-sm">
+              <p class="text-[#ffffff] font-semibold">Merveille Aganze Sami</p>
+              <p class="text-[#ffffff]/50">MEL &amp; Database Management Advisor</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <article class="max-w-3xl mx-auto px-5 sm:px-8 py-12 md:py-16">
+
+      <figure class="mb-12">
+        <img src="../visuels/visuel_2026-07-19_psm.png" alt="Plot of standardised covariate differences before and after matching, with the 0.1 threshold" class="w-full rounded-2xl shadow-xl ring-1 ring-night/10" />
+        <figcaption class="text-night/60 text-sm mt-3 text-center"><strong class="text-night/70">Figure 1.</strong> Illustration: standardised differences in covariates between treated and comparison groups, before and after matching. The conventional 0.1 threshold serves as a balance benchmark.</figcaption>
+      </figure>
+
+      <p class="text-lg md:text-xl leading-9 text-night/80 mb-8">A common practice in evaluation is to compare a group of beneficiaries with a group of non-beneficiaries, then attribute the measured gap to the programme. This reading assumes the two groups were comparable before the intervention. That condition is rarely met in the field.</p>
+
+      <p class="leading-8 text-night/80 mb-5">Participation in a project almost always results from a selection process: targeting through eligibility criteria, self-selection of the most available or best-informed households, proximity to an access road. The gap observed at the end of the programme therefore aggregates two components: the effect of the intervention and the pre-existing differences between the groups. This confounding constitutes selection bias, whose magnitude may exceed that of the effect being sought <a href="#ref-heckman" class="text-navy hover:underline">(Heckman et al., 1997)</a>.</p>
+
+      <h2 class="font-display font-bold text-night text-2xl md:text-3xl mb-5">1. The principle of the propensity score</h2>
+
+      <p class="leading-8 text-night/80 mb-5">The propensity score is defined as the probability, for a given unit, of receiving the treatment given its characteristics observed before the intervention. It is most often estimated by a logistic regression whose dependent variable is participation and whose explanatory variables are baseline characteristics: household size, education, productive assets, distance to a centre, initial value of the outcome of interest.</p>
+
+      <div class="bg-sky/60 border-l-4 border-navy rounded-r-2xl p-5 md:p-6 mb-10">
+        <p class="leading-7 text-night/80 text-sm md:text-base"><i class="fas fa-circle-info text-navy mr-2"></i><strong class="text-night">The founding property.</strong> The propensity score is a <em>balancing score</em>: conditional on its value, the distribution of observed covariates is independent of treatment assignment. Comparing units with similar scores therefore amounts, on those variables, to comparing equivalent profiles — a result that reduces a multidimensional problem to a one-dimensional one <a href="#ref-rosenbaum" class="text-navy hover:underline">(Rosenbaum &amp; Rubin, 1983)</a>.</p>
+      </div>
+
+      <p class="leading-8 text-night/80 mb-5">This property holds only under an explicit assumption, known as conditional independence: every variable that jointly influences participation and the outcome must appear in the model. It is an identifying assumption, not a result the data can demonstrate.</p>
+
+      <h2 class="font-display font-bold text-night text-2xl md:text-3xl mb-5">2. Five implementation steps</h2>
+
+      <ol class="space-y-4 text-night/80 leading-7 mb-10 list-none">
+        <li class="flex items-start gap-4"><span class="flex-none inline-flex items-center justify-center w-8 h-8 rounded-full bg-gradient-to-br from-navy to-lagoon text-[#ffffff] text-sm font-bold">1</span><span><strong class="text-night">Specify the covariates.</strong> Retain only variables measured before the intervention or structurally invariant. Including a post-treatment variable, itself affected by the programme, introduces further bias.</span></li>
+        <li class="flex items-start gap-4"><span class="flex-none inline-flex items-center justify-center w-8 h-8 rounded-full bg-gradient-to-br from-navy to-lagoon text-[#ffffff] text-sm font-bold">2</span><span><strong class="text-night">Estimate the score.</strong> A logistic regression suffices in most cases. The aim is not to maximise the model's predictive performance but to obtain a score that balances the groups.</span></li>
+        <li class="flex items-start gap-4"><span class="flex-none inline-flex items-center justify-center w-8 h-8 rounded-full bg-gradient-to-br from-navy to-lagoon text-[#ffffff] text-sm font-bold">3</span><span><strong class="text-night">Choose the matching algorithm.</strong> Nearest neighbour with or without replacement, kernel matching, stratification, or inverse probability weighting. Each option trades bias against variance; the respective properties are documented <a href="#ref-caliendo" class="text-navy hover:underline">(Caliendo &amp; Kopeinig, 2008)</a>.</span></li>
+        <li class="flex items-start gap-4"><span class="flex-none inline-flex items-center justify-center w-8 h-8 rounded-full bg-gradient-to-br from-navy to-lagoon text-[#ffffff] text-sm font-bold">4</span><span><strong class="text-night">Impose common support and a caliper.</strong> Treated units whose score has no counterpart in the comparison group must be dropped or flagged. A maximum score distance — the caliper — prevents accommodating matches between distant profiles.</span></li>
+        <li class="flex items-start gap-4"><span class="flex-none inline-flex items-center justify-center w-8 h-8 rounded-full bg-gradient-to-br from-navy to-lagoon text-[#ffffff] text-sm font-bold">5</span><span><strong class="text-night">Check balance.</strong> Not an optional step: it is balance, not estimation, that validates the matching.</span></li>
+      </ol>
+
+      <h2 class="font-display font-bold text-night text-2xl md:text-3xl mb-5">3. Diagnosing balance rather than fit</h2>
+
+      <p class="leading-8 text-night/80 mb-5">The quality of a matching procedure is not judged by the significance of the coefficients in the participation model, but by the effective reduction of differences between groups. The usual indicator is the standardised mean difference, computed covariate by covariate before and after matching.</p>
+
+      <p class="leading-8 text-night/80 mb-5">The methodological literature conventionally treats an absolute value below 0.1 as indicating acceptable balance; this is a pragmatic benchmark rather than a statistical threshold <a href="#ref-austin" class="text-navy hover:underline">(Austin, 2011)</a>. Plotting these differences before and after matching — often called a <em>love plot</em> — shows in a single figure whether the operation has genuinely tightened the distributions. Examining the overlap of score distributions and, for continuous variables, variance ratios is also recommended <a href="#ref-stuart" class="text-navy hover:underline">(Stuart, 2010)</a>.</p>
+
+      <h2 class="font-display font-bold text-night text-2xl md:text-3xl mb-5">4. Limitations to document</h2>
+
+      <ul class="space-y-3.5 text-night/80 leading-7 mb-10">
+        <li class="flex items-start gap-3"><i class="fas fa-circle-exclamation text-navy mt-1.5"></i><span><strong class="text-night">The unobserved remains out of reach.</strong> Motivation, social capital and prior information do not appear in routine survey data. Matching leaves them intact. A sensitivity analysis, indicating how strong an unobserved factor would have had to be to overturn the result, at least quantifies the stake.</span></li>
+        <li class="flex items-start gap-3"><i class="fas fa-circle-exclamation text-navy mt-1.5"></i><span><strong class="text-night">Matching on the score is not always the best choice.</strong> Research has shown that matching based on the propensity score alone can, in certain configurations, degrade balance relative to methods matching directly on covariates. This critique concerns the use of the score for matching, not the propensity score family as a whole <a href="#ref-king" class="text-navy hover:underline">(King &amp; Nielsen, 2019)</a>.</span></li>
+        <li class="flex items-start gap-3"><i class="fas fa-circle-exclamation text-navy mt-1.5"></i><span><strong class="text-night">Standard errors must account for matching.</strong> Treating the matched sample as an ordinary sample understates uncertainty, since the score is itself estimated. Resampling or appropriate variance estimators are required.</span></li>
+        <li class="flex items-start gap-3"><i class="fas fa-circle-exclamation text-navy mt-1.5"></i><span><strong class="text-night">Restricting to common support changes the population of inference.</strong> If a substantial share of treated units is dropped for lack of a counterpart, the estimated effect no longer applies to all beneficiaries. The matching rate must be reported.</span></li>
+      </ul>
+
+      <h2 class="font-display font-bold text-night text-2xl md:text-3xl mb-5">5. Position within an evaluation design</h2>
+
+      <p class="leading-8 text-night/80 mb-5">Propensity score matching does not replace random assignment; it provides an approximation in the situations — the majority in development cooperation — where randomisation is neither feasible nor acceptable. Its credibility rests on the richness of baseline data: a well-designed baseline survey covering the plausible determinants of participation conditions validity far more than the sophistication of the chosen algorithm.</p>
+
+      <p class="leading-8 text-night/80 mb-5">Where data are available before and after the intervention for both groups, combining matching with difference-in-differences markedly strengthens the argument: it neutralises time-invariant differences, including unobserved ones, that persist after matching.</p>
+
+      <div class="bg-gradient-to-br from-petrol to-night rounded-2xl p-6 md:p-8 mb-10">
+        <h2 class="font-display font-semibold text-[#ffffff] text-xl mb-4"><i class="fas fa-list-check text-lagoon mr-2"></i>Key points</h2>
+        <ul class="space-y-2.5 text-[#ffffff]/80 leading-7 text-sm md:text-base">
+          <li class="flex items-start gap-3"><i class="fas fa-check text-lagoon mt-1.5"></i>The propensity score summarises in one dimension the observed characteristics driving participation</li>
+          <li class="flex items-start gap-3"><i class="fas fa-check text-lagoon mt-1.5"></i>Its validity rests on an identifying assumption the data cannot verify</li>
+          <li class="flex items-start gap-3"><i class="fas fa-check text-lagoon mt-1.5"></i>Balance checks — standardised differences, indicative 0.1 threshold — validate the matching, not the model</li>
+          <li class="flex items-start gap-3"><i class="fas fa-check text-lagoon mt-1.5"></i>The unobserved is not corrected: document sensitivity and the matching rate</li>
+          <li class="flex items-start gap-3"><i class="fas fa-check text-lagoon mt-1.5"></i>A complete baseline survey matters more than the choice of algorithm</li>
+        </ul>
+      </div>
+
+      <p class="leading-8 text-night/80 mb-5">The useful question upstream of an evaluation is not what gap separates the two groups, but how far those groups were comparable before the intervention. The answer determines what the measured gap allows one to conclude.</p>
+
+      <div class="bg-white border border-night/10 shadow-sm rounded-2xl p-6 md:p-8 mb-10">
+        <h2 class="font-display font-semibold text-night text-xl mb-5"><i class="fas fa-book text-navy mr-2"></i>References</h2>
+        <ol class="space-y-4 text-night/75 text-sm leading-6 ref">
+          <li id="ref-austin">Austin, P. C. (2011). An Introduction to Propensity Score Methods for Reducing the Effects of Confounding in Observational Studies. <em>Multivariate Behavioral Research</em>, 46(3), 399–424. <a href="https://doi.org/10.1080/00273171.2011.568786" target="_blank" class="text-navy hover:underline break-all">doi.org/10.1080/00273171.2011.568786</a></li>
+          <li id="ref-caliendo">Caliendo, M., &amp; Kopeinig, S. (2008). Some Practical Guidance for the Implementation of Propensity Score Matching. <em>Journal of Economic Surveys</em>, 22(1), 31–72. <a href="https://doi.org/10.1111/j.1467-6419.2007.00527.x" target="_blank" class="text-navy hover:underline break-all">doi.org/10.1111/j.1467-6419.2007.00527.x</a></li>
+          <li id="ref-heckman">Heckman, J. J., Ichimura, H., &amp; Todd, P. E. (1997). Matching as an Econometric Evaluation Estimator: Evidence from Evaluating a Job Training Programme. <em>The Review of Economic Studies</em>, 64(4), 605–654. <a href="https://doi.org/10.2307/2971733" target="_blank" class="text-navy hover:underline break-all">doi.org/10.2307/2971733</a></li>
+          <li id="ref-king">King, G., &amp; Nielsen, R. (2019). Why Propensity Scores Should Not Be Used for Matching. <em>Political Analysis</em>, 27(4), 435–454. <a href="https://doi.org/10.1017/pan.2019.11" target="_blank" class="text-navy hover:underline break-all">doi.org/10.1017/pan.2019.11</a></li>
+          <li id="ref-rosenbaum">Rosenbaum, P. R., &amp; Rubin, D. B. (1983). The Central Role of the Propensity Score in Observational Studies for Causal Effects. <em>Biometrika</em>, 70(1), 41–55. <a href="https://doi.org/10.1093/biomet/70.1.41" target="_blank" class="text-navy hover:underline break-all">doi.org/10.1093/biomet/70.1.41</a></li>
+          <li id="ref-stuart">Stuart, E. A. (2010). Matching Methods for Causal Inference: A Review and a Look Forward. <em>Statistical Science</em>, 25(1), 1–21. <a href="https://doi.org/10.1214/09-STS313" target="_blank" class="text-navy hover:underline break-all">doi.org/10.1214/09-STS313</a></li>
+        </ol>
+      </div>
+
+      <div class="bg-white border border-night/10 shadow-sm rounded-2xl p-6 md:p-7 flex flex-col sm:flex-row items-center gap-5 mb-6">
+        <img src="../Photomerveille.jpg?v=2" alt="Merveille Aganze Sami" class="w-20 h-20 rounded-full object-cover ring-2 ring-navy/30" />
+        <div class="text-center sm:text-left">
+          <p class="font-display font-semibold text-night">Merveille Aganze Sami</p>
+          <p class="text-night/70 text-sm leading-6 mt-1">MEL &amp; Database Management Advisor. 9+ years of experience in monitoring &amp; evaluation, GIS and digitalization with international organizations (GIZ, Enabel) in DR Congo.</p>
+          <div class="flex justify-center sm:justify-start gap-4 mt-3 text-sm">
+            <a href="https://www.linkedin.com/in/mervag27/?skipRedirect=true" target="_blank" class="text-navy font-medium hover:text-night transition"><i class="fab fa-linkedin mr-1.5"></i>LinkedIn</a>
+            <a href="contact.html" class="text-navy font-medium hover:text-night transition"><i class="fas fa-envelope mr-1.5"></i>Contact me</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="flex flex-col sm:flex-row items-center justify-between gap-4 bg-sky/60 rounded-2xl p-6">
+        <p class="text-night/80 font-medium text-center sm:text-left">An impact evaluation to design?</p>
+        <a href="contact.html" class="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-navy to-lagoon text-[#ffffff] font-semibold px-6 py-2.5 shadow-md hover:-translate-y-0.5 transition whitespace-nowrap">Get in touch <i class="fas fa-arrow-right"></i></a>
+      </div>
+    </article>
+  </main>
+
+  <footer class="mt-16 bg-gradient-to-br from-petrol to-night text-[#ffffff]">
+    <div class="max-w-6xl mx-auto px-5 sm:px-8 pt-12 md:pt-16 pb-8">
+      <div class="grid gap-10 md:grid-cols-[1.2fr_0.7fr_1.1fr]">
+        <div>
+          <p class="font-display font-bold text-xl mb-3">Merveille <span class="bg-gradient-to-r from-navy to-lagoon bg-clip-text text-transparent">AGANZE SAMI</span></p>
+          <p class="text-[#ffffff]/60 text-sm leading-7 max-w-xs">MEL &amp; Database Management Advisor. Data, GIS and digitalization at the service of your decisions.</p>
+          <div class="flex items-center gap-3 mt-6">
+            <a href="https://www.linkedin.com/in/mervag27/?skipRedirect=true" target="_blank" class="inline-flex items-center justify-center w-10 h-10 rounded-full bg-[#ffffff]/10 hover:bg-navy transition" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+            <a href="https://github.com/MerveAS" target="_blank" class="inline-flex items-center justify-center w-10 h-10 rounded-full bg-[#ffffff]/10 hover:bg-navy transition" aria-label="GitHub"><i class="fab fa-github"></i></a>
+          </div>
+        </div>
+        <div>
+          <h3 class="font-display font-semibold text-xs uppercase tracking-[0.2em] text-[#ffffff]/50 mb-4">Navigation</h3>
+          <ul class="space-y-2.5 text-sm">
+            <li><a href="index.html" class="text-[#ffffff]/70 hover:text-lagoon transition">Home</a></li>
+            <li><a href="blog.html" class="text-[#ffffff]/70 hover:text-lagoon transition">Blog</a></li>
+            <li><a href="expertise.html" class="text-[#ffffff]/70 hover:text-lagoon transition">Expertise</a></li>
+            <li><a href="projects.html" class="text-[#ffffff]/70 hover:text-lagoon transition">Projects</a></li>
+            <li><a href="contact.html" class="text-[#ffffff]/70 hover:text-lagoon transition">Contact</a></li>
+          </ul>
+        </div>
+        <div>
+          <h3 class="font-display font-semibold text-xs uppercase tracking-[0.2em] text-[#ffffff]/50 mb-4">Contact</h3>
+          <ul class="space-y-3 text-sm text-[#ffffff]/70">
+            <li class="flex items-center gap-3"><span class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-[#ffffff]/10 text-lagoon text-xs"><i class="fas fa-phone"></i></span>+243 850 012 270</li>
+            <li class="flex items-center gap-3"><span class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-[#ffffff]/10 text-lagoon text-xs"><i class="fas fa-envelope"></i></span><a href="mailto:merveille.aganzesami@fitigroup.org" class="hover:text-lagoon transition break-all">merveille.aganzesami@fitigroup.org</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="mt-10 pt-6 border-t border-[#ffffff]/10 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-[#ffffff]/50">
+        <p>© 2026 Merveille AGANZE SAMI — All rights reserved · <span class="text-[#ffffff]/30">v2.2</span></p>
+        <a href="#" onclick="window.scrollTo({top:0,behavior:'smooth'});return false;" class="inline-flex items-center gap-2 hover:text-lagoon transition">Back to top <i class="fas fa-arrow-up"></i></a>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>

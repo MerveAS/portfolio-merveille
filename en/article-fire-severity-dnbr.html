@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Measuring fire severity from satellite data: dNBR, RdNBR and RBR | Merveille Aganze Sami</title>
+  <meta name="description" content="A burn perimeter shows where fire passed. It does not show where vegetation was destroyed and where it was merely scorched. NBR-derived indices measure that gradient." />
+  <meta property="og:title" content="Measuring fire severity from satellite data: dNBR, RdNBR and RBR" />
+  <meta property="og:description" content="A burn perimeter shows where fire passed. It does not show where vegetation was destroyed and where it was merely scorched. NBR-derived indices measure that gradient." />
+  <meta property="og:image" content="../visuels/visuel_2026-07-14_dnbr.png" />
+  <meta property="og:type" content="article" />
+  <link rel="alternate" hreflang="fr" href="https://merveille.fitigroup.org/article-severite-feux-dnbr.html" />
+  <link rel="alternate" hreflang="en" href="https://merveille.fitigroup.org/en/article-fire-severity-dnbr.html" />
+  <link rel="icon" href="../favicon.svg?v=2" type="image/svg+xml" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = { theme: { extend: {
+      colors: { night:'#222B38', navy:'#EE7A5C', steel:'#8A93A3', petrol:'#26303E', lagoon:'#F2A48F', sky:'#F7DCD1', pale:'#F7F5F2' },
+      fontFamily: { sans:['DM Sans','Arial','sans-serif'], display:['Plus Jakarta Sans','Arial','sans-serif'] } } } }
+  </script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    html { scroll-behavior: smooth; }
+    .ref { font-variant-numeric: tabular-nums; }
+    @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col bg-gradient-to-b from-pale via-pale to-sky text-night font-sans antialiased">
+
+  <header class="sticky top-0 z-50 bg-pale/95 backdrop-blur border-b border-navy/20">
+    <div class="max-w-6xl mx-auto px-5 sm:px-8 min-h-16 md:min-h-20 py-2 flex items-center justify-between gap-4">
+      <a href="index.html" class="font-display font-bold text-night text-base sm:text-lg md:text-xl tracking-tight">
+        Merveille <span class="text-navy hidden sm:inline">AGANZE SAMI</span>
+      </a>
+      <nav class="flex flex-wrap justify-end items-center gap-x-4 gap-y-1 sm:gap-x-6 md:gap-x-8 text-xs sm:text-sm md:text-[15px]">
+        <a href="index.html" class="text-night/70 hover:text-navy transition">Home</a>
+        <a href="blog.html" class="text-navy font-semibold">Blog</a>
+        <a href="expertise.html" class="text-night/70 hover:text-navy transition">Expertise</a>
+        <a href="projects.html" class="text-night/70 hover:text-navy transition">Projects</a>
+        <a href="../article-severite-feux-dnbr.html" class="text-[11px] font-semibold border border-navy/40 rounded-full px-3 py-1 text-night/70 hover:text-navy hover:border-navy/60 transition" title="Version française">FR</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="flex-1">
+    <section class="max-w-6xl mx-auto px-5 sm:px-8 pt-10 md:pt-14">
+      <div class="bg-gradient-to-br from-petrol to-night rounded-[2rem] md:rounded-[2.5rem] px-6 sm:px-10 md:px-14 py-12 md:py-14 relative overflow-hidden">
+        <div class="absolute -bottom-24 -right-16 w-80 h-80 bg-navy/20 rounded-full blur-2xl"></div>
+        <div class="relative max-w-3xl">
+          <a href="blog.html" class="inline-flex items-center gap-2 text-[#ffffff]/60 text-sm hover:text-lagoon transition mb-6"><i class="fas fa-arrow-left"></i> Back to blog</a>
+          <div class="flex flex-wrap items-center gap-2 mb-5">
+            <span class="text-[11px] font-semibold uppercase tracking-wider bg-gradient-to-r from-navy to-lagoon text-[#ffffff] rounded-full px-3 py-1">Article</span>
+            <span class="text-[11px] font-medium text-[#ffffff]/50"><i class="fas fa-calendar mr-1.5"></i>14 July 2026</span>
+            <span class="text-[11px] font-medium text-[#ffffff]/50"><i class="fas fa-clock mr-1.5"></i>9 min read</span>
+          </div>
+          <h1 class="font-display font-bold text-[#ffffff] text-3xl sm:text-4xl md:text-5xl leading-tight mb-5">Fire severity:<br /><span class="bg-gradient-to-r from-navy to-lagoon bg-clip-text text-transparent">from burn perimeter to impact gradient</span></h1>
+          <p class="text-[#ffffff]/60 text-base mb-6">The spectral basis of NBR, relative indices and implementation caveats for post-fire monitoring</p>
+          <div class="flex items-center gap-3">
+            <img src="../Photomerveille.jpg?v=2" alt="Merveille Aganze Sami" class="w-10 h-10 rounded-full object-cover ring-2 ring-[#ffffff]/30" />
+            <div class="text-sm">
+              <p class="text-[#ffffff] font-semibold">Merveille Aganze Sami</p>
+              <p class="text-[#ffffff]/50">MEL &amp; Database Management Advisor</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <article class="max-w-3xl mx-auto px-5 sm:px-8 py-12 md:py-16">
+
+      <figure class="mb-12">
+        <img src="../visuels/visuel_2026-07-14_dnbr.png" alt="dNBR severity map with areas classified as low, moderate and high" class="w-full rounded-2xl shadow-xl ring-1 ring-night/10" />
+        <figcaption class="text-night/60 text-sm mt-3 text-center"><strong class="text-night/70">Figure 1.</strong> Illustration: a severity map derived from dNBR, with low, moderate and high classes. The gradient, not the mere presence of ash, guides prioritisation.</figcaption>
+      </figure>
+
+      <p class="text-lg md:text-xl leading-9 text-night/80 mb-8">After a fire has passed, delineating the burn perimeter is useful but partial information. It shows where the fire went, without distinguishing sectors where vegetation cover was destroyed from those where it was only partly affected. Yet these two situations call for neither the same ecological diagnosis nor the same restoration measures.</p>
+
+      <p class="leading-8 text-night/80 mb-5">Direct observation runs into material constraints: the areas concerned often extend over hundreds of square kilometres, in poorly accessible forest-savanna mosaics. Remote sensing provides a spatially exhaustive, reproducible and documented measurement. It deserves all the more attention as satellite inventories place Africa foremost in burned area worldwide, and as moderate-resolution products appreciably underestimate that total, a substantial share of small fires escaping a 500-metre resolution <a href="#ref-ramo" class="text-navy hover:underline">(Ramo et al., 2021)</a>.</p>
+
+      <h2 class="font-display font-bold text-night text-2xl md:text-3xl mb-5">1. The spectral basis of the NBR index</h2>
+
+      <p class="leading-8 text-night/80 mb-5">The Normalized Burn Ratio exploits the opposing behaviour of two spectral domains under combustion. In the near infrared, reflectance is high for dense chlorophyll-bearing vegetation and drops when leaf structure is destroyed. In the shortwave infrared, reflectance instead increases as water content falls and bare soil, ash and char appear.</p>
+
+      <p class="leading-8 text-night/80 mb-5">The normalised combination of these two bands therefore maximises the contrast between a vegetated and a burned surface. On Sentinel-2 it uses bands B8A and B12; on Landsat 8/9, bands 5 and 7. The formulation and its operational classes were established in the post-fire assessment protocol of the FIREMON programme <a href="#ref-key" class="text-navy hover:underline">(Key &amp; Benson, 2006)</a>.</p>
+
+      <h2 class="font-display font-bold text-night text-2xl md:text-3xl mb-5">2. From NBR to dNBR</h2>
+
+      <div class="bg-sky/60 border-l-4 border-navy rounded-r-2xl p-5 md:p-6 mb-10">
+        <p class="leading-7 text-night/80 text-sm md:text-base"><i class="fas fa-circle-info text-navy mr-2"></i><strong class="text-night">The difference principle.</strong> dNBR is computed as the difference between pre-fire and post-fire NBR, conventionally multiplied by 1000 to work with integers. It measures not a state but a <em>change</em>: it is the magnitude of the spectral shift, not the absolute post-fire value, that informs on the intensity of impact on the canopy.</p>
+      </div>
+
+      <p class="leading-8 text-night/80 mb-5">This difference produces a continuous gradient, discretised into classes — unburned, low, moderate and high severity — whose indicative bounds, drawn from North American literature, must be adjusted to context. A wooded savanna and a dense forest do not exhibit the same amplitudes of change.</p>
+
+      <h2 class="font-display font-bold text-night text-2xl md:text-3xl mb-5">3. Correcting for pre-fire cover: RdNBR and RBR</h2>
+
+      <p class="leading-8 text-night/80 mb-5">dNBR has a structural limitation: its amplitude depends on the biomass present before the fire. A dense formation may lose a great deal in absolute value while retaining part of its cover, whereas a sparse formation, entirely destroyed, shows a smaller change. Comparing these two situations on dNBR alone overstates severity in the better-stocked environments.</p>
+
+      <p class="leading-8 text-night/80 mb-5">The Relative differenced NBR addresses this bias by scaling dNBR to the initial state, through the square root of pre-fire NBR. This normalisation improves comparability across cover types within a single heterogeneous landscape <a href="#ref-miller" class="text-navy hover:underline">(Miller &amp; Thode, 2007)</a>. A later formulation, the Relativized Burn Ratio, modifies the denominator to limit the instability observed when pre-fire NBR approaches zero, and generally shows a closer correspondence with field measurements <a href="#ref-parks" class="text-navy hover:underline">(Parks et al., 2014)</a>.</p>
+
+      <h2 class="font-display font-bold text-night text-2xl md:text-3xl mb-5">4. Implementation caveats</h2>
+
+      <ul class="space-y-3.5 text-night/80 leading-7 mb-10">
+        <li class="flex items-start gap-3"><i class="fas fa-circle-exclamation text-navy mt-1.5"></i><span><strong class="text-night">Choice of dates.</strong> An initial assessment, on imagery acquired shortly after the fire is out, measures the direct effect of combustion. An extended assessment, in the following growing season, incorporates delayed mortality and regrowth capacity. The two windows answer distinct questions and are not interchangeable; the one retained must be stated.</span></li>
+        <li class="flex items-start gap-3"><i class="fas fa-circle-exclamation text-navy mt-1.5"></i><span><strong class="text-night">Phenological effect.</strong> If the pre and post images belong to different seasons, the measured change aggregates the fire effect and the seasonal dynamics of the canopy. Using dates from the same period, or a seasonal composite, limits this confounding.</span></li>
+        <li class="flex items-start gap-3"><i class="fas fa-circle-exclamation text-navy mt-1.5"></i><span><strong class="text-night">Clouds, smoke and shadows.</strong> Quality masks must be applied strictly. Unmasked residual smoke alters reflectance in both domains and produces severity values with no physical basis.</span></li>
+        <li class="flex items-start gap-3"><i class="fas fa-circle-exclamation text-navy mt-1.5"></i><span><strong class="text-night">Geometric registration.</strong> As the computation is pixel-by-pixel, an offset between the two dates generates artefacts along field boundaries and forest edges. Co-registration quality must be checked before any processing.</span></li>
+        <li class="flex items-start gap-3"><i class="fas fa-circle-exclamation text-navy mt-1.5"></i><span><strong class="text-night">Ambiguous signal in sparsely vegetated settings.</strong> NBR responds to structure and water content; over bare soils, outcrops or already degraded areas, the relationship between index change and actual severity weakens appreciably <a href="#ref-roy" class="text-navy hover:underline">(Roy et al., 2006)</a>.</span></li>
+      </ul>
+
+      <h2 class="font-display font-bold text-night text-2xl md:text-3xl mb-5">5. Calibration and validation</h2>
+
+      <p class="leading-8 text-night/80 mb-5">Class thresholds should not be carried over unchanged from one publication to another. The recommended approach is to calibrate the bounds locally from field observations — Composite Burn Index plots, geolocated photographs, transects — then document the resulting relationship between index value and observed severity. This calibration is the main guarantee of a severity map's transferability.</p>
+
+      <p class="leading-8 text-night/80 mb-5">Where field access is not possible, partial validation remains feasible by comparison with very-high-resolution imagery or with accounts from neighbouring communities, provided the associated confidence level is stated explicitly.</p>
+
+      <h2 class="font-display font-bold text-night text-2xl md:text-3xl mb-5">6. Operational use</h2>
+
+      <p class="leading-8 text-night/80 mb-5">A properly produced severity map supports three direct uses: prioritising restoration work, concentrating resources on high-severity sectors where natural regeneration is least likely; quantifying ecological impact, by intersection with land-cover and biodiversity layers; and building a documented archive of the event, reusable for multi-year monitoring of recovery.</p>
+
+      <p class="leading-8 text-night/80 mb-5">This last point deserves attention. Comparing several events over time presupposes that the method, the time windows and the thresholds remain identical. A written and versioned protocol conditions the value of the resulting series.</p>
+
+      <div class="bg-gradient-to-br from-petrol to-night rounded-2xl p-6 md:p-8 mb-10">
+        <h2 class="font-display font-semibold text-[#ffffff] text-xl mb-4"><i class="fas fa-list-check text-lagoon mr-2"></i>Key points</h2>
+        <ul class="space-y-2.5 text-[#ffffff]/80 leading-7 text-sm md:text-base">
+          <li class="flex items-start gap-3"><i class="fas fa-check text-lagoon mt-1.5"></i>NBR combines near and shortwave infrared to maximise contrast after combustion</li>
+          <li class="flex items-start gap-3"><i class="fas fa-check text-lagoon mt-1.5"></i>dNBR measures a change between two dates, not a post-fire state</li>
+          <li class="flex items-start gap-3"><i class="fas fa-check text-lagoon mt-1.5"></i>RdNBR and RBR correct the dependence on pre-fire cover and improve comparability</li>
+          <li class="flex items-start gap-3"><i class="fas fa-check text-lagoon mt-1.5"></i>Time window, phenology, masking and co-registration condition the validity of the result</li>
+          <li class="flex items-start gap-3"><i class="fas fa-check text-lagoon mt-1.5"></i>Class thresholds must be calibrated locally and the protocol versioned</li>
+        </ul>
+      </div>
+
+      <p class="leading-8 text-night/80 mb-5">A fire does not have a binary effect on vegetation cover. It is the severity gradient, not the burn perimeter alone, that provides the information needed for a restoration decision.</p>
+
+      <div class="bg-white border border-night/10 shadow-sm rounded-2xl p-6 md:p-8 mb-10">
+        <h2 class="font-display font-semibold text-night text-xl mb-5"><i class="fas fa-book text-navy mr-2"></i>References</h2>
+        <ol class="space-y-4 text-night/75 text-sm leading-6 ref">
+          <li id="ref-key">Key, C. H., &amp; Benson, N. C. (2006). Landscape Assessment (LA): Sampling and Analysis Methods. In <em>FIREMON: Fire Effects Monitoring and Inventory System</em> (RMRS-GTR-164-CD). Fort Collins: USDA Forest Service, Rocky Mountain Research Station.</li>
+          <li id="ref-miller">Miller, J. D., &amp; Thode, A. E. (2007). Quantifying burn severity in a heterogeneous landscape with a relative version of the delta Normalized Burn Ratio (dNBR). <em>Remote Sensing of Environment</em>, 109(1), 66–80. <a href="https://doi.org/10.1016/j.rse.2006.12.006" target="_blank" class="text-navy hover:underline break-all">doi.org/10.1016/j.rse.2006.12.006</a></li>
+          <li id="ref-parks">Parks, S. A., Dillon, G. K., &amp; Miller, C. (2014). A New Metric for Quantifying Burn Severity: The Relativized Burn Ratio. <em>Remote Sensing</em>, 6(3), 1827–1844. <a href="https://doi.org/10.3390/rs6031827" target="_blank" class="text-navy hover:underline break-all">doi.org/10.3390/rs6031827</a></li>
+          <li id="ref-ramo">Ramo, R., Roteta, E., Bistinas, I., van Wees, D., Bastarrika, A., Chuvieco, E., &amp; van der Werf, G. R. (2021). African burned area and fire carbon emissions are strongly impacted by small fires undetected by coarse resolution satellite data. <em>PNAS</em>, 118(9), e2011160118. <a href="https://doi.org/10.1073/pnas.2011160118" target="_blank" class="text-navy hover:underline break-all">doi.org/10.1073/pnas.2011160118</a></li>
+          <li id="ref-roy">Roy, D. P., Boschetti, L., &amp; Trigg, S. N. (2006). Remote Sensing of Fire Severity: Assessing the Performance of the Normalized Burn Ratio. <em>IEEE Geoscience and Remote Sensing Letters</em>, 3(1), 112–116. <a href="https://doi.org/10.1109/LGRS.2005.858485" target="_blank" class="text-navy hover:underline break-all">doi.org/10.1109/LGRS.2005.858485</a></li>
+        </ol>
+      </div>
+
+      <div class="bg-white border border-night/10 shadow-sm rounded-2xl p-6 md:p-7 flex flex-col sm:flex-row items-center gap-5 mb-6">
+        <img src="../Photomerveille.jpg?v=2" alt="Merveille Aganze Sami" class="w-20 h-20 rounded-full object-cover ring-2 ring-navy/30" />
+        <div class="text-center sm:text-left">
+          <p class="font-display font-semibold text-night">Merveille Aganze Sami</p>
+          <p class="text-night/70 text-sm leading-6 mt-1">MEL &amp; Database Management Advisor. 9+ years of experience in monitoring &amp; evaluation, GIS and digitalization with international organizations (GIZ, Enabel) in DR Congo.</p>
+          <div class="flex justify-center sm:justify-start gap-4 mt-3 text-sm">
+            <a href="https://www.linkedin.com/in/mervag27/?skipRedirect=true" target="_blank" class="text-navy font-medium hover:text-night transition"><i class="fab fa-linkedin mr-1.5"></i>LinkedIn</a>
+            <a href="contact.html" class="text-navy font-medium hover:text-night transition"><i class="fas fa-envelope mr-1.5"></i>Contact me</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="flex flex-col sm:flex-row items-center justify-between gap-4 bg-sky/60 rounded-2xl p-6">
+        <p class="text-night/80 font-medium text-center sm:text-left">Post-fire monitoring to set up?</p>
+        <a href="contact.html" class="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-navy to-lagoon text-[#ffffff] font-semibold px-6 py-2.5 shadow-md hover:-translate-y-0.5 transition whitespace-nowrap">Get in touch <i class="fas fa-arrow-right"></i></a>
+      </div>
+    </article>
+  </main>
+
+  <footer class="mt-16 bg-gradient-to-br from-petrol to-night text-[#ffffff]">
+    <div class="max-w-6xl mx-auto px-5 sm:px-8 pt-12 md:pt-16 pb-8">
+      <div class="grid gap-10 md:grid-cols-[1.2fr_0.7fr_1.1fr]">
+        <div>
+          <p class="font-display font-bold text-xl mb-3">Merveille <span class="bg-gradient-to-r from-navy to-lagoon bg-clip-text text-transparent">AGANZE SAMI</span></p>
+          <p class="text-[#ffffff]/60 text-sm leading-7 max-w-xs">MEL &amp; Database Management Advisor. Data, GIS and digitalization at the service of your decisions.</p>
+          <div class="flex items-center gap-3 mt-6">
+            <a href="https://www.linkedin.com/in/mervag27/?skipRedirect=true" target="_blank" class="inline-flex items-center justify-center w-10 h-10 rounded-full bg-[#ffffff]/10 hover:bg-navy transition" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+            <a href="https://github.com/MerveAS" target="_blank" class="inline-flex items-center justify-center w-10 h-10 rounded-full bg-[#ffffff]/10 hover:bg-navy transition" aria-label="GitHub"><i class="fab fa-github"></i></a>
+          </div>
+        </div>
+        <div>
+          <h3 class="font-display font-semibold text-xs uppercase tracking-[0.2em] text-[#ffffff]/50 mb-4">Navigation</h3>
+          <ul class="space-y-2.5 text-sm">
+            <li><a href="index.html" class="text-[#ffffff]/70 hover:text-lagoon transition">Home</a></li>
+            <li><a href="blog.html" class="text-[#ffffff]/70 hover:text-lagoon transition">Blog</a></li>
+            <li><a href="expertise.html" class="text-[#ffffff]/70 hover:text-lagoon transition">Expertise</a></li>
+            <li><a href="projects.html" class="text-[#ffffff]/70 hover:text-lagoon transition">Projects</a></li>
+            <li><a href="contact.html" class="text-[#ffffff]/70 hover:text-lagoon transition">Contact</a></li>
+          </ul>
+        </div>
+        <div>
+          <h3 class="font-display font-semibold text-xs uppercase tracking-[0.2em] text-[#ffffff]/50 mb-4">Contact</h3>
+          <ul class="space-y-3 text-sm text-[#ffffff]/70">
+            <li class="flex items-center gap-3"><span class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-[#ffffff]/10 text-lagoon text-xs"><i class="fas fa-phone"></i></span>+243 850 012 270</li>
+            <li class="flex items-center gap-3"><span class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-[#ffffff]/10 text-lagoon text-xs"><i class="fas fa-envelope"></i></span><a href="mailto:merveille.aganzesami@fitigroup.org" class="hover:text-lagoon transition break-all">merveille.aganzesami@fitigroup.org</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="mt-10 pt-6 border-t border-[#ffffff]/10 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-[#ffffff]/50">
+        <p>© 2026 Merveille AGANZE SAMI — All rights reserved · <span class="text-[#ffffff]/30">v2.2</span></p>
+        <a href="#" onclick="window.scrollTo({top:0,behavior:'smooth'});return false;" class="inline-flex items-center gap-2 hover:text-lagoon transition">Back to top <i class="fas fa-arrow-up"></i></a>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>
