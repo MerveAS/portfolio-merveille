@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ripley's K function: testing spatial clustering and measuring its scale | Merveille Aganze Sami</title>
+  <meta name="description" content="A purely random distribution produces visually convincing clumps. The K function compares, at every distance, the observed neighbourhood with that expected under an explicit null model." />
+  <meta property="og:title" content="Ripley's K function: testing spatial clustering and measuring its scale" />
+  <meta property="og:description" content="A purely random distribution produces visually convincing clumps. The K function compares, at every distance, the observed neighbourhood with that expected under an explicit null model." />
+  <meta property="og:image" content="../visuels/visuel_2026-06-28_ripleysk.png" />
+  <meta property="og:type" content="article" />
+  <link rel="alternate" hreflang="fr" href="https://merveille.fitigroup.org/article-fonction-k-ripley.html" />
+  <link rel="alternate" hreflang="en" href="https://merveille.fitigroup.org/en/article-ripley-k-function.html" />
+  <link rel="icon" href="../favicon.svg?v=2" type="image/svg+xml" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = { theme: { extend: {
+      colors: { night:'#222B38', navy:'#EE7A5C', steel:'#8A93A3', petrol:'#26303E', lagoon:'#F2A48F', sky:'#F7DCD1', pale:'#F7F5F2' },
+      fontFamily: { sans:['DM Sans','Arial','sans-serif'], display:['Plus Jakarta Sans','Arial','sans-serif'] } } } }
+  </script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    html { scroll-behavior: smooth; }
+    .ref { font-variant-numeric: tabular-nums; }
+    @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col bg-gradient-to-b from-pale via-pale to-sky text-night font-sans antialiased">
+
+  <header class="sticky top-0 z-50 bg-pale/95 backdrop-blur border-b border-navy/20">
+    <div class="max-w-6xl mx-auto px-5 sm:px-8 min-h-16 md:min-h-20 py-2 flex items-center justify-between gap-4">
+      <a href="index.html" class="font-display font-bold text-night text-base sm:text-lg md:text-xl tracking-tight">
+        Merveille <span class="text-navy hidden sm:inline">AGANZE SAMI</span>
+      </a>
+      <nav class="flex flex-wrap justify-end items-center gap-x-4 gap-y-1 sm:gap-x-6 md:gap-x-8 text-xs sm:text-sm md:text-[15px]">
+        <a href="index.html" class="text-night/70 hover:text-navy transition">Home</a>
+        <a href="blog.html" class="text-navy font-semibold">Blog</a>
+        <a href="expertise.html" class="text-night/70 hover:text-navy transition">Expertise</a>
+        <a href="projects.html" class="text-night/70 hover:text-navy transition">Projects</a>
+        <a href="../article-fonction-k-ripley.html" class="text-[11px] font-semibold border border-navy/40 rounded-full px-3 py-1 text-night/70 hover:text-navy hover:border-navy/60 transition" title="Version française">FR</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="flex-1">
+    <section class="max-w-6xl mx-auto px-5 sm:px-8 pt-10 md:pt-14">
+      <div class="bg-gradient-to-br from-petrol to-night rounded-[2rem] md:rounded-[2.5rem] px-6 sm:px-10 md:px-14 py-12 md:py-14 relative overflow-hidden">
+        <div class="absolute -bottom-24 -right-16 w-80 h-80 bg-navy/20 rounded-full blur-2xl"></div>
+        <div class="relative max-w-3xl">
+          <a href="blog.html" class="inline-flex items-center gap-2 text-[#ffffff]/60 text-sm hover:text-lagoon transition mb-6"><i class="fas fa-arrow-left"></i> Back to blog</a>
+          <div class="flex flex-wrap items-center gap-2 mb-5">
+            <span class="text-[11px] font-semibold uppercase tracking-wider bg-gradient-to-r from-navy to-lagoon text-[#ffffff] rounded-full px-3 py-1">Article</span>
+            <span class="text-[11px] font-medium text-[#ffffff]/50"><i class="fas fa-calendar mr-1.5"></i>28 June 2026</span>
+            <span class="text-[11px] font-medium text-[#ffffff]/50"><i class="fas fa-clock mr-1.5"></i>10 min read</span>
+          </div>
+          <h1 class="font-display font-bold text-[#ffffff] text-3xl sm:text-4xl md:text-5xl leading-tight mb-5">Ripley's K function:<br /><span class="bg-gradient-to-r from-navy to-lagoon bg-clip-text text-transparent">at what scale do points cluster?</span></h1>
+          <p class="text-[#ffffff]/60 text-base mb-6">Second-order statistics, simulation envelopes and null model choice in point pattern analysis</p>
+          <div class="flex items-center gap-3">
+            <img src="../Photomerveille.jpg?v=2" alt="Merveille Aganze Sami" class="w-10 h-10 rounded-full object-cover ring-2 ring-[#ffffff]/30" />
+            <div class="text-sm">
+              <p class="text-[#ffffff] font-semibold">Merveille Aganze Sami</p>
+              <p class="text-[#ffffff]/50">MEL &amp; Database Management Advisor</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <article class="max-w-3xl mx-auto px-5 sm:px-8 py-12 md:py-16">
+
+      <figure class="mb-12">
+        <img src="../visuels/visuel_2026-06-28_ripleysk.png" alt="Clustered point pattern and L function curve departing from the simulation envelope" class="w-full rounded-2xl shadow-xl ring-1 ring-night/10" />
+        <figcaption class="text-night/60 text-sm mt-3 text-center"><strong class="text-night/70">Figure 1.</strong> Illustration: point pattern and transformed curve compared with a simulation envelope. The range of distances where the curve leaves the envelope indicates the clustering scale.</figcaption>
+      </figure>
+
+      <p class="text-lg md:text-xl leading-9 text-night/80 mb-8">Reading a map of points — boreholes, reported incidents, beneficiary households, disease cases — frequently leads to identifying clusters and drawing operational conclusions. This reading runs into a well-established property of visual perception: an entirely random distribution also produces apparent clumps, often convincing ones.</p>
+
+      <p class="leading-8 text-night/80 mb-5">The question an analysis must answer is therefore not whether clusters are visible, but whether their intensity exceeds what a structureless distribution would produce, and at what distance that departure appears.</p>
+
+      <h2 class="font-display font-bold text-night text-2xl md:text-3xl mb-5">1. What the K function measures</h2>
+
+      <p class="leading-8 text-night/80 mb-5">The K function is defined, for a given distance, as the average number of points lying within that distance of any point in the pattern, scaled by the overall intensity of the pattern. It therefore describes neighbourhood structure at all scales simultaneously, not at one <a href="#ref-ripley1976" class="text-navy hover:underline">(Ripley, 1976)</a>.</p>
+
+      <p class="leading-8 text-night/80 mb-5">Under complete spatial randomness, this quantity takes a known theoretical value, proportional to the area of the disc of the radius considered. Comparing observed with theoretical values yields the diagnosis: a higher value indicates more neighbours than expected — clustering; a lower value indicates a more regular arrangement — dispersion <a href="#ref-ripley1977" class="text-navy hover:underline">(Ripley, 1977)</a>.</p>
+
+      <div class="bg-sky/60 border-l-4 border-navy rounded-r-2xl p-5 md:p-6 mb-10">
+        <p class="leading-7 text-night/80 text-sm md:text-base"><i class="fas fa-circle-info text-navy mr-2"></i><strong class="text-night">The L transformation.</strong> The K function grows with the square of distance, which makes graphical reading awkward and the variance uneven across scales. A standard transformation stabilises that variance and reduces the theoretical value to a straight line, or to a horizontal line once distance is subtracted. Departure from this reference can then be read directly, at every distance.</p>
+      </div>
+
+      <h2 class="font-display font-bold text-night text-2xl md:text-3xl mb-5">2. The simulation envelope</h2>
+
+      <p class="leading-8 text-night/80 mb-5">A difference between observed and theoretical curves is not enough to conclude: one must know what departure a genuinely random pattern would produce. The procedure simulates a large number of patterns under the null model, computes the function for each, and derives a band of plausible values. The observed curve is compared with that band.</p>
+
+      <p class="leading-8 text-night/80 mb-5">This construction calls for an important caveat. An envelope computed distance by distance is not a valid test of the whole curve: since the curve is examined over a continuous range of distances, the probability that it leaves the envelope at least once far exceeds the stated level. So-called global envelopes, or tests based on an aggregated deviation, correct this defect and should be preferred where a formal conclusion is sought <a href="#ref-baddeley-env" class="text-navy hover:underline">(Baddeley et al., 2014)</a>.</p>
+
+      <h2 class="font-display font-bold text-night text-2xl md:text-3xl mb-5">3. Edge effects</h2>
+
+      <p class="leading-8 text-night/80 mb-5">A point near the boundary of the study area has part of its neighbourhood outside the observed domain. Without correction, the neighbour count is systematically understated for such points, biasing the function towards an appearance of dispersion. Several corrections exist — weighting by the included disc fraction, translation correction, reduced-window method — and applying them is not optional once the area is small relative to the distances examined <a href="#ref-diggle" class="text-navy hover:underline">(Diggle, 2013)</a>.</p>
+
+      <h2 class="font-display font-bold text-night text-2xl md:text-3xl mb-5">4. Choosing the null model</h2>
+
+      <p class="leading-8 text-night/80 mb-5">This is the most decisive point, and the most often neglected. Complete spatial randomness assumes constant intensity across the whole study area. Yet phenomena monitored in project settings almost never meet this condition: incidents occur where people live, boreholes are sited where villages exist.</p>
+
+      <p class="leading-8 text-night/80 mb-5">Spatially varying intensity then produces apparent clustering reflecting no interaction between points, only the underlying distribution of population or infrastructure. Two responses are available: use a version of the function that admits non-constant intensity, estimated separately — which connects with the approach set out in the article on <a href="article-kernel-density.html" class="text-navy hover:underline font-medium">kernel density estimation</a> — or construct a null model that explicitly reflects the expected distribution process <a href="#ref-wiegand" class="text-navy hover:underline">(Wiegand &amp; Moloney, 2004)</a>.</p>
+
+      <p class="leading-8 text-night/80 mb-5">This decision must precede the computation. A clustering result obtained under an unsuitable null model carries no information about the phenomenon studied.</p>
+
+      <h2 class="font-display font-bold text-night text-2xl md:text-3xl mb-5">5. What the curve contributes to a decision</h2>
+
+      <p class="leading-8 text-night/80 mb-5">The main operational contribution lies in identifying a scale. The distance at which departure from the reference peaks indicates the reach of the clustering process: it is the scale at which events genuinely group. This information directly informs how a response is sized — the radius of an intervention zone, the mesh of a surveillance system, the spacing of service points.</p>
+
+      <p class="leading-8 text-night/80 mb-5">It also distinguishes situations that mapping alone conflates: a pattern may be clustered at small scale and regular at large scale, a frequent configuration where local clumps are evenly spread across the territory. Related functions, based on distances between points rather than on a cumulative count, refine this reading <a href="#ref-baddeley-book" class="text-navy hover:underline">(Baddeley et al., 2015)</a>.</p>
+
+      <div class="bg-gradient-to-br from-petrol to-night rounded-2xl p-6 md:p-8 mb-10">
+        <h2 class="font-display font-semibold text-[#ffffff] text-xl mb-4"><i class="fas fa-list-check text-lagoon mr-2"></i>Key points</h2>
+        <ul class="space-y-2.5 text-[#ffffff]/80 leading-7 text-sm md:text-base">
+          <li class="flex items-start gap-3"><i class="fas fa-check text-lagoon mt-1.5"></i>A random distribution produces visually convincing clumps</li>
+          <li class="flex items-start gap-3"><i class="fas fa-check text-lagoon mt-1.5"></i>The K function compares the observed neighbourhood with a reference, at all distances</li>
+          <li class="flex items-start gap-3"><i class="fas fa-check text-lagoon mt-1.5"></i>An envelope computed point by point is not a valid test of the whole curve</li>
+          <li class="flex items-start gap-3"><i class="fas fa-check text-lagoon mt-1.5"></i>Edge corrections are required once the area is small relative to the distances studied</li>
+          <li class="flex items-start gap-3"><i class="fas fa-check text-lagoon mt-1.5"></i>The null model is the main decision: non-constant intensity creates apparent clustering</li>
+        </ul>
+      </div>
+
+      <p class="leading-8 text-night/80 mb-5">A map shows where the points are. Analysing their structure shows whether their arrangement has a regularity, and at what scale. It is this second piece of information that allows a response to be sized.</p>
+
+      <div class="bg-white border border-night/10 shadow-sm rounded-2xl p-6 md:p-8 mb-10">
+        <h2 class="font-display font-semibold text-night text-xl mb-5"><i class="fas fa-book text-navy mr-2"></i>References</h2>
+        <ol class="space-y-4 text-night/75 text-sm leading-6 ref">
+          <li id="ref-baddeley-book">Baddeley, A., Rubak, E., &amp; Turner, R. (2015). <em>Spatial Point Patterns: Methodology and Applications with R</em>. Boca Raton: CRC Press.</li>
+          <li id="ref-baddeley-env">Baddeley, A., Diggle, P. J., Hardegen, A., Lawrence, T., Milne, R. K., &amp; Nair, G. (2014). On tests of spatial pattern based on simulation envelopes. <em>Ecological Monographs</em>, 84(3), 477–489. <a href="https://doi.org/10.1890/13-2042.1" target="_blank" class="text-navy hover:underline break-all">doi.org/10.1890/13-2042.1</a></li>
+          <li id="ref-diggle">Diggle, P. J. (2013). <em>Statistical Analysis of Spatial and Spatio-Temporal Point Patterns</em> (3rd ed.). Boca Raton: CRC Press. <a href="https://doi.org/10.1201/b15326" target="_blank" class="text-navy hover:underline break-all">doi.org/10.1201/b15326</a></li>
+          <li id="ref-ripley1976">Ripley, B. D. (1976). The second-order analysis of stationary point processes. <em>Journal of Applied Probability</em>, 13(2), 255–266. <a href="https://doi.org/10.2307/3212829" target="_blank" class="text-navy hover:underline break-all">doi.org/10.2307/3212829</a></li>
+          <li id="ref-ripley1977">Ripley, B. D. (1977). Modelling Spatial Patterns. <em>Journal of the Royal Statistical Society: Series B</em>, 39(2), 172–212. <a href="https://doi.org/10.1111/j.2517-6161.1977.tb01615.x" target="_blank" class="text-navy hover:underline break-all">doi.org/10.1111/j.2517-6161.1977.tb01615.x</a></li>
+          <li id="ref-wiegand">Wiegand, T., &amp; Moloney, K. A. (2004). Rings, circles, and null-models for point pattern analysis in ecology. <em>Oikos</em>, 104(2), 209–229. <a href="https://doi.org/10.1111/j.0030-1299.2004.12497.x" target="_blank" class="text-navy hover:underline break-all">doi.org/10.1111/j.0030-1299.2004.12497.x</a></li>
+        </ol>
+      </div>
+
+      <div class="bg-white border border-night/10 shadow-sm rounded-2xl p-6 md:p-7 flex flex-col sm:flex-row items-center gap-5 mb-6">
+        <img src="../Photomerveille.jpg?v=2" alt="Merveille Aganze Sami" class="w-20 h-20 rounded-full object-cover ring-2 ring-navy/30" />
+        <div class="text-center sm:text-left">
+          <p class="font-display font-semibold text-night">Merveille Aganze Sami</p>
+          <p class="text-night/70 text-sm leading-6 mt-1">MEL &amp; Database Management Advisor. 9+ years of experience in monitoring &amp; evaluation, GIS and digitalization with international organizations (GIZ, Enabel) in DR Congo.</p>
+          <div class="flex justify-center sm:justify-start gap-4 mt-3 text-sm">
+            <a href="https://www.linkedin.com/in/mervag27/?skipRedirect=true" target="_blank" class="text-navy font-medium hover:text-night transition"><i class="fab fa-linkedin mr-1.5"></i>LinkedIn</a>
+            <a href="contact.html" class="text-navy font-medium hover:text-night transition"><i class="fas fa-envelope mr-1.5"></i>Contact me</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="flex flex-col sm:flex-row items-center justify-between gap-4 bg-sky/60 rounded-2xl p-6">
+        <p class="text-night/80 font-medium text-center sm:text-left">A point pattern to analyse?</p>
+        <a href="contact.html" class="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-navy to-lagoon text-[#ffffff] font-semibold px-6 py-2.5 shadow-md hover:-translate-y-0.5 transition whitespace-nowrap">Get in touch <i class="fas fa-arrow-right"></i></a>
+      </div>
+    </article>
+  </main>
+
+  <footer class="mt-16 bg-gradient-to-br from-petrol to-night text-[#ffffff]">
+    <div class="max-w-6xl mx-auto px-5 sm:px-8 pt-12 md:pt-16 pb-8">
+      <div class="grid gap-10 md:grid-cols-[1.2fr_0.7fr_1.1fr]">
+        <div>
+          <p class="font-display font-bold text-xl mb-3">Merveille <span class="bg-gradient-to-r from-navy to-lagoon bg-clip-text text-transparent">AGANZE SAMI</span></p>
+          <p class="text-[#ffffff]/60 text-sm leading-7 max-w-xs">MEL &amp; Database Management Advisor. Data, GIS and digitalization at the service of your decisions.</p>
+          <div class="flex items-center gap-3 mt-6">
+            <a href="https://www.linkedin.com/in/mervag27/?skipRedirect=true" target="_blank" class="inline-flex items-center justify-center w-10 h-10 rounded-full bg-[#ffffff]/10 hover:bg-navy transition" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+            <a href="https://github.com/MerveAS" target="_blank" class="inline-flex items-center justify-center w-10 h-10 rounded-full bg-[#ffffff]/10 hover:bg-navy transition" aria-label="GitHub"><i class="fab fa-github"></i></a>
+          </div>
+        </div>
+        <div>
+          <h3 class="font-display font-semibold text-xs uppercase tracking-[0.2em] text-[#ffffff]/50 mb-4">Navigation</h3>
+          <ul class="space-y-2.5 text-sm">
+            <li><a href="index.html" class="text-[#ffffff]/70 hover:text-lagoon transition">Home</a></li>
+            <li><a href="blog.html" class="text-[#ffffff]/70 hover:text-lagoon transition">Blog</a></li>
+            <li><a href="expertise.html" class="text-[#ffffff]/70 hover:text-lagoon transition">Expertise</a></li>
+            <li><a href="projects.html" class="text-[#ffffff]/70 hover:text-lagoon transition">Projects</a></li>
+            <li><a href="contact.html" class="text-[#ffffff]/70 hover:text-lagoon transition">Contact</a></li>
+          </ul>
+        </div>
+        <div>
+          <h3 class="font-display font-semibold text-xs uppercase tracking-[0.2em] text-[#ffffff]/50 mb-4">Contact</h3>
+          <ul class="space-y-3 text-sm text-[#ffffff]/70">
+            <li class="flex items-center gap-3"><span class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-[#ffffff]/10 text-lagoon text-xs"><i class="fas fa-phone"></i></span>+243 850 012 270</li>
+            <li class="flex items-center gap-3"><span class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-[#ffffff]/10 text-lagoon text-xs"><i class="fas fa-envelope"></i></span><a href="mailto:merveille.aganzesami@fitigroup.org" class="hover:text-lagoon transition break-all">merveille.aganzesami@fitigroup.org</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="mt-10 pt-6 border-t border-[#ffffff]/10 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-[#ffffff]/50">
+        <p>© 2026 Merveille AGANZE SAMI — All rights reserved · <span class="text-[#ffffff]/30">v2.2</span></p>
+        <a href="#" onclick="window.scrollTo({top:0,behavior:'smooth'});return false;" class="inline-flex items-center gap-2 hover:text-lagoon transition">Back to top <i class="fas fa-arrow-up"></i></a>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>

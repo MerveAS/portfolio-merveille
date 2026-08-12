@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Fonction K de Ripley : tester une agrégation spatiale et en mesurer l'échelle | Merveille Aganze Sami</title>
+  <meta name="description" content="Une répartition purement aléatoire produit des amas visuellement convaincants. La fonction K compare, à chaque distance, le voisinage observé à celui attendu sous un modèle nul explicite." />
+  <meta property="og:title" content="Fonction K de Ripley : tester une agrégation spatiale et en mesurer l'échelle" />
+  <meta property="og:description" content="Une répartition purement aléatoire produit des amas visuellement convaincants. La fonction K compare, à chaque distance, le voisinage observé à celui attendu sous un modèle nul explicite." />
+  <meta property="og:image" content="visuels/visuel_2026-06-28_ripleysk.png" />
+  <meta property="og:type" content="article" />
+  <link rel="alternate" hreflang="fr" href="https://merveille.fitigroup.org/article-fonction-k-ripley.html" />
+  <link rel="alternate" hreflang="en" href="https://merveille.fitigroup.org/en/article-ripley-k-function.html" />
+  <link rel="icon" href="favicon.svg?v=2" type="image/svg+xml" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = { theme: { extend: {
+      colors: { night:'#222B38', navy:'#EE7A5C', steel:'#8A93A3', petrol:'#26303E', lagoon:'#F2A48F', sky:'#F7DCD1', pale:'#F7F5F2' },
+      fontFamily: { sans:['DM Sans','Arial','sans-serif'], display:['Plus Jakarta Sans','Arial','sans-serif'] } } } }
+  </script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    html { scroll-behavior: smooth; }
+    .ref { font-variant-numeric: tabular-nums; }
+    @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col bg-gradient-to-b from-pale via-pale to-sky text-night font-sans antialiased">
+
+  <header class="sticky top-0 z-50 bg-pale/95 backdrop-blur border-b border-navy/20">
+    <div class="max-w-6xl mx-auto px-5 sm:px-8 min-h-16 md:min-h-20 py-2 flex items-center justify-between gap-4">
+      <a href="index.html" class="font-display font-bold text-night text-base sm:text-lg md:text-xl tracking-tight">
+        Merveille <span class="text-navy hidden sm:inline">AGANZE SAMI</span>
+      </a>
+      <nav class="flex flex-wrap justify-end items-center gap-x-4 gap-y-1 sm:gap-x-6 md:gap-x-8 text-xs sm:text-sm md:text-[15px]">
+        <a href="index.html" class="text-night/70 hover:text-navy transition">Accueil</a>
+        <a href="blog.html" class="text-navy font-semibold">Blog</a>
+        <a href="expertises.html" class="text-night/70 hover:text-navy transition">Expertises</a>
+        <a href="projets.html" class="text-night/70 hover:text-navy transition">Projets</a>
+        <a href="en/article-ripley-k-function.html" class="text-[11px] font-semibold border border-navy/40 rounded-full px-3 py-1 text-night/70 hover:text-navy hover:border-navy/60 transition" title="English version">EN</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="flex-1">
+    <section class="max-w-6xl mx-auto px-5 sm:px-8 pt-10 md:pt-14">
+      <div class="bg-gradient-to-br from-petrol to-night rounded-[2rem] md:rounded-[2.5rem] px-6 sm:px-10 md:px-14 py-12 md:py-14 relative overflow-hidden">
+        <div class="absolute -bottom-24 -right-16 w-80 h-80 bg-navy/20 rounded-full blur-2xl"></div>
+        <div class="relative max-w-3xl">
+          <a href="blog.html" class="inline-flex items-center gap-2 text-[#ffffff]/60 text-sm hover:text-lagoon transition mb-6"><i class="fas fa-arrow-left"></i> Retour au blog</a>
+          <div class="flex flex-wrap items-center gap-2 mb-5">
+            <span class="text-[11px] font-semibold uppercase tracking-wider bg-gradient-to-r from-navy to-lagoon text-[#ffffff] rounded-full px-3 py-1">Article</span>
+            <span class="text-[11px] font-medium text-[#ffffff]/50"><i class="fas fa-calendar mr-1.5"></i>28 juin 2026</span>
+            <span class="text-[11px] font-medium text-[#ffffff]/50"><i class="fas fa-clock mr-1.5"></i>10 min de lecture</span>
+          </div>
+          <h1 class="font-display font-bold text-[#ffffff] text-3xl sm:text-4xl md:text-5xl leading-tight mb-5">Fonction K de Ripley :<br /><span class="bg-gradient-to-r from-navy to-lagoon bg-clip-text text-transparent">à quelle échelle les points s'agrègent-ils ?</span></h1>
+          <p class="text-[#ffffff]/60 text-base mb-6">Statistique de second ordre, enveloppes de simulation et choix du modèle nul en analyse de semis de points</p>
+          <div class="flex items-center gap-3">
+            <img src="Photomerveille.jpg?v=2" alt="Merveille Aganze Sami" class="w-10 h-10 rounded-full object-cover ring-2 ring-[#ffffff]/30" />
+            <div class="text-sm">
+              <p class="text-[#ffffff] font-semibold">Merveille Aganze Sami</p>
+              <p class="text-[#ffffff]/50">Conseillère MEL &amp; Gestion de Bases de Données</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <article class="max-w-3xl mx-auto px-5 sm:px-8 py-12 md:py-16">
+
+      <figure class="mb-12">
+        <img src="visuels/visuel_2026-06-28_ripleysk.png" alt="Semis de points structuré en grappes et courbe de la fonction L sortant de l'enveloppe de simulation" class="w-full rounded-2xl shadow-xl ring-1 ring-night/10" />
+        <figcaption class="text-night/60 text-sm mt-3 text-center"><strong class="text-night/70">Figure 1.</strong> Illustration : semis de points et courbe transformée comparée à une enveloppe de simulation. La plage de distances où la courbe sort de l'enveloppe indique l'échelle d'agrégation.</figcaption>
+      </figure>
+
+      <p class="text-lg md:text-xl leading-9 text-night/80 mb-8">La lecture d'une carte de points — forages, incidents signalés, ménages bénéficiaires, foyers de maladie — conduit fréquemment à identifier des regroupements et à en tirer des conclusions opérationnelles. Cette lecture se heurte à une propriété bien établie de la perception visuelle : une répartition entièrement aléatoire produit elle aussi des amas apparents, souvent convaincants.</p>
+
+      <p class="leading-8 text-night/80 mb-5">La question à laquelle une analyse doit répondre n'est donc pas de savoir si des regroupements sont visibles, mais si leur intensité excède ce qu'une répartition sans structure produirait, et à quelle distance cet écart se manifeste.</p>
+
+      <h2 class="font-display font-bold text-night text-2xl md:text-3xl mb-5">1. Ce que mesure la fonction K</h2>
+
+      <p class="leading-8 text-night/80 mb-5">La fonction K se définit, pour une distance donnée, comme le nombre moyen de points situés à moins de cette distance d'un point quelconque du semis, rapporté à l'intensité générale du semis. Elle décrit donc la structure du voisinage à toutes les échelles simultanément, et non à une seule <a href="#ref-ripley1976" class="text-navy hover:underline">(Ripley, 1976)</a>.</p>
+
+      <p class="leading-8 text-night/80 mb-5">Sous une hypothèse de répartition complètement aléatoire, cette quantité prend une valeur théorique connue, proportionnelle à la surface du disque de rayon considéré. La comparaison entre valeur observée et valeur théorique fournit le diagnostic : une valeur supérieure indique davantage de voisins qu'attendu — agrégation ; une valeur inférieure indique une répartition plus régulière — dispersion <a href="#ref-ripley1977" class="text-navy hover:underline">(Ripley, 1977)</a>.</p>
+
+      <div class="bg-sky/60 border-l-4 border-navy rounded-r-2xl p-5 md:p-6 mb-10">
+        <p class="leading-7 text-night/80 text-sm md:text-base"><i class="fas fa-circle-info text-navy mr-2"></i><strong class="text-night">La transformation en fonction L.</strong> La fonction K croît avec le carré de la distance, ce qui rend la lecture graphique malaisée et la variance inégale selon l'échelle. Une transformation usuelle stabilise cette variance et ramène la valeur théorique à une droite, voire à une ligne horizontale lorsqu'on soustrait la distance. L'écart à cette référence se lit alors directement, à toutes les distances.</p>
+      </div>
+
+      <h2 class="font-display font-bold text-night text-2xl md:text-3xl mb-5">2. L'enveloppe de simulation</h2>
+
+      <p class="leading-8 text-night/80 mb-5">Une différence entre courbe observée et courbe théorique ne suffit pas à conclure : encore faut-il savoir quel écart un semis réellement aléatoire produirait. La procédure consiste à simuler un grand nombre de semis sous le modèle nul, à calculer la fonction pour chacun, et à en déduire une bande de valeurs plausibles. La courbe observée est comparée à cette bande.</p>
+
+      <p class="leading-8 text-night/80 mb-5">Cette construction appelle une précaution importante. Une enveloppe calculée distance par distance ne constitue pas un test valide de l'ensemble de la courbe : la courbe étant examinée sur une plage continue de distances, la probabilité qu'elle sorte de l'enveloppe en au moins un point dépasse largement le seuil affiché. Des enveloppes dites globales, ou des tests fondés sur un écart agrégé, corrigent ce défaut et devraient être préférées lorsqu'une conclusion formelle est recherchée <a href="#ref-baddeley-env" class="text-navy hover:underline">(Baddeley et al., 2014)</a>.</p>
+
+      <h2 class="font-display font-bold text-night text-2xl md:text-3xl mb-5">3. Les effets de bord</h2>
+
+      <p class="leading-8 text-night/80 mb-5">Un point situé près de la limite de la zone d'étude possède une partie de son voisinage hors du domaine observé. Sans correction, le nombre de voisins est systématiquement sous-estimé pour ces points, ce qui biaise la fonction vers une apparence de dispersion. Plusieurs corrections existent — pondération par la fraction de disque incluse, correction par translation, méthode de la fenêtre réduite — et leur application n'est pas optionnelle dès lors que la zone est de petite taille par rapport aux distances examinées <a href="#ref-diggle" class="text-navy hover:underline">(Diggle, 2013)</a>.</p>
+
+      <h2 class="font-display font-bold text-night text-2xl md:text-3xl mb-5">4. Le choix du modèle nul</h2>
+
+      <p class="leading-8 text-night/80 mb-5">C'est le point le plus déterminant, et le plus souvent négligé. L'hypothèse de répartition complètement aléatoire suppose une intensité constante sur toute la zone d'étude. Or les phénomènes suivis en contexte de projet ne remplissent presque jamais cette condition : les incidents se produisent là où vivent les personnes, les forages sont implantés là où existent des villages.</p>
+
+      <p class="leading-8 text-night/80 mb-5">Une intensité variable dans l'espace produit alors une agrégation apparente qui ne traduit aucune interaction entre points, mais seulement la répartition sous-jacente de la population ou des infrastructures. Deux réponses sont possibles : utiliser une version de la fonction qui admet une intensité non constante, estimée séparément — ce qui rejoint la démarche exposée dans l'article sur l'<a href="article-densite-noyau.html" class="text-navy hover:underline font-medium">estimation par noyau</a> — ou construire un modèle nul reflétant explicitement le processus de répartition attendu <a href="#ref-wiegand" class="text-navy hover:underline">(Wiegand &amp; Moloney, 2004)</a>.</p>
+
+      <p class="leading-8 text-night/80 mb-5">Cette décision doit précéder le calcul. Un résultat d'agrégation obtenu sous un modèle nul inadapté n'apporte aucune information sur le phénomène étudié.</p>
+
+      <h2 class="font-display font-bold text-night text-2xl md:text-3xl mb-5">5. Ce que la courbe apporte à une décision</h2>
+
+      <p class="leading-8 text-night/80 mb-5">L'apport opérationnel principal réside dans l'identification d'une échelle. La distance à laquelle l'écart à la référence est maximal indique la portée du processus d'agrégation : c'est l'échelle à laquelle les événements se regroupent effectivement. Cette information oriente directement le dimensionnement d'une réponse — rayon d'une zone d'intervention, maillage d'un dispositif de surveillance, distance entre points de service.</p>
+
+      <p class="leading-8 text-night/80 mb-5">Elle permet également de distinguer des situations que la seule cartographie confond : un semis peut être agrégé à petite échelle et régulier à grande échelle, configuration fréquente lorsque des grappes locales se répartissent uniformément sur le territoire. Des fonctions apparentées, fondées sur les distances entre points plutôt que sur un cumul, permettent d'affiner cette lecture <a href="#ref-baddeley-book" class="text-navy hover:underline">(Baddeley et al., 2015)</a>.</p>
+
+      <div class="bg-gradient-to-br from-petrol to-night rounded-2xl p-6 md:p-8 mb-10">
+        <h2 class="font-display font-semibold text-[#ffffff] text-xl mb-4"><i class="fas fa-list-check text-lagoon mr-2"></i>Points essentiels</h2>
+        <ul class="space-y-2.5 text-[#ffffff]/80 leading-7 text-sm md:text-base">
+          <li class="flex items-start gap-3"><i class="fas fa-check text-lagoon mt-1.5"></i>Une répartition aléatoire produit des amas visuellement convaincants</li>
+          <li class="flex items-start gap-3"><i class="fas fa-check text-lagoon mt-1.5"></i>La fonction K compare le voisinage observé à une référence, à toutes les distances</li>
+          <li class="flex items-start gap-3"><i class="fas fa-check text-lagoon mt-1.5"></i>Une enveloppe calculée point par point n'est pas un test valide de l'ensemble de la courbe</li>
+          <li class="flex items-start gap-3"><i class="fas fa-check text-lagoon mt-1.5"></i>Les corrections de bord sont nécessaires dès que la zone est petite au regard des distances étudiées</li>
+          <li class="flex items-start gap-3"><i class="fas fa-check text-lagoon mt-1.5"></i>Le modèle nul est la décision principale : une intensité non constante crée une agrégation apparente</li>
+        </ul>
+      </div>
+
+      <p class="leading-8 text-night/80 mb-5">Une carte indique où se trouvent les points. L'analyse de leur structure indique si leur agencement présente une régularité, et à quelle échelle. C'est cette seconde information qui permet de dimensionner une réponse.</p>
+
+      <div class="bg-white border border-night/10 shadow-sm rounded-2xl p-6 md:p-8 mb-10">
+        <h2 class="font-display font-semibold text-night text-xl mb-5"><i class="fas fa-book text-navy mr-2"></i>Références</h2>
+        <ol class="space-y-4 text-night/75 text-sm leading-6 ref">
+          <li id="ref-baddeley-book">Baddeley, A., Rubak, E., &amp; Turner, R. (2015). <em>Spatial Point Patterns: Methodology and Applications with R</em>. Boca Raton: CRC Press.</li>
+          <li id="ref-baddeley-env">Baddeley, A., Diggle, P. J., Hardegen, A., Lawrence, T., Milne, R. K., &amp; Nair, G. (2014). On tests of spatial pattern based on simulation envelopes. <em>Ecological Monographs</em>, 84(3), 477–489. <a href="https://doi.org/10.1890/13-2042.1" target="_blank" class="text-navy hover:underline break-all">doi.org/10.1890/13-2042.1</a></li>
+          <li id="ref-diggle">Diggle, P. J. (2013). <em>Statistical Analysis of Spatial and Spatio-Temporal Point Patterns</em> (3rd ed.). Boca Raton: CRC Press. <a href="https://doi.org/10.1201/b15326" target="_blank" class="text-navy hover:underline break-all">doi.org/10.1201/b15326</a></li>
+          <li id="ref-ripley1976">Ripley, B. D. (1976). The second-order analysis of stationary point processes. <em>Journal of Applied Probability</em>, 13(2), 255–266. <a href="https://doi.org/10.2307/3212829" target="_blank" class="text-navy hover:underline break-all">doi.org/10.2307/3212829</a></li>
+          <li id="ref-ripley1977">Ripley, B. D. (1977). Modelling Spatial Patterns. <em>Journal of the Royal Statistical Society: Series B</em>, 39(2), 172–212. <a href="https://doi.org/10.1111/j.2517-6161.1977.tb01615.x" target="_blank" class="text-navy hover:underline break-all">doi.org/10.1111/j.2517-6161.1977.tb01615.x</a></li>
+          <li id="ref-wiegand">Wiegand, T., &amp; Moloney, K. A. (2004). Rings, circles, and null-models for point pattern analysis in ecology. <em>Oikos</em>, 104(2), 209–229. <a href="https://doi.org/10.1111/j.0030-1299.2004.12497.x" target="_blank" class="text-navy hover:underline break-all">doi.org/10.1111/j.0030-1299.2004.12497.x</a></li>
+        </ol>
+      </div>
+
+      <div class="bg-white border border-night/10 shadow-sm rounded-2xl p-6 md:p-7 flex flex-col sm:flex-row items-center gap-5 mb-6">
+        <img src="Photomerveille.jpg?v=2" alt="Merveille Aganze Sami" class="w-20 h-20 rounded-full object-cover ring-2 ring-navy/30" />
+        <div class="text-center sm:text-left">
+          <p class="font-display font-semibold text-night">Merveille Aganze Sami</p>
+          <p class="text-night/70 text-sm leading-6 mt-1">Conseillère MEL &amp; Gestion de Bases de Données. Plus de 9 ans d'expérience en suivi-évaluation, SIG et digitalisation auprès d'organisations internationales (GIZ, Enabel) en RD Congo.</p>
+          <div class="flex justify-center sm:justify-start gap-4 mt-3 text-sm">
+            <a href="https://www.linkedin.com/in/mervag27/?skipRedirect=true" target="_blank" class="text-navy font-medium hover:text-night transition"><i class="fab fa-linkedin mr-1.5"></i>LinkedIn</a>
+            <a href="contact.html" class="text-navy font-medium hover:text-night transition"><i class="fas fa-envelope mr-1.5"></i>Me contacter</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="flex flex-col sm:flex-row items-center justify-between gap-4 bg-sky/60 rounded-2xl p-6">
+        <p class="text-night/80 font-medium text-center sm:text-left">Un semis de points à analyser ?</p>
+        <a href="contact.html" class="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-navy to-lagoon text-[#ffffff] font-semibold px-6 py-2.5 shadow-md hover:-translate-y-0.5 transition whitespace-nowrap">Prendre contact <i class="fas fa-arrow-right"></i></a>
+      </div>
+    </article>
+  </main>
+
+  <footer class="mt-16 bg-gradient-to-br from-petrol to-night text-[#ffffff]">
+    <div class="max-w-6xl mx-auto px-5 sm:px-8 pt-12 md:pt-16 pb-8">
+      <div class="grid gap-10 md:grid-cols-[1.2fr_0.7fr_1.1fr]">
+        <div>
+          <p class="font-display font-bold text-xl mb-3">Merveille <span class="bg-gradient-to-r from-navy to-lagoon bg-clip-text text-transparent">AGANZE SAMI</span></p>
+          <p class="text-[#ffffff]/60 text-sm leading-7 max-w-xs">Conseillère MEL &amp; Gestion de Bases de Données. Données, SIG et digitalisation au service de vos décisions.</p>
+          <div class="flex items-center gap-3 mt-6">
+            <a href="https://www.linkedin.com/in/mervag27/?skipRedirect=true" target="_blank" class="inline-flex items-center justify-center w-10 h-10 rounded-full bg-[#ffffff]/10 hover:bg-navy transition" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+            <a href="https://github.com/MerveAS" target="_blank" class="inline-flex items-center justify-center w-10 h-10 rounded-full bg-[#ffffff]/10 hover:bg-navy transition" aria-label="GitHub"><i class="fab fa-github"></i></a>
+          </div>
+        </div>
+        <div>
+          <h3 class="font-display font-semibold text-xs uppercase tracking-[0.2em] text-[#ffffff]/50 mb-4">Navigation</h3>
+          <ul class="space-y-2.5 text-sm">
+            <li><a href="index.html" class="text-[#ffffff]/70 hover:text-lagoon transition">Accueil</a></li>
+            <li><a href="blog.html" class="text-[#ffffff]/70 hover:text-lagoon transition">Blog</a></li>
+            <li><a href="expertises.html" class="text-[#ffffff]/70 hover:text-lagoon transition">Expertises</a></li>
+            <li><a href="projets.html" class="text-[#ffffff]/70 hover:text-lagoon transition">Projets</a></li>
+            <li><a href="contact.html" class="text-[#ffffff]/70 hover:text-lagoon transition">Contact</a></li>
+          </ul>
+        </div>
+        <div>
+          <h3 class="font-display font-semibold text-xs uppercase tracking-[0.2em] text-[#ffffff]/50 mb-4">Contact</h3>
+          <ul class="space-y-3 text-sm text-[#ffffff]/70">
+            <li class="flex items-center gap-3"><span class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-[#ffffff]/10 text-lagoon text-xs"><i class="fas fa-phone"></i></span>+243 850 012 270</li>
+            <li class="flex items-center gap-3"><span class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-[#ffffff]/10 text-lagoon text-xs"><i class="fas fa-envelope"></i></span><a href="mailto:merveille.aganzesami@fitigroup.org" class="hover:text-lagoon transition break-all">merveille.aganzesami@fitigroup.org</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="mt-10 pt-6 border-t border-[#ffffff]/10 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-[#ffffff]/50">
+        <p>© 2026 Merveille AGANZE SAMI — Tous droits réservés · <span class="text-[#ffffff]/30">v2.2</span></p>
+        <a href="#" onclick="window.scrollTo({top:0,behavior:'smooth'});return false;" class="inline-flex items-center gap-2 hover:text-lagoon transition">Retour en haut <i class="fas fa-arrow-up"></i></a>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>

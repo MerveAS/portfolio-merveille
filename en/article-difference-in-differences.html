@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Difference-in-differences: what the measured gap actually supports | Merveille Aganze Sami</title>
+  <meta name="description" content="A rising indicator does not demonstrate a project effect. Difference-in-differences compares the beneficiary group's change with a comparison group's, under an assumption that must be stated." />
+  <meta property="og:title" content="Difference-in-differences: what the measured gap actually supports" />
+  <meta property="og:description" content="A rising indicator does not demonstrate a project effect. Difference-in-differences compares the beneficiary group's change with a comparison group's, under an assumption that must be stated." />
+  <meta property="og:image" content="../visuels/visuel_2026-06-23_did.png" />
+  <meta property="og:type" content="article" />
+  <link rel="alternate" hreflang="fr" href="https://merveille.fitigroup.org/article-double-difference.html" />
+  <link rel="alternate" hreflang="en" href="https://merveille.fitigroup.org/en/article-difference-in-differences.html" />
+  <link rel="icon" href="../favicon.svg?v=2" type="image/svg+xml" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = { theme: { extend: {
+      colors: { night:'#222B38', navy:'#EE7A5C', steel:'#8A93A3', petrol:'#26303E', lagoon:'#F2A48F', sky:'#F7DCD1', pale:'#F7F5F2' },
+      fontFamily: { sans:['DM Sans','Arial','sans-serif'], display:['Plus Jakarta Sans','Arial','sans-serif'] } } } }
+  </script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    html { scroll-behavior: smooth; }
+    .ref { font-variant-numeric: tabular-nums; }
+    @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col bg-gradient-to-b from-pale via-pale to-sky text-night font-sans antialiased">
+
+  <header class="sticky top-0 z-50 bg-pale/95 backdrop-blur border-b border-navy/20">
+    <div class="max-w-6xl mx-auto px-5 sm:px-8 min-h-16 md:min-h-20 py-2 flex items-center justify-between gap-4">
+      <a href="index.html" class="font-display font-bold text-night text-base sm:text-lg md:text-xl tracking-tight">
+        Merveille <span class="text-navy hidden sm:inline">AGANZE SAMI</span>
+      </a>
+      <nav class="flex flex-wrap justify-end items-center gap-x-4 gap-y-1 sm:gap-x-6 md:gap-x-8 text-xs sm:text-sm md:text-[15px]">
+        <a href="index.html" class="text-night/70 hover:text-navy transition">Home</a>
+        <a href="blog.html" class="text-navy font-semibold">Blog</a>
+        <a href="expertise.html" class="text-night/70 hover:text-navy transition">Expertise</a>
+        <a href="projects.html" class="text-night/70 hover:text-navy transition">Projects</a>
+        <a href="../article-double-difference.html" class="text-[11px] font-semibold border border-navy/40 rounded-full px-3 py-1 text-night/70 hover:text-navy hover:border-navy/60 transition" title="Version française">FR</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="flex-1">
+    <section class="max-w-6xl mx-auto px-5 sm:px-8 pt-10 md:pt-14">
+      <div class="bg-gradient-to-br from-petrol to-night rounded-[2rem] md:rounded-[2.5rem] px-6 sm:px-10 md:px-14 py-12 md:py-14 relative overflow-hidden">
+        <div class="absolute -bottom-24 -right-16 w-80 h-80 bg-navy/20 rounded-full blur-2xl"></div>
+        <div class="relative max-w-3xl">
+          <a href="blog.html" class="inline-flex items-center gap-2 text-[#ffffff]/60 text-sm hover:text-lagoon transition mb-6"><i class="fas fa-arrow-left"></i> Back to blog</a>
+          <div class="flex flex-wrap items-center gap-2 mb-5">
+            <span class="text-[11px] font-semibold uppercase tracking-wider bg-gradient-to-r from-navy to-lagoon text-[#ffffff] rounded-full px-3 py-1">Article</span>
+            <span class="text-[11px] font-medium text-[#ffffff]/50"><i class="fas fa-calendar mr-1.5"></i>23 June 2026</span>
+            <span class="text-[11px] font-medium text-[#ffffff]/50"><i class="fas fa-clock mr-1.5"></i>11 min read</span>
+          </div>
+          <h1 class="font-display font-bold text-[#ffffff] text-3xl sm:text-4xl md:text-5xl leading-tight mb-5">Difference-in-differences:<br /><span class="bg-gradient-to-r from-navy to-lagoon bg-clip-text text-transparent">“compared with what?”</span></h1>
+          <p class="text-[#ffffff]/60 text-base mb-6">The parallel trends assumption, inference on standard errors and handling staggered treatment timing</p>
+          <div class="flex items-center gap-3">
+            <img src="../Photomerveille.jpg?v=2" alt="Merveille Aganze Sami" class="w-10 h-10 rounded-full object-cover ring-2 ring-[#ffffff]/30" />
+            <div class="text-sm">
+              <p class="text-[#ffffff] font-semibold">Merveille Aganze Sami</p>
+              <p class="text-[#ffffff]/50">MEL &amp; Database Management Advisor</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <article class="max-w-3xl mx-auto px-5 sm:px-8 py-12 md:py-16">
+
+      <figure class="mb-12">
+        <img src="../visuels/visuel_2026-06-23_did.png" alt="Two time trajectories, treated and comparison groups, with the counterfactual projection and the estimated gap" class="w-full rounded-2xl shadow-xl ring-1 ring-night/10" />
+        <figcaption class="text-night/60 text-sm mt-3 text-center"><strong class="text-night/70">Figure 1.</strong> Illustration: treated and comparison group trajectories, counterfactual projection dashed, and estimated gap. It is this gap, not the raw progression, that constitutes the effect estimate.</figcaption>
+      </figure>
+
+      <p class="text-lg md:text-xl leading-9 text-night/80 mb-8">The most common reading of a project result compares an indicator before and after the intervention among beneficiaries. A rise is then interpreted as an effect. This inference implicitly assumes that, absent the project, the indicator would have remained stable.</p>
+
+      <p class="leading-8 text-night/80 mb-5">That assumption is rarely warranted. A favourable agricultural season, a price movement, a national policy or a dynamic already under way before the first activity produce variations independent of the intervention. A before-after comparison on the beneficiary group alone aggregates the project effect and all of these factors.</p>
+
+      <h2 class="font-display font-bold text-night text-2xl md:text-3xl mb-5">1. What difference-in-differences isolates</h2>
+
+      <p class="leading-8 text-night/80 mb-5">The method follows two groups — beneficiaries and a comparison group — over at least two periods. It computes the change in the indicator within each group, then the difference between those two changes. The reasoning is explicit: whatever affected both groups in the same way cancels in the subtraction; what remains is attributable to what distinguishes the two groups, namely the intervention.</p>
+
+      <p class="leading-8 text-night/80 mb-5">The classic illustration of this approach in public policy evaluation rests on comparing two territories subject to different rules, one serving as a reference for the other <a href="#ref-card" class="text-navy hover:underline">(Card &amp; Krueger, 1994)</a>. The principle applies equally to a development project with partial geographic coverage.</p>
+
+      <div class="bg-sky/60 border-l-4 border-navy rounded-r-2xl p-5 md:p-6 mb-10">
+        <p class="leading-7 text-night/80 text-sm md:text-base"><i class="fas fa-circle-info text-navy mr-2"></i><strong class="text-night">The implicit counterfactual.</strong> The method constructs a hypothetical trajectory: the one the beneficiary group would have followed had change there matched the comparison group's. The effect estimate is the gap between the observed trajectory and this projection. The entire validity of the exercise therefore rests on the credibility of that projection, not on the quality of the computation itself.</p>
+      </div>
+
+      <h2 class="font-display font-bold text-night text-2xl md:text-3xl mb-5">2. The parallel trends assumption</h2>
+
+      <p class="leading-8 text-night/80 mb-5">The identifying condition reads: absent the intervention, the two groups would have experienced the same change. It does not assume they were identical — a constant level difference is allowed and cancels in the double difference — but that their trajectories would have been parallel.</p>
+
+      <p class="leading-8 text-night/80 mb-5">This assumption concerns a situation that did not occur; it cannot therefore be demonstrated. It can, however, be made more or less plausible by examining pre-intervention periods: if the two groups followed parallel trajectories over several periods before the start, the assumption gains credibility.</p>
+
+      <h2 class="font-display font-bold text-night text-2xl md:text-3xl mb-5">3. Checking pre-trends without being reassured by them</h2>
+
+      <p class="leading-8 text-night/80 mb-5">Plotting period-by-period gaps, before and after the intervention, is the usual check. It calls for two reservations. First, a test on prior periods often lacks power: no detected gap does not mean no gap. Second, selecting cases on the basis of that test introduces bias into the estimates retained, a documented effect that invites treating this check as an element of judgement rather than a validation criterion <a href="#ref-roth" class="text-navy hover:underline">(Roth, 2022)</a>.</p>
+
+      <p class="leading-8 text-night/80 mb-5">The recommended approach is therefore to present the pre-period plot, to state the assumption as an assumption, and to examine the sensitivity of the result to plausible departures from parallelism.</p>
+
+      <h2 class="font-display font-bold text-night text-2xl md:text-3xl mb-5">4. Standard errors</h2>
+
+      <p class="leading-8 text-night/80 mb-5">A frequently underestimated difficulty concerns inference. Observations from the same geographic unit are correlated over time, and units within the same territory are correlated with one another. Treating observations as independent yields markedly understated standard errors and unfounded significance conclusions <a href="#ref-bertrand" class="text-navy hover:underline">(Bertrand et al., 2004)</a>.</p>
+
+      <p class="leading-8 text-night/80 mb-5">The usual correction clusters errors at the level at which treatment is assigned — territory, district, grouping. It nonetheless assumes a sufficient number of clusters; below about thirty, inference methods designed for few clusters are required. The number of clusters used should appear in the report, alongside the sample size <a href="#ref-angrist" class="text-navy hover:underline">(Angrist &amp; Pischke, 2009)</a>.</p>
+
+      <h2 class="font-display font-bold text-night text-2xl md:text-3xl mb-5">5. When treatment starts at different dates</h2>
+
+      <p class="leading-8 text-night/80 mb-5">Many projects begin at different dates depending on the area. This configuration, long handled by a standard fixed-effects regression, raises a recently identified difficulty: the estimator implicitly combines comparisons between already-treated units and later-treated units, some of which receive negative weights when the effect varies over time <a href="#ref-goodman" class="text-navy hover:underline">(Goodman-Bacon, 2021)</a>.</p>
+
+      <p class="leading-8 text-night/80 mb-5">Estimators designed for this case build explicit comparisons between cohorts entering at a given date and not-yet-treated units, then aggregate these effects under transparent weighting <a href="#ref-callaway" class="text-navy hover:underline">(Callaway &amp; Sant'Anna, 2021)</a>. Where entry dates differ, their use should be the rule rather than the exception.</p>
+
+      <h2 class="font-display font-bold text-night text-2xl md:text-3xl mb-5">6. Further points to document</h2>
+
+      <ul class="space-y-3.5 text-night/80 leading-7 mb-10">
+        <li class="flex items-start gap-3"><i class="fas fa-circle-exclamation text-navy mt-1.5"></i><span><strong class="text-night">Sample composition.</strong> If the units observed differ between the two periods, the double difference partly measures a compositional change. A panel of the same units is preferable; failing that, the comparability of samples must be established.</span></li>
+        <li class="flex items-start gap-3"><i class="fas fa-circle-exclamation text-navy mt-1.5"></i><span><strong class="text-night">Anticipation effects.</strong> Prior announcement of the project may alter behaviour before actual start-up, contaminating the reference period. The date to use is that of first plausible influence, not that of the first activity.</span></li>
+        <li class="flex items-start gap-3"><i class="fas fa-circle-exclamation text-navy mt-1.5"></i><span><strong class="text-night">Spillover to the comparison group.</strong> If benefits partly reach the comparison group — geographic proximity, trade, mobility — the estimated effect is understated. A minimum distance between treated and comparison areas limits this risk.</span></li>
+        <li class="flex items-start gap-3"><i class="fas fa-circle-exclamation text-navy mt-1.5"></i><span><strong class="text-night">Selection on a temporary dip.</strong> Where targeting picks units experiencing a passing difficulty, their spontaneous recovery will be counted as an effect. Examining several prior periods reveals this configuration.</span></li>
+      </ul>
+
+      <div class="bg-gradient-to-br from-petrol to-night rounded-2xl p-6 md:p-8 mb-10">
+        <h2 class="font-display font-semibold text-[#ffffff] text-xl mb-4"><i class="fas fa-list-check text-lagoon mr-2"></i>Key points</h2>
+        <ul class="space-y-2.5 text-[#ffffff]/80 leading-7 text-sm md:text-base">
+          <li class="flex items-start gap-3"><i class="fas fa-check text-lagoon mt-1.5"></i>A rise in an indicator is not a result until it is referenced against a benchmark</li>
+          <li class="flex items-start gap-3"><i class="fas fa-check text-lagoon mt-1.5"></i>The method rests on a parallel trends assumption, which is stated but not demonstrated</li>
+          <li class="flex items-start gap-3"><i class="fas fa-check text-lagoon mt-1.5"></i>Examining prior periods strengthens plausibility without constituting validation</li>
+          <li class="flex items-start gap-3"><i class="fas fa-check text-lagoon mt-1.5"></i>Standard errors must be clustered at the level of treatment assignment</li>
+          <li class="flex items-start gap-3"><i class="fas fa-check text-lagoon mt-1.5"></i>Where entry dates differ, standard fixed-effects regression is no longer appropriate</li>
+        </ul>
+      </div>
+
+      <p class="leading-8 text-night/80 mb-5">The question underpinning an impact evaluation is not whether an indicator rose, but against what reference that rise is measured. Constructing and justifying that reference is the substance of the methodological work.</p>
+
+      <div class="bg-white border border-night/10 shadow-sm rounded-2xl p-6 md:p-8 mb-10">
+        <h2 class="font-display font-semibold text-night text-xl mb-5"><i class="fas fa-book text-navy mr-2"></i>References</h2>
+        <ol class="space-y-4 text-night/75 text-sm leading-6 ref">
+          <li id="ref-angrist">Angrist, J. D., &amp; Pischke, J.-S. (2009). <em>Mostly Harmless Econometrics: An Empiricist's Companion</em>. Princeton: Princeton University Press.</li>
+          <li id="ref-bertrand">Bertrand, M., Duflo, E., &amp; Mullainathan, S. (2004). How Much Should We Trust Differences-in-Differences Estimates? <em>The Quarterly Journal of Economics</em>, 119(1), 249–275. <a href="https://doi.org/10.1162/003355304772839588" target="_blank" class="text-navy hover:underline break-all">doi.org/10.1162/003355304772839588</a></li>
+          <li id="ref-callaway">Callaway, B., &amp; Sant'Anna, P. H. C. (2021). Difference-in-Differences with multiple time periods. <em>Journal of Econometrics</em>, 225(2), 200–230. <a href="https://doi.org/10.1016/j.jeconom.2020.12.001" target="_blank" class="text-navy hover:underline break-all">doi.org/10.1016/j.jeconom.2020.12.001</a></li>
+          <li id="ref-card">Card, D., &amp; Krueger, A. B. (1994). Minimum Wages and Employment: A Case Study of the Fast-Food Industry in New Jersey and Pennsylvania. <em>American Economic Review</em>, 84(4), 772–793.</li>
+          <li id="ref-goodman">Goodman-Bacon, A. (2021). Difference-in-differences with variation in treatment timing. <em>Journal of Econometrics</em>, 225(2), 254–277. <a href="https://doi.org/10.1016/j.jeconom.2021.03.014" target="_blank" class="text-navy hover:underline break-all">doi.org/10.1016/j.jeconom.2021.03.014</a></li>
+          <li id="ref-roth">Roth, J. (2022). Pretest with Caution: Event-Study Estimates after Testing for Parallel Trends. <em>American Economic Review: Insights</em>, 4(3), 305–322. <a href="https://doi.org/10.1257/aeri.20210236" target="_blank" class="text-navy hover:underline break-all">doi.org/10.1257/aeri.20210236</a></li>
+        </ol>
+      </div>
+
+      <div class="bg-white border border-night/10 shadow-sm rounded-2xl p-6 md:p-7 flex flex-col sm:flex-row items-center gap-5 mb-6">
+        <img src="../Photomerveille.jpg?v=2" alt="Merveille Aganze Sami" class="w-20 h-20 rounded-full object-cover ring-2 ring-navy/30" />
+        <div class="text-center sm:text-left">
+          <p class="font-display font-semibold text-night">Merveille Aganze Sami</p>
+          <p class="text-night/70 text-sm leading-6 mt-1">MEL &amp; Database Management Advisor. 9+ years of experience in monitoring &amp; evaluation, GIS and digitalization with international organizations (GIZ, Enabel) in DR Congo.</p>
+          <div class="flex justify-center sm:justify-start gap-4 mt-3 text-sm">
+            <a href="https://www.linkedin.com/in/mervag27/?skipRedirect=true" target="_blank" class="text-navy font-medium hover:text-night transition"><i class="fab fa-linkedin mr-1.5"></i>LinkedIn</a>
+            <a href="contact.html" class="text-navy font-medium hover:text-night transition"><i class="fas fa-envelope mr-1.5"></i>Contact me</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="flex flex-col sm:flex-row items-center justify-between gap-4 bg-sky/60 rounded-2xl p-6">
+        <p class="text-night/80 font-medium text-center sm:text-left">An impact evaluation to design?</p>
+        <a href="contact.html" class="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-navy to-lagoon text-[#ffffff] font-semibold px-6 py-2.5 shadow-md hover:-translate-y-0.5 transition whitespace-nowrap">Get in touch <i class="fas fa-arrow-right"></i></a>
+      </div>
+    </article>
+  </main>
+
+  <footer class="mt-16 bg-gradient-to-br from-petrol to-night text-[#ffffff]">
+    <div class="max-w-6xl mx-auto px-5 sm:px-8 pt-12 md:pt-16 pb-8">
+      <div class="grid gap-10 md:grid-cols-[1.2fr_0.7fr_1.1fr]">
+        <div>
+          <p class="font-display font-bold text-xl mb-3">Merveille <span class="bg-gradient-to-r from-navy to-lagoon bg-clip-text text-transparent">AGANZE SAMI</span></p>
+          <p class="text-[#ffffff]/60 text-sm leading-7 max-w-xs">MEL &amp; Database Management Advisor. Data, GIS and digitalization at the service of your decisions.</p>
+          <div class="flex items-center gap-3 mt-6">
+            <a href="https://www.linkedin.com/in/mervag27/?skipRedirect=true" target="_blank" class="inline-flex items-center justify-center w-10 h-10 rounded-full bg-[#ffffff]/10 hover:bg-navy transition" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+            <a href="https://github.com/MerveAS" target="_blank" class="inline-flex items-center justify-center w-10 h-10 rounded-full bg-[#ffffff]/10 hover:bg-navy transition" aria-label="GitHub"><i class="fab fa-github"></i></a>
+          </div>
+        </div>
+        <div>
+          <h3 class="font-display font-semibold text-xs uppercase tracking-[0.2em] text-[#ffffff]/50 mb-4">Navigation</h3>
+          <ul class="space-y-2.5 text-sm">
+            <li><a href="index.html" class="text-[#ffffff]/70 hover:text-lagoon transition">Home</a></li>
+            <li><a href="blog.html" class="text-[#ffffff]/70 hover:text-lagoon transition">Blog</a></li>
+            <li><a href="expertise.html" class="text-[#ffffff]/70 hover:text-lagoon transition">Expertise</a></li>
+            <li><a href="projects.html" class="text-[#ffffff]/70 hover:text-lagoon transition">Projects</a></li>
+            <li><a href="contact.html" class="text-[#ffffff]/70 hover:text-lagoon transition">Contact</a></li>
+          </ul>
+        </div>
+        <div>
+          <h3 class="font-display font-semibold text-xs uppercase tracking-[0.2em] text-[#ffffff]/50 mb-4">Contact</h3>
+          <ul class="space-y-3 text-sm text-[#ffffff]/70">
+            <li class="flex items-center gap-3"><span class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-[#ffffff]/10 text-lagoon text-xs"><i class="fas fa-phone"></i></span>+243 850 012 270</li>
+            <li class="flex items-center gap-3"><span class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-[#ffffff]/10 text-lagoon text-xs"><i class="fas fa-envelope"></i></span><a href="mailto:merveille.aganzesami@fitigroup.org" class="hover:text-lagoon transition break-all">merveille.aganzesami@fitigroup.org</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="mt-10 pt-6 border-t border-[#ffffff]/10 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-[#ffffff]/50">
+        <p>© 2026 Merveille AGANZE SAMI — All rights reserved · <span class="text-[#ffffff]/30">v2.2</span></p>
+        <a href="#" onclick="window.scrollTo({top:0,behavior:'smooth'});return false;" class="inline-flex items-center gap-2 hover:text-lagoon transition">Back to top <i class="fas fa-arrow-up"></i></a>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>

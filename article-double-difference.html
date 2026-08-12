@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Double différence : ce que l'écart mesuré autorise réellement à conclure | Merveille Aganze Sami</title>
+  <meta name="description" content="Un indicateur qui progresse ne démontre pas l'effet d'un projet. La double différence compare l'évolution du groupe bénéficiaire à celle d'un groupe témoin, sous une hypothèse qu'il faut expliciter." />
+  <meta property="og:title" content="Double différence : ce que l'écart mesuré autorise réellement à conclure" />
+  <meta property="og:description" content="Un indicateur qui progresse ne démontre pas l'effet d'un projet. La double différence compare l'évolution du groupe bénéficiaire à celle d'un groupe témoin, sous une hypothèse qu'il faut expliciter." />
+  <meta property="og:image" content="visuels/visuel_2026-06-23_did.png" />
+  <meta property="og:type" content="article" />
+  <link rel="alternate" hreflang="fr" href="https://merveille.fitigroup.org/article-double-difference.html" />
+  <link rel="alternate" hreflang="en" href="https://merveille.fitigroup.org/en/article-difference-in-differences.html" />
+  <link rel="icon" href="favicon.svg?v=2" type="image/svg+xml" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = { theme: { extend: {
+      colors: { night:'#222B38', navy:'#EE7A5C', steel:'#8A93A3', petrol:'#26303E', lagoon:'#F2A48F', sky:'#F7DCD1', pale:'#F7F5F2' },
+      fontFamily: { sans:['DM Sans','Arial','sans-serif'], display:['Plus Jakarta Sans','Arial','sans-serif'] } } } }
+  </script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    html { scroll-behavior: smooth; }
+    .ref { font-variant-numeric: tabular-nums; }
+    @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col bg-gradient-to-b from-pale via-pale to-sky text-night font-sans antialiased">
+
+  <header class="sticky top-0 z-50 bg-pale/95 backdrop-blur border-b border-navy/20">
+    <div class="max-w-6xl mx-auto px-5 sm:px-8 min-h-16 md:min-h-20 py-2 flex items-center justify-between gap-4">
+      <a href="index.html" class="font-display font-bold text-night text-base sm:text-lg md:text-xl tracking-tight">
+        Merveille <span class="text-navy hidden sm:inline">AGANZE SAMI</span>
+      </a>
+      <nav class="flex flex-wrap justify-end items-center gap-x-4 gap-y-1 sm:gap-x-6 md:gap-x-8 text-xs sm:text-sm md:text-[15px]">
+        <a href="index.html" class="text-night/70 hover:text-navy transition">Accueil</a>
+        <a href="blog.html" class="text-navy font-semibold">Blog</a>
+        <a href="expertises.html" class="text-night/70 hover:text-navy transition">Expertises</a>
+        <a href="projets.html" class="text-night/70 hover:text-navy transition">Projets</a>
+        <a href="en/article-difference-in-differences.html" class="text-[11px] font-semibold border border-navy/40 rounded-full px-3 py-1 text-night/70 hover:text-navy hover:border-navy/60 transition" title="English version">EN</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="flex-1">
+    <section class="max-w-6xl mx-auto px-5 sm:px-8 pt-10 md:pt-14">
+      <div class="bg-gradient-to-br from-petrol to-night rounded-[2rem] md:rounded-[2.5rem] px-6 sm:px-10 md:px-14 py-12 md:py-14 relative overflow-hidden">
+        <div class="absolute -bottom-24 -right-16 w-80 h-80 bg-navy/20 rounded-full blur-2xl"></div>
+        <div class="relative max-w-3xl">
+          <a href="blog.html" class="inline-flex items-center gap-2 text-[#ffffff]/60 text-sm hover:text-lagoon transition mb-6"><i class="fas fa-arrow-left"></i> Retour au blog</a>
+          <div class="flex flex-wrap items-center gap-2 mb-5">
+            <span class="text-[11px] font-semibold uppercase tracking-wider bg-gradient-to-r from-navy to-lagoon text-[#ffffff] rounded-full px-3 py-1">Article</span>
+            <span class="text-[11px] font-medium text-[#ffffff]/50"><i class="fas fa-calendar mr-1.5"></i>23 juin 2026</span>
+            <span class="text-[11px] font-medium text-[#ffffff]/50"><i class="fas fa-clock mr-1.5"></i>11 min de lecture</span>
+          </div>
+          <h1 class="font-display font-bold text-[#ffffff] text-3xl sm:text-4xl md:text-5xl leading-tight mb-5">Double différence :<br /><span class="bg-gradient-to-r from-navy to-lagoon bg-clip-text text-transparent">« par rapport à quoi ? »</span></h1>
+          <p class="text-[#ffffff]/60 text-base mb-6">Hypothèse de tendances parallèles, inférence sur les erreurs-types et traitement des dates d'entrée échelonnées</p>
+          <div class="flex items-center gap-3">
+            <img src="Photomerveille.jpg?v=2" alt="Merveille Aganze Sami" class="w-10 h-10 rounded-full object-cover ring-2 ring-[#ffffff]/30" />
+            <div class="text-sm">
+              <p class="text-[#ffffff] font-semibold">Merveille Aganze Sami</p>
+              <p class="text-[#ffffff]/50">Conseillère MEL &amp; Gestion de Bases de Données</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <article class="max-w-3xl mx-auto px-5 sm:px-8 py-12 md:py-16">
+
+      <figure class="mb-12">
+        <img src="visuels/visuel_2026-06-23_did.png" alt="Deux trajectoires temporelles, groupe traité et groupe témoin, avec la projection contrefactuelle et l'écart estimé" class="w-full rounded-2xl shadow-xl ring-1 ring-night/10" />
+        <figcaption class="text-night/60 text-sm mt-3 text-center"><strong class="text-night/70">Figure 1.</strong> Illustration : trajectoires du groupe traité et du groupe témoin, projection contrefactuelle en pointillé et écart estimé. C'est cet écart, non la progression brute, qui constitue l'estimation d'effet.</figcaption>
+      </figure>
+
+      <p class="text-lg md:text-xl leading-9 text-night/80 mb-8">La lecture la plus courante d'un résultat de projet consiste à comparer la valeur d'un indicateur avant et après l'intervention chez les bénéficiaires. Une progression est alors interprétée comme un effet. Cette inférence suppose implicitement qu'en l'absence du projet, l'indicateur serait resté stable.</p>
+
+      <p class="leading-8 text-night/80 mb-5">Cette supposition est rarement fondée. Une saison agricole favorable, une évolution des prix, une politique nationale ou une dynamique déjà engagée avant la première activité produisent des variations indépendantes de l'intervention. La comparaison avant-après sur le seul groupe bénéficiaire agrège l'effet du projet et l'ensemble de ces facteurs.</p>
+
+      <h2 class="font-display font-bold text-night text-2xl md:text-3xl mb-5">1. Ce que la double différence isole</h2>
+
+      <p class="leading-8 text-night/80 mb-5">La méthode suit deux groupes — bénéficiaires et groupe de comparaison — sur au moins deux périodes. Elle calcule la variation de l'indicateur dans chaque groupe, puis la différence entre ces deux variations. Le raisonnement est explicite : ce qui a affecté les deux groupes de la même manière s'annule dans la soustraction ; ce qui subsiste est attribuable à ce qui distingue les deux groupes, c'est-à-dire l'intervention.</p>
+
+      <p class="leading-8 text-night/80 mb-5">L'illustration classique de cette approche en évaluation de politique publique repose sur la comparaison de deux territoires soumis à des règles différentes, l'un servant de référence à l'autre <a href="#ref-card" class="text-navy hover:underline">(Card &amp; Krueger, 1994)</a>. Le principe s'applique de la même manière à un projet de développement dont la couverture géographique est partielle.</p>
+
+      <div class="bg-sky/60 border-l-4 border-navy rounded-r-2xl p-5 md:p-6 mb-10">
+        <p class="leading-7 text-night/80 text-sm md:text-base"><i class="fas fa-circle-info text-navy mr-2"></i><strong class="text-night">Le contrefactuel implicite.</strong> La méthode construit une trajectoire hypothétique : celle qu'aurait suivie le groupe bénéficiaire si l'évolution y avait été la même que dans le groupe témoin. L'estimation d'effet correspond à l'écart entre la trajectoire observée et cette projection. Toute la validité de l'exercice repose donc sur la crédibilité de cette projection, non sur la qualité du calcul lui-même.</p>
+      </div>
+
+      <h2 class="font-display font-bold text-night text-2xl md:text-3xl mb-5">2. L'hypothèse de tendances parallèles</h2>
+
+      <p class="leading-8 text-night/80 mb-5">La condition d'identification s'énonce ainsi : en l'absence d'intervention, les deux groupes auraient connu la même évolution. Il ne s'agit pas de supposer qu'ils étaient identiques — un écart de niveau constant est admis et disparaît dans la double différence — mais que leurs trajectoires auraient été parallèles.</p>
+
+      <p class="leading-8 text-night/80 mb-5">Cette hypothèse porte sur une situation qui n'a pas eu lieu ; elle ne peut donc pas être démontrée. Elle peut en revanche être rendue plus ou moins plausible par l'examen des périodes antérieures à l'intervention : si les deux groupes ont suivi des trajectoires parallèles pendant plusieurs périodes avant le démarrage, l'hypothèse gagne en crédibilité.</p>
+
+      <h2 class="font-display font-bold text-night text-2xl md:text-3xl mb-5">3. Vérifier les tendances antérieures sans s'en satisfaire</h2>
+
+      <p class="leading-8 text-night/80 mb-5">La représentation graphique des écarts période par période, avant et après l'intervention, constitue la vérification usuelle. Elle appelle toutefois deux réserves. D'une part, un test sur les périodes antérieures manque souvent de puissance : l'absence d'écart détecté ne signifie pas l'absence d'écart. D'autre part, sélectionner les cas sur la base de ce test introduit un biais dans les estimations retenues, un effet documenté qui invite à traiter cette vérification comme un élément d'appréciation plutôt que comme un critère de validation <a href="#ref-roth" class="text-navy hover:underline">(Roth, 2022)</a>.</p>
+
+      <p class="leading-8 text-night/80 mb-5">La démarche recommandée consiste donc à présenter le graphique des périodes antérieures, à énoncer l'hypothèse comme une hypothèse, et à examiner la sensibilité du résultat à des écarts plausibles de parallélisme.</p>
+
+      <h2 class="font-display font-bold text-night text-2xl md:text-3xl mb-5">4. Les erreurs-types</h2>
+
+      <p class="leading-8 text-night/80 mb-5">Une difficulté fréquemment sous-estimée concerne l'inférence. Les observations d'une même unité géographique sont corrélées dans le temps, et les unités d'un même territoire le sont entre elles. Traiter les observations comme indépendantes conduit à des erreurs-types nettement trop faibles et à des conclusions de significativité non fondées <a href="#ref-bertrand" class="text-navy hover:underline">(Bertrand et al., 2004)</a>.</p>
+
+      <p class="leading-8 text-night/80 mb-5">La correction usuelle regroupe les erreurs au niveau auquel le traitement est assigné — territoire, district, groupement. Elle suppose toutefois un nombre suffisant de groupes ; en deçà d'une trentaine, des méthodes d'inférence adaptées aux petits nombres de groupes sont nécessaires. Le nombre de groupes retenus doit figurer dans le rapport, au même titre que la taille d'échantillon <a href="#ref-angrist" class="text-navy hover:underline">(Angrist &amp; Pischke, 2009)</a>.</p>
+
+      <h2 class="font-display font-bold text-night text-2xl md:text-3xl mb-5">5. Lorsque les dates d'entrée sont échelonnées</h2>
+
+      <p class="leading-8 text-night/80 mb-5">De nombreux projets démarrent à des dates différentes selon les zones. Cette configuration, longtemps traitée par une régression à effets fixes standard, pose une difficulté identifiée récemment : l'estimateur combine implicitement des comparaisons entre unités déjà traitées et unités traitées plus tard, comparaisons dont certaines reçoivent des pondérations négatives lorsque l'effet varie dans le temps <a href="#ref-goodman" class="text-navy hover:underline">(Goodman-Bacon, 2021)</a>.</p>
+
+      <p class="leading-8 text-night/80 mb-5">Des estimateurs conçus pour ce cas construisent des comparaisons explicites entre groupes entrés à une date donnée et unités non encore traitées, puis agrègent ces effets selon une pondération transparente <a href="#ref-callaway" class="text-navy hover:underline">(Callaway &amp; Sant'Anna, 2021)</a>. Lorsque les dates d'entrée diffèrent, leur usage devrait être la règle plutôt que l'exception.</p>
+
+      <h2 class="font-display font-bold text-night text-2xl md:text-3xl mb-5">6. Autres points à documenter</h2>
+
+      <ul class="space-y-3.5 text-night/80 leading-7 mb-10">
+        <li class="flex items-start gap-3"><i class="fas fa-circle-exclamation text-navy mt-1.5"></i><span><strong class="text-night">Composition de l'échantillon.</strong> Si les unités observées diffèrent entre les deux périodes, la double différence mesure en partie un changement de composition. Un panel de mêmes unités est préférable ; à défaut, la comparabilité des échantillons doit être établie.</span></li>
+        <li class="flex items-start gap-3"><i class="fas fa-circle-exclamation text-navy mt-1.5"></i><span><strong class="text-night">Effets d'anticipation.</strong> Une annonce préalable du projet peut modifier les comportements avant le démarrage effectif, ce qui contamine la période de référence. La date à retenir est celle de la première influence plausible, non celle de la première activité.</span></li>
+        <li class="flex items-start gap-3"><i class="fas fa-circle-exclamation text-navy mt-1.5"></i><span><strong class="text-night">Diffusion vers le groupe témoin.</strong> Si les bénéfices atteignent partiellement le groupe de comparaison — proximité géographique, échanges commerciaux, mobilité des personnes — l'effet estimé est sous-évalué. Une distance minimale entre zones traitées et zones témoins limite ce risque.</span></li>
+        <li class="flex items-start gap-3"><i class="fas fa-circle-exclamation text-navy mt-1.5"></i><span><strong class="text-night">Sélection sur une baisse temporaire.</strong> Lorsque le ciblage retient des unités en difficulté passagère, leur remontée spontanée sera comptabilisée comme un effet. L'examen de plusieurs périodes antérieures permet de repérer cette configuration.</span></li>
+      </ul>
+
+      <div class="bg-gradient-to-br from-petrol to-night rounded-2xl p-6 md:p-8 mb-10">
+        <h2 class="font-display font-semibold text-[#ffffff] text-xl mb-4"><i class="fas fa-list-check text-lagoon mr-2"></i>Points essentiels</h2>
+        <ul class="space-y-2.5 text-[#ffffff]/80 leading-7 text-sm md:text-base">
+          <li class="flex items-start gap-3"><i class="fas fa-check text-lagoon mt-1.5"></i>Une progression d'indicateur n'est pas un résultat tant qu'elle n'est pas rapportée à une référence</li>
+          <li class="flex items-start gap-3"><i class="fas fa-check text-lagoon mt-1.5"></i>La méthode repose sur une hypothèse de trajectoires parallèles, qui s'énonce mais ne se démontre pas</li>
+          <li class="flex items-start gap-3"><i class="fas fa-check text-lagoon mt-1.5"></i>L'examen des périodes antérieures renforce la plausibilité sans constituer une validation</li>
+          <li class="flex items-start gap-3"><i class="fas fa-check text-lagoon mt-1.5"></i>Les erreurs-types doivent être regroupées au niveau d'assignation du traitement</li>
+          <li class="flex items-start gap-3"><i class="fas fa-check text-lagoon mt-1.5"></i>Lorsque les dates d'entrée diffèrent, la régression à effets fixes standard n'est plus appropriée</li>
+        </ul>
+      </div>
+
+      <p class="leading-8 text-night/80 mb-5">La question qui fonde une évaluation d'impact n'est pas de savoir si un indicateur a progressé, mais par rapport à quelle référence cette progression est mesurée. La construction et la justification de cette référence constituent l'essentiel du travail méthodologique.</p>
+
+      <div class="bg-white border border-night/10 shadow-sm rounded-2xl p-6 md:p-8 mb-10">
+        <h2 class="font-display font-semibold text-night text-xl mb-5"><i class="fas fa-book text-navy mr-2"></i>Références</h2>
+        <ol class="space-y-4 text-night/75 text-sm leading-6 ref">
+          <li id="ref-angrist">Angrist, J. D., &amp; Pischke, J.-S. (2009). <em>Mostly Harmless Econometrics: An Empiricist's Companion</em>. Princeton: Princeton University Press.</li>
+          <li id="ref-bertrand">Bertrand, M., Duflo, E., &amp; Mullainathan, S. (2004). How Much Should We Trust Differences-in-Differences Estimates? <em>The Quarterly Journal of Economics</em>, 119(1), 249–275. <a href="https://doi.org/10.1162/003355304772839588" target="_blank" class="text-navy hover:underline break-all">doi.org/10.1162/003355304772839588</a></li>
+          <li id="ref-callaway">Callaway, B., &amp; Sant'Anna, P. H. C. (2021). Difference-in-Differences with multiple time periods. <em>Journal of Econometrics</em>, 225(2), 200–230. <a href="https://doi.org/10.1016/j.jeconom.2020.12.001" target="_blank" class="text-navy hover:underline break-all">doi.org/10.1016/j.jeconom.2020.12.001</a></li>
+          <li id="ref-card">Card, D., &amp; Krueger, A. B. (1994). Minimum Wages and Employment: A Case Study of the Fast-Food Industry in New Jersey and Pennsylvania. <em>American Economic Review</em>, 84(4), 772–793.</li>
+          <li id="ref-goodman">Goodman-Bacon, A. (2021). Difference-in-differences with variation in treatment timing. <em>Journal of Econometrics</em>, 225(2), 254–277. <a href="https://doi.org/10.1016/j.jeconom.2021.03.014" target="_blank" class="text-navy hover:underline break-all">doi.org/10.1016/j.jeconom.2021.03.014</a></li>
+          <li id="ref-roth">Roth, J. (2022). Pretest with Caution: Event-Study Estimates after Testing for Parallel Trends. <em>American Economic Review: Insights</em>, 4(3), 305–322. <a href="https://doi.org/10.1257/aeri.20210236" target="_blank" class="text-navy hover:underline break-all">doi.org/10.1257/aeri.20210236</a></li>
+        </ol>
+      </div>
+
+      <div class="bg-white border border-night/10 shadow-sm rounded-2xl p-6 md:p-7 flex flex-col sm:flex-row items-center gap-5 mb-6">
+        <img src="Photomerveille.jpg?v=2" alt="Merveille Aganze Sami" class="w-20 h-20 rounded-full object-cover ring-2 ring-navy/30" />
+        <div class="text-center sm:text-left">
+          <p class="font-display font-semibold text-night">Merveille Aganze Sami</p>
+          <p class="text-night/70 text-sm leading-6 mt-1">Conseillère MEL &amp; Gestion de Bases de Données. Plus de 9 ans d'expérience en suivi-évaluation, SIG et digitalisation auprès d'organisations internationales (GIZ, Enabel) en RD Congo.</p>
+          <div class="flex justify-center sm:justify-start gap-4 mt-3 text-sm">
+            <a href="https://www.linkedin.com/in/mervag27/?skipRedirect=true" target="_blank" class="text-navy font-medium hover:text-night transition"><i class="fab fa-linkedin mr-1.5"></i>LinkedIn</a>
+            <a href="contact.html" class="text-navy font-medium hover:text-night transition"><i class="fas fa-envelope mr-1.5"></i>Me contacter</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="flex flex-col sm:flex-row items-center justify-between gap-4 bg-sky/60 rounded-2xl p-6">
+        <p class="text-night/80 font-medium text-center sm:text-left">Une évaluation d'impact à concevoir ?</p>
+        <a href="contact.html" class="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-navy to-lagoon text-[#ffffff] font-semibold px-6 py-2.5 shadow-md hover:-translate-y-0.5 transition whitespace-nowrap">Prendre contact <i class="fas fa-arrow-right"></i></a>
+      </div>
+    </article>
+  </main>
+
+  <footer class="mt-16 bg-gradient-to-br from-petrol to-night text-[#ffffff]">
+    <div class="max-w-6xl mx-auto px-5 sm:px-8 pt-12 md:pt-16 pb-8">
+      <div class="grid gap-10 md:grid-cols-[1.2fr_0.7fr_1.1fr]">
+        <div>
+          <p class="font-display font-bold text-xl mb-3">Merveille <span class="bg-gradient-to-r from-navy to-lagoon bg-clip-text text-transparent">AGANZE SAMI</span></p>
+          <p class="text-[#ffffff]/60 text-sm leading-7 max-w-xs">Conseillère MEL &amp; Gestion de Bases de Données. Données, SIG et digitalisation au service de vos décisions.</p>
+          <div class="flex items-center gap-3 mt-6">
+            <a href="https://www.linkedin.com/in/mervag27/?skipRedirect=true" target="_blank" class="inline-flex items-center justify-center w-10 h-10 rounded-full bg-[#ffffff]/10 hover:bg-navy transition" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+            <a href="https://github.com/MerveAS" target="_blank" class="inline-flex items-center justify-center w-10 h-10 rounded-full bg-[#ffffff]/10 hover:bg-navy transition" aria-label="GitHub"><i class="fab fa-github"></i></a>
+          </div>
+        </div>
+        <div>
+          <h3 class="font-display font-semibold text-xs uppercase tracking-[0.2em] text-[#ffffff]/50 mb-4">Navigation</h3>
+          <ul class="space-y-2.5 text-sm">
+            <li><a href="index.html" class="text-[#ffffff]/70 hover:text-lagoon transition">Accueil</a></li>
+            <li><a href="blog.html" class="text-[#ffffff]/70 hover:text-lagoon transition">Blog</a></li>
+            <li><a href="expertises.html" class="text-[#ffffff]/70 hover:text-lagoon transition">Expertises</a></li>
+            <li><a href="projets.html" class="text-[#ffffff]/70 hover:text-lagoon transition">Projets</a></li>
+            <li><a href="contact.html" class="text-[#ffffff]/70 hover:text-lagoon transition">Contact</a></li>
+          </ul>
+        </div>
+        <div>
+          <h3 class="font-display font-semibold text-xs uppercase tracking-[0.2em] text-[#ffffff]/50 mb-4">Contact</h3>
+          <ul class="space-y-3 text-sm text-[#ffffff]/70">
+            <li class="flex items-center gap-3"><span class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-[#ffffff]/10 text-lagoon text-xs"><i class="fas fa-phone"></i></span>+243 850 012 270</li>
+            <li class="flex items-center gap-3"><span class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-[#ffffff]/10 text-lagoon text-xs"><i class="fas fa-envelope"></i></span><a href="mailto:merveille.aganzesami@fitigroup.org" class="hover:text-lagoon transition break-all">merveille.aganzesami@fitigroup.org</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="mt-10 pt-6 border-t border-[#ffffff]/10 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-[#ffffff]/50">
+        <p>© 2026 Merveille AGANZE SAMI — Tous droits réservés · <span class="text-[#ffffff]/30">v2.2</span></p>
+        <a href="#" onclick="window.scrollTo({top:0,behavior:'smooth'});return false;" class="inline-flex items-center gap-2 hover:text-lagoon transition">Retour en haut <i class="fas fa-arrow-up"></i></a>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>
