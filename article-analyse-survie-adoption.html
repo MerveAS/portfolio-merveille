@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Analyse de survie : mesurer le rythme d'adoption, pas seulement le taux final | Merveille Aganze Sami</title>
+  <meta name="description" content="Un taux d'adoption en fin de projet ignore la durée. L'analyse de survie estime la probabilité d'adoption au fil du temps en traitant correctement les ménages sortis du suivi." />
+  <meta property="og:title" content="Analyse de survie : mesurer le rythme d'adoption, pas seulement le taux final" />
+  <meta property="og:description" content="Un taux d'adoption en fin de projet ignore la durée. L'analyse de survie estime la probabilité d'adoption au fil du temps en traitant correctement les ménages sortis du suivi." />
+  <meta property="og:image" content="visuels/visuel_2026-06-20_survie.png" />
+  <meta property="og:type" content="article" />
+  <link rel="alternate" hreflang="fr" href="https://merveille.fitigroup.org/article-analyse-survie-adoption.html" />
+  <link rel="alternate" hreflang="en" href="https://merveille.fitigroup.org/en/article-survival-analysis-adoption.html" />
+  <link rel="icon" href="favicon.svg?v=2" type="image/svg+xml" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = { theme: { extend: {
+      colors: { night:'#222B38', navy:'#EE7A5C', steel:'#8A93A3', petrol:'#26303E', lagoon:'#F2A48F', sky:'#F7DCD1', pale:'#F7F5F2' },
+      fontFamily: { sans:['DM Sans','Arial','sans-serif'], display:['Plus Jakarta Sans','Arial','sans-serif'] } } } }
+  </script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    html { scroll-behavior: smooth; }
+    .ref { font-variant-numeric: tabular-nums; }
+    @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col bg-gradient-to-b from-pale via-pale to-sky text-night font-sans antialiased">
+
+  <header class="sticky top-0 z-50 bg-pale/95 backdrop-blur border-b border-navy/20">
+    <div class="max-w-6xl mx-auto px-5 sm:px-8 min-h-16 md:min-h-20 py-2 flex items-center justify-between gap-4">
+      <a href="index.html" class="font-display font-bold text-night text-base sm:text-lg md:text-xl tracking-tight">
+        Merveille <span class="text-navy hidden sm:inline">AGANZE SAMI</span>
+      </a>
+      <nav class="flex flex-wrap justify-end items-center gap-x-4 gap-y-1 sm:gap-x-6 md:gap-x-8 text-xs sm:text-sm md:text-[15px]">
+        <a href="index.html" class="text-night/70 hover:text-navy transition">Accueil</a>
+        <a href="blog.html" class="text-navy font-semibold">Blog</a>
+        <a href="expertises.html" class="text-night/70 hover:text-navy transition">Expertises</a>
+        <a href="projets.html" class="text-night/70 hover:text-navy transition">Projets</a>
+        <a href="en/article-survival-analysis-adoption.html" class="text-[11px] font-semibold border border-navy/40 rounded-full px-3 py-1 text-night/70 hover:text-navy hover:border-navy/60 transition" title="English version">EN</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="flex-1">
+    <section class="max-w-6xl mx-auto px-5 sm:px-8 pt-10 md:pt-14">
+      <div class="bg-gradient-to-br from-petrol to-night rounded-[2rem] md:rounded-[2.5rem] px-6 sm:px-10 md:px-14 py-12 md:py-14 relative overflow-hidden">
+        <div class="absolute -bottom-24 -right-16 w-80 h-80 bg-navy/20 rounded-full blur-2xl"></div>
+        <div class="relative max-w-3xl">
+          <a href="blog.html" class="inline-flex items-center gap-2 text-[#ffffff]/60 text-sm hover:text-lagoon transition mb-6"><i class="fas fa-arrow-left"></i> Retour au blog</a>
+          <div class="flex flex-wrap items-center gap-2 mb-5">
+            <span class="text-[11px] font-semibold uppercase tracking-wider bg-gradient-to-r from-navy to-lagoon text-[#ffffff] rounded-full px-3 py-1">Article</span>
+            <span class="text-[11px] font-medium text-[#ffffff]/50"><i class="fas fa-calendar mr-1.5"></i>20 juin 2026</span>
+            <span class="text-[11px] font-medium text-[#ffffff]/50"><i class="fas fa-clock mr-1.5"></i>10 min de lecture</span>
+          </div>
+          <h1 class="font-display font-bold text-[#ffffff] text-3xl sm:text-4xl md:text-5xl leading-tight mb-5">Analyse de survie :<br /><span class="bg-gradient-to-r from-navy to-lagoon bg-clip-text text-transparent">le « quand » derrière le « combien »</span></h1>
+          <p class="text-[#ffffff]/60 text-base mb-6">Traitement des données censurées, estimation de la courbe d'adoption et modélisation des facteurs de rythme</p>
+          <div class="flex items-center gap-3">
+            <img src="Photomerveille.jpg?v=2" alt="Merveille Aganze Sami" class="w-10 h-10 rounded-full object-cover ring-2 ring-[#ffffff]/30" />
+            <div class="text-sm">
+              <p class="text-[#ffffff] font-semibold">Merveille Aganze Sami</p>
+              <p class="text-[#ffffff]/50">Conseillère MEL &amp; Gestion de Bases de Données</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <article class="max-w-3xl mx-auto px-5 sm:px-8 py-12 md:py-16">
+
+      <figure class="mb-12">
+        <img src="visuels/visuel_2026-06-20_survie.png" alt="Deux courbes d'adoption en escalier avec marques de censure, pour un groupe proche et un groupe éloigné du service" class="w-full rounded-2xl shadow-xl ring-1 ring-night/10" />
+        <figcaption class="text-night/60 text-sm mt-3 text-center"><strong class="text-night/70">Figure 1.</strong> Illustration : courbes d'adoption estimées pour deux groupes, avec marques de censure. L'écart de temps médian est plus informatif qu'un taux final.</figcaption>
+      </figure>
+
+      <p class="text-lg md:text-xl leading-9 text-night/80 mb-8">Les dispositifs de suivi rendent généralement compte de l'adoption d'une pratique par un taux mesuré en fin de période : la proportion de ménages ayant adopté. Cette mesure présente l'inconvénient d'être un état, alors que le phénomène étudié est un processus qui se déploie dans le temps.</p>
+
+      <p class="leading-8 text-night/80 mb-5">Deux projets affichant le même taux final peuvent recouvrir des dynamiques opposées : dans l'un, la majorité des adoptions s'est produite dans les trois premiers mois ; dans l'autre, elle s'est étalée sur deux ans. Ces deux situations n'appellent ni le même diagnostic ni la même décision opérationnelle.</p>
+
+      <h2 class="font-display font-bold text-night text-2xl md:text-3xl mb-5">1. Le problème que pose le calcul d'un taux</h2>
+
+      <p class="leading-8 text-night/80 mb-5">Une difficulté technique s'ajoute à cette perte d'information. Tous les ménages ne sont pas observés pendant la même durée : certains rejoignent le dispositif en cours de route, d'autres en sortent — déménagement, retrait, fin de la période d'observation. Au moment du calcul, on sait seulement qu'ils n'avaient pas adopté <em>jusque-là</em>.</p>
+
+      <div class="bg-sky/60 border-l-4 border-navy rounded-r-2xl p-5 md:p-6 mb-10">
+        <p class="leading-7 text-night/80 text-sm md:text-base"><i class="fas fa-circle-info text-navy mr-2"></i><strong class="text-night">La censure à droite.</strong> Ces observations partielles ne sont ni des adoptions ni des non-adoptions : elles constituent une information de durée minimale. Les exclure du calcul supprime des données valides et biaise le résultat ; les compter comme non-adoptions revient à affirmer une information dont on ne dispose pas. Les méthodes d'analyse de survie sont précisément construites pour exploiter cette information partielle.</p>
+      </div>
+
+      <h2 class="font-display font-bold text-night text-2xl md:text-3xl mb-5">2. Estimer la courbe d'adoption</h2>
+
+      <p class="leading-8 text-night/80 mb-5">L'estimateur non paramétrique de référence reconstruit la probabilité de ne pas encore avoir adopté à chaque instant, en actualisant cette probabilité à chaque événement observé et en retirant du dénominateur les unités censurées <a href="#ref-km" class="text-navy hover:underline">(Kaplan &amp; Meier, 1958)</a>. Le résultat est une courbe en escalier dont la lecture fournit directement des grandeurs opérationnelles.</p>
+
+      <p class="leading-8 text-night/80 mb-5">La plus utile est le temps médian — la durée au terme de laquelle la moitié des ménages a adopté. Une moyenne n'est généralement pas calculable en présence de censure, puisque la durée reste inconnue pour une partie de l'échantillon. La comparaison entre deux groupes s'effectue par un test dédié comparant l'ensemble des courbes plutôt qu'un point particulier <a href="#ref-bland" class="text-navy hover:underline">(Bland &amp; Altman, 2004)</a>.</p>
+
+      <h2 class="font-display font-bold text-night text-2xl md:text-3xl mb-5">3. Quantifier l'effet des facteurs</h2>
+
+      <p class="leading-8 text-night/80 mb-5">Le modèle à risques proportionnels permet d'estimer l'effet de plusieurs caractéristiques sur le rythme d'adoption — distance au point de service, composition du ménage, modalité d'accompagnement — sans imposer de forme particulière à la courbe de base <a href="#ref-cox" class="text-navy hover:underline">(Cox, 1972)</a>. Chaque coefficient s'interprète comme un rapport de taux instantané : une valeur de 1,5 indique un rythme d'adoption supérieur de moitié, à autres caractéristiques comparables.</p>
+
+      <p class="leading-8 text-night/80 mb-5">Une précision d'interprétation s'impose ici. Le modèle décrit une association conditionnelle, non un effet causal. Attribuer à un facteur un rôle causal requiert un dispositif d'identification distinct, comme celui présenté dans l'article sur l'<a href="article-appariement-score-propension.html" class="text-navy hover:underline font-medium">appariement par score de propension</a>.</p>
+
+      <h2 class="font-display font-bold text-night text-2xl md:text-3xl mb-5">4. Vérifier l'hypothèse du modèle</h2>
+
+      <p class="leading-8 text-night/80 mb-5">Le modèle suppose que le rapport de taux entre deux profils reste constant dans le temps. Cette hypothèse est vérifiable au moyen d'un examen des résidus, et elle est fréquemment violée en pratique : un accompagnement de proximité peut accélérer fortement l'adoption les premiers mois puis n'avoir plus d'effet différencié <a href="#ref-grambsch" class="text-navy hover:underline">(Grambsch &amp; Therneau, 1994)</a>.</p>
+
+      <p class="leading-8 text-night/80 mb-5">Lorsque l'hypothèse ne tient pas, deux réponses existent : stratifier le modèle selon la variable concernée, ou introduire un terme d'interaction avec le temps. Signaler la violation sans la traiter conduit à des coefficients dont l'interprétation n'est pas celle annoncée.</p>
+
+      <h2 class="font-display font-bold text-night text-2xl md:text-3xl mb-5">5. Points à traiter dans un dispositif de terrain</h2>
+
+      <ul class="space-y-3.5 text-night/80 leading-7 mb-10">
+        <li class="flex items-start gap-3"><i class="fas fa-circle-exclamation text-navy mt-1.5"></i><span><strong class="text-night">Définition de l'événement.</strong> « Adopter » doit correspondre à un critère observable et daté. Une définition floue produit une variable de durée dont la mesure varie selon l'enquêteur.</span></li>
+        <li class="flex items-start gap-3"><i class="fas fa-circle-exclamation text-navy mt-1.5"></i><span><strong class="text-night">Censure par intervalle.</strong> Lorsque les visites de suivi sont périodiques, on sait seulement que l'adoption est survenue entre deux passages. Traiter la date de visite comme la date d'événement introduit un biais systématique ; des méthodes adaptées à la censure par intervalle existent et devraient être utilisées lorsque l'espacement des visites est important.</span></li>
+        <li class="flex items-start gap-3"><i class="fas fa-circle-exclamation text-navy mt-1.5"></i><span><strong class="text-night">Censure informative.</strong> Si les ménages qui sortent du suivi sont précisément ceux qui n'auraient pas adopté, l'estimation est biaisée de façon optimiste. Les motifs de sortie doivent être enregistrés et analysés.</span></li>
+        <li class="flex items-start gap-3"><i class="fas fa-circle-exclamation text-navy mt-1.5"></i><span><strong class="text-night">Risques concurrents.</strong> Un ménage qui quitte la zone ou abandonne l'activité ne se trouve pas dans la même situation qu'un ménage encore susceptible d'adopter. Traiter ces sorties comme de simples censures surestime la probabilité d'adoption ; des estimateurs tenant compte des événements concurrents corrigent ce biais <a href="#ref-fine" class="text-navy hover:underline">(Fine &amp; Gray, 1999)</a>.</span></li>
+        <li class="flex items-start gap-3"><i class="fas fa-circle-exclamation text-navy mt-1.5"></i><span><strong class="text-night">Corrélation intra-village.</strong> Les ménages d'une même localité partagent des déterminants non observés. Les erreurs-types doivent en tenir compte, faute de quoi la précision est surestimée.</span></li>
+      </ul>
+
+      <h2 class="font-display font-bold text-night text-2xl md:text-3xl mb-5">6. Intégration dans l'outil de collecte</h2>
+
+      <p class="leading-8 text-night/80 mb-5">La condition pratique est simple mais souvent absente : le formulaire de collecte doit enregistrer des <em>dates</em> d'événement, et non un statut binaire à la date de visite. Cette modification, mineure sur le plan de l'outil, conditionne l'ensemble de l'analyse. Chaque visite horodatée alimente alors une courbe qui se met à jour à mesure que les données arrivent <a href="#ref-clark" class="text-navy hover:underline">(Clark et al., 2003)</a>.</p>
+
+      <p class="leading-8 text-night/80 mb-5">Le tableau de bord passe ainsi d'un indicateur d'état — la cible est-elle atteinte — à un indicateur de rythme, qui signale un ralentissement avant que le taux final ne soit compromis.</p>
+
+      <div class="bg-gradient-to-br from-petrol to-night rounded-2xl p-6 md:p-8 mb-10">
+        <h2 class="font-display font-semibold text-[#ffffff] text-xl mb-4"><i class="fas fa-list-check text-lagoon mr-2"></i>Points essentiels</h2>
+        <ul class="space-y-2.5 text-[#ffffff]/80 leading-7 text-sm md:text-base">
+          <li class="flex items-start gap-3"><i class="fas fa-check text-lagoon mt-1.5"></i>Un taux final agrège deux dynamiques très différentes : rapide puis stable, ou lente et continue</li>
+          <li class="flex items-start gap-3"><i class="fas fa-check text-lagoon mt-1.5"></i>Les sorties de suivi sont une information de durée minimale, non des non-adoptions</li>
+          <li class="flex items-start gap-3"><i class="fas fa-check text-lagoon mt-1.5"></i>Le temps médian est la grandeur lisible ; la moyenne est généralement non calculable</li>
+          <li class="flex items-start gap-3"><i class="fas fa-check text-lagoon mt-1.5"></i>Le modèle à risques proportionnels décrit une association, pas un effet causal</li>
+          <li class="flex items-start gap-3"><i class="fas fa-check text-lagoon mt-1.5"></i>Le formulaire doit enregistrer des dates d'événement, non un statut à la date de visite</li>
+        </ul>
+      </div>
+
+      <p class="leading-8 text-night/80 mb-5">En suivi de programme, la question du « combien » recouvre fréquemment une question de « quand » plus directement actionnable. Mesurer un rythme permet d'intervenir en cours de processus ; mesurer un état ne permet que d'en rendre compte après coup.</p>
+
+      <div class="bg-white border border-night/10 shadow-sm rounded-2xl p-6 md:p-8 mb-10">
+        <h2 class="font-display font-semibold text-night text-xl mb-5"><i class="fas fa-book text-navy mr-2"></i>Références</h2>
+        <ol class="space-y-4 text-night/75 text-sm leading-6 ref">
+          <li id="ref-bland">Bland, J. M., &amp; Altman, D. G. (2004). The logrank test. <em>BMJ</em>, 328(7447), 1073. <a href="https://doi.org/10.1136/bmj.328.7447.1073" target="_blank" class="text-navy hover:underline break-all">doi.org/10.1136/bmj.328.7447.1073</a></li>
+          <li id="ref-clark">Clark, T. G., Bradburn, M. J., Love, S. B., &amp; Altman, D. G. (2003). Survival Analysis Part I: Basic concepts and first analyses. <em>British Journal of Cancer</em>, 89(2), 232–238. <a href="https://doi.org/10.1038/sj.bjc.6601118" target="_blank" class="text-navy hover:underline break-all">doi.org/10.1038/sj.bjc.6601118</a></li>
+          <li id="ref-cox">Cox, D. R. (1972). Regression Models and Life-Tables. <em>Journal of the Royal Statistical Society: Series B</em>, 34(2), 187–202. <a href="https://doi.org/10.1111/j.2517-6161.1972.tb00899.x" target="_blank" class="text-navy hover:underline break-all">doi.org/10.1111/j.2517-6161.1972.tb00899.x</a></li>
+          <li id="ref-fine">Fine, J. P., &amp; Gray, R. J. (1999). A Proportional Hazards Model for the Subdistribution of a Competing Risk. <em>Journal of the American Statistical Association</em>, 94(446), 496–509. <a href="https://doi.org/10.1080/01621459.1999.10474144" target="_blank" class="text-navy hover:underline break-all">doi.org/10.1080/01621459.1999.10474144</a></li>
+          <li id="ref-grambsch">Grambsch, P. M., &amp; Therneau, T. M. (1994). Proportional hazards tests and diagnostics based on weighted residuals. <em>Biometrika</em>, 81(3), 515–526. <a href="https://doi.org/10.1093/biomet/81.3.515" target="_blank" class="text-navy hover:underline break-all">doi.org/10.1093/biomet/81.3.515</a></li>
+          <li id="ref-km">Kaplan, E. L., &amp; Meier, P. (1958). Nonparametric Estimation from Incomplete Observations. <em>Journal of the American Statistical Association</em>, 53(282), 457–481. <a href="https://doi.org/10.1080/01621459.1958.10501452" target="_blank" class="text-navy hover:underline break-all">doi.org/10.1080/01621459.1958.10501452</a></li>
+        </ol>
+      </div>
+
+      <div class="bg-white border border-night/10 shadow-sm rounded-2xl p-6 md:p-7 flex flex-col sm:flex-row items-center gap-5 mb-6">
+        <img src="Photomerveille.jpg?v=2" alt="Merveille Aganze Sami" class="w-20 h-20 rounded-full object-cover ring-2 ring-navy/30" />
+        <div class="text-center sm:text-left">
+          <p class="font-display font-semibold text-night">Merveille Aganze Sami</p>
+          <p class="text-night/70 text-sm leading-6 mt-1">Conseillère MEL &amp; Gestion de Bases de Données. Plus de 9 ans d'expérience en suivi-évaluation, SIG et digitalisation auprès d'organisations internationales (GIZ, Enabel) en RD Congo.</p>
+          <div class="flex justify-center sm:justify-start gap-4 mt-3 text-sm">
+            <a href="https://www.linkedin.com/in/mervag27/?skipRedirect=true" target="_blank" class="text-navy font-medium hover:text-night transition"><i class="fab fa-linkedin mr-1.5"></i>LinkedIn</a>
+            <a href="contact.html" class="text-navy font-medium hover:text-night transition"><i class="fas fa-envelope mr-1.5"></i>Me contacter</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="flex flex-col sm:flex-row items-center justify-between gap-4 bg-sky/60 rounded-2xl p-6">
+        <p class="text-night/80 font-medium text-center sm:text-left">Un suivi d'adoption à structurer ?</p>
+        <a href="contact.html" class="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-navy to-lagoon text-[#ffffff] font-semibold px-6 py-2.5 shadow-md hover:-translate-y-0.5 transition whitespace-nowrap">Prendre contact <i class="fas fa-arrow-right"></i></a>
+      </div>
+    </article>
+  </main>
+
+  <footer class="mt-16 bg-gradient-to-br from-petrol to-night text-[#ffffff]">
+    <div class="max-w-6xl mx-auto px-5 sm:px-8 pt-12 md:pt-16 pb-8">
+      <div class="grid gap-10 md:grid-cols-[1.2fr_0.7fr_1.1fr]">
+        <div>
+          <p class="font-display font-bold text-xl mb-3">Merveille <span class="bg-gradient-to-r from-navy to-lagoon bg-clip-text text-transparent">AGANZE SAMI</span></p>
+          <p class="text-[#ffffff]/60 text-sm leading-7 max-w-xs">Conseillère MEL &amp; Gestion de Bases de Données. Données, SIG et digitalisation au service de vos décisions.</p>
+          <div class="flex items-center gap-3 mt-6">
+            <a href="https://www.linkedin.com/in/mervag27/?skipRedirect=true" target="_blank" class="inline-flex items-center justify-center w-10 h-10 rounded-full bg-[#ffffff]/10 hover:bg-navy transition" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+            <a href="https://github.com/MerveAS" target="_blank" class="inline-flex items-center justify-center w-10 h-10 rounded-full bg-[#ffffff]/10 hover:bg-navy transition" aria-label="GitHub"><i class="fab fa-github"></i></a>
+          </div>
+        </div>
+        <div>
+          <h3 class="font-display font-semibold text-xs uppercase tracking-[0.2em] text-[#ffffff]/50 mb-4">Navigation</h3>
+          <ul class="space-y-2.5 text-sm">
+            <li><a href="index.html" class="text-[#ffffff]/70 hover:text-lagoon transition">Accueil</a></li>
+            <li><a href="blog.html" class="text-[#ffffff]/70 hover:text-lagoon transition">Blog</a></li>
+            <li><a href="expertises.html" class="text-[#ffffff]/70 hover:text-lagoon transition">Expertises</a></li>
+            <li><a href="projets.html" class="text-[#ffffff]/70 hover:text-lagoon transition">Projets</a></li>
+            <li><a href="contact.html" class="text-[#ffffff]/70 hover:text-lagoon transition">Contact</a></li>
+          </ul>
+        </div>
+        <div>
+          <h3 class="font-display font-semibold text-xs uppercase tracking-[0.2em] text-[#ffffff]/50 mb-4">Contact</h3>
+          <ul class="space-y-3 text-sm text-[#ffffff]/70">
+            <li class="flex items-center gap-3"><span class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-[#ffffff]/10 text-lagoon text-xs"><i class="fas fa-phone"></i></span>+243 850 012 270</li>
+            <li class="flex items-center gap-3"><span class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-[#ffffff]/10 text-lagoon text-xs"><i class="fas fa-envelope"></i></span><a href="mailto:merveille.aganzesami@fitigroup.org" class="hover:text-lagoon transition break-all">merveille.aganzesami@fitigroup.org</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="mt-10 pt-6 border-t border-[#ffffff]/10 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-[#ffffff]/50">
+        <p>© 2026 Merveille AGANZE SAMI — Tous droits réservés · <span class="text-[#ffffff]/30">v2.2</span></p>
+        <a href="#" onclick="window.scrollTo({top:0,behavior:'smooth'});return false;" class="inline-flex items-center gap-2 hover:text-lagoon transition">Retour en haut <i class="fas fa-arrow-up"></i></a>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>

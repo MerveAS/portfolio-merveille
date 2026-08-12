@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Survival analysis: measuring the pace of adoption, not just the final rate | Merveille Aganze Sami</title>
+  <meta name="description" content="An end-of-project adoption rate ignores duration. Survival analysis estimates the probability of adoption over time while correctly handling households that left the monitoring system." />
+  <meta property="og:title" content="Survival analysis: measuring the pace of adoption, not just the final rate" />
+  <meta property="og:description" content="An end-of-project adoption rate ignores duration. Survival analysis estimates the probability of adoption over time while correctly handling households that left the monitoring system." />
+  <meta property="og:image" content="../visuels/visuel_2026-06-20_survie.png" />
+  <meta property="og:type" content="article" />
+  <link rel="alternate" hreflang="fr" href="https://merveille.fitigroup.org/article-analyse-survie-adoption.html" />
+  <link rel="alternate" hreflang="en" href="https://merveille.fitigroup.org/en/article-survival-analysis-adoption.html" />
+  <link rel="icon" href="../favicon.svg?v=2" type="image/svg+xml" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = { theme: { extend: {
+      colors: { night:'#222B38', navy:'#EE7A5C', steel:'#8A93A3', petrol:'#26303E', lagoon:'#F2A48F', sky:'#F7DCD1', pale:'#F7F5F2' },
+      fontFamily: { sans:['DM Sans','Arial','sans-serif'], display:['Plus Jakarta Sans','Arial','sans-serif'] } } } }
+  </script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    html { scroll-behavior: smooth; }
+    .ref { font-variant-numeric: tabular-nums; }
+    @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col bg-gradient-to-b from-pale via-pale to-sky text-night font-sans antialiased">
+
+  <header class="sticky top-0 z-50 bg-pale/95 backdrop-blur border-b border-navy/20">
+    <div class="max-w-6xl mx-auto px-5 sm:px-8 min-h-16 md:min-h-20 py-2 flex items-center justify-between gap-4">
+      <a href="index.html" class="font-display font-bold text-night text-base sm:text-lg md:text-xl tracking-tight">
+        Merveille <span class="text-navy hidden sm:inline">AGANZE SAMI</span>
+      </a>
+      <nav class="flex flex-wrap justify-end items-center gap-x-4 gap-y-1 sm:gap-x-6 md:gap-x-8 text-xs sm:text-sm md:text-[15px]">
+        <a href="index.html" class="text-night/70 hover:text-navy transition">Home</a>
+        <a href="blog.html" class="text-navy font-semibold">Blog</a>
+        <a href="expertise.html" class="text-night/70 hover:text-navy transition">Expertise</a>
+        <a href="projects.html" class="text-night/70 hover:text-navy transition">Projects</a>
+        <a href="../article-analyse-survie-adoption.html" class="text-[11px] font-semibold border border-navy/40 rounded-full px-3 py-1 text-night/70 hover:text-navy hover:border-navy/60 transition" title="Version française">FR</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="flex-1">
+    <section class="max-w-6xl mx-auto px-5 sm:px-8 pt-10 md:pt-14">
+      <div class="bg-gradient-to-br from-petrol to-night rounded-[2rem] md:rounded-[2.5rem] px-6 sm:px-10 md:px-14 py-12 md:py-14 relative overflow-hidden">
+        <div class="absolute -bottom-24 -right-16 w-80 h-80 bg-navy/20 rounded-full blur-2xl"></div>
+        <div class="relative max-w-3xl">
+          <a href="blog.html" class="inline-flex items-center gap-2 text-[#ffffff]/60 text-sm hover:text-lagoon transition mb-6"><i class="fas fa-arrow-left"></i> Back to blog</a>
+          <div class="flex flex-wrap items-center gap-2 mb-5">
+            <span class="text-[11px] font-semibold uppercase tracking-wider bg-gradient-to-r from-navy to-lagoon text-[#ffffff] rounded-full px-3 py-1">Article</span>
+            <span class="text-[11px] font-medium text-[#ffffff]/50"><i class="fas fa-calendar mr-1.5"></i>20 June 2026</span>
+            <span class="text-[11px] font-medium text-[#ffffff]/50"><i class="fas fa-clock mr-1.5"></i>10 min read</span>
+          </div>
+          <h1 class="font-display font-bold text-[#ffffff] text-3xl sm:text-4xl md:text-5xl leading-tight mb-5">Survival analysis:<br /><span class="bg-gradient-to-r from-navy to-lagoon bg-clip-text text-transparent">the “when” behind the “how many”</span></h1>
+          <p class="text-[#ffffff]/60 text-base mb-6">Handling censored data, estimating the adoption curve and modelling the factors that set the pace</p>
+          <div class="flex items-center gap-3">
+            <img src="../Photomerveille.jpg?v=2" alt="Merveille Aganze Sami" class="w-10 h-10 rounded-full object-cover ring-2 ring-[#ffffff]/30" />
+            <div class="text-sm">
+              <p class="text-[#ffffff] font-semibold">Merveille Aganze Sami</p>
+              <p class="text-[#ffffff]/50">MEL &amp; Database Management Advisor</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <article class="max-w-3xl mx-auto px-5 sm:px-8 py-12 md:py-16">
+
+      <figure class="mb-12">
+        <img src="../visuels/visuel_2026-06-20_survie.png" alt="Two step-shaped adoption curves with censoring marks, for a group near and a group far from the service" class="w-full rounded-2xl shadow-xl ring-1 ring-night/10" />
+        <figcaption class="text-night/60 text-sm mt-3 text-center"><strong class="text-night/70">Figure 1.</strong> Illustration: estimated adoption curves for two groups, with censoring marks. The gap in median time is more informative than a final rate.</figcaption>
+      </figure>
+
+      <p class="text-lg md:text-xl leading-9 text-night/80 mb-8">Monitoring systems generally report adoption of a practice through a rate measured at the end of the period: the proportion of households that adopted. This measure has the drawback of being a state, whereas the phenomenon studied is a process unfolding over time.</p>
+
+      <p class="leading-8 text-night/80 mb-5">Two projects reporting the same final rate may cover opposite dynamics: in one, most adoptions occurred within the first three months; in the other, they spread over two years. These two situations call for neither the same diagnosis nor the same operational decision.</p>
+
+      <h2 class="font-display font-bold text-night text-2xl md:text-3xl mb-5">1. The problem with computing a rate</h2>
+
+      <p class="leading-8 text-night/80 mb-5">A technical difficulty compounds this loss of information. Not all households are observed for the same length of time: some join partway through, others leave — relocation, withdrawal, end of the observation period. At the time of computation, all that is known is that they had not adopted <em>up to that point</em>.</p>
+
+      <div class="bg-sky/60 border-l-4 border-navy rounded-r-2xl p-5 md:p-6 mb-10">
+        <p class="leading-7 text-night/80 text-sm md:text-base"><i class="fas fa-circle-info text-navy mr-2"></i><strong class="text-night">Right censoring.</strong> These partial observations are neither adoptions nor non-adoptions: they constitute information about a minimum duration. Excluding them removes valid data and biases the result; counting them as non-adoptions asserts information one does not have. Survival analysis methods are built precisely to exploit this partial information.</p>
+      </div>
+
+      <h2 class="font-display font-bold text-night text-2xl md:text-3xl mb-5">2. Estimating the adoption curve</h2>
+
+      <p class="leading-8 text-night/80 mb-5">The reference non-parametric estimator reconstructs the probability of not yet having adopted at each point in time, updating that probability at each observed event and removing censored units from the denominator <a href="#ref-km" class="text-navy hover:underline">(Kaplan &amp; Meier, 1958)</a>. The result is a step curve whose reading directly yields operational quantities.</p>
+
+      <p class="leading-8 text-night/80 mb-5">The most useful is median time — the duration by which half the households have adopted. A mean is generally not computable under censoring, since the duration remains unknown for part of the sample. Comparison between two groups uses a dedicated test comparing the whole curves rather than a single point <a href="#ref-bland" class="text-navy hover:underline">(Bland &amp; Altman, 2004)</a>.</p>
+
+      <h2 class="font-display font-bold text-night text-2xl md:text-3xl mb-5">3. Quantifying the effect of factors</h2>
+
+      <p class="leading-8 text-night/80 mb-5">The proportional hazards model estimates the effect of several characteristics on the pace of adoption — distance to the service point, household composition, type of support — without imposing a particular form on the baseline curve <a href="#ref-cox" class="text-navy hover:underline">(Cox, 1972)</a>. Each coefficient is interpreted as an instantaneous rate ratio: a value of 1.5 indicates a pace of adoption half again as fast, at comparable other characteristics.</p>
+
+      <p class="leading-8 text-night/80 mb-5">One interpretive point matters here. The model describes a conditional association, not a causal effect. Attributing a causal role to a factor requires a separate identification design, such as the one presented in the article on <a href="article-propensity-score-matching.html" class="text-navy hover:underline font-medium">propensity score matching</a>.</p>
+
+      <h2 class="font-display font-bold text-night text-2xl md:text-3xl mb-5">4. Checking the model's assumption</h2>
+
+      <p class="leading-8 text-night/80 mb-5">The model assumes the rate ratio between two profiles stays constant over time. This assumption can be checked by examining residuals, and it is frequently violated in practice: close-support arrangements may sharply accelerate adoption in the early months and then cease to differentiate <a href="#ref-grambsch" class="text-navy hover:underline">(Grambsch &amp; Therneau, 1994)</a>.</p>
+
+      <p class="leading-8 text-night/80 mb-5">Where the assumption does not hold, two responses exist: stratify the model on the variable concerned, or introduce an interaction with time. Flagging the violation without addressing it yields coefficients whose interpretation is not the one announced.</p>
+
+      <h2 class="font-display font-bold text-night text-2xl md:text-3xl mb-5">5. Points to handle in a field system</h2>
+
+      <ul class="space-y-3.5 text-night/80 leading-7 mb-10">
+        <li class="flex items-start gap-3"><i class="fas fa-circle-exclamation text-navy mt-1.5"></i><span><strong class="text-night">Definition of the event.</strong> “Adopting” must correspond to an observable, dated criterion. A vague definition produces a duration variable whose measurement varies by enumerator.</span></li>
+        <li class="flex items-start gap-3"><i class="fas fa-circle-exclamation text-navy mt-1.5"></i><span><strong class="text-night">Interval censoring.</strong> Where monitoring visits are periodic, all that is known is that adoption occurred between two visits. Treating the visit date as the event date introduces systematic bias; methods for interval-censored data exist and should be used where visits are widely spaced.</span></li>
+        <li class="flex items-start gap-3"><i class="fas fa-circle-exclamation text-navy mt-1.5"></i><span><strong class="text-night">Informative censoring.</strong> If the households that leave monitoring are precisely those that would not have adopted, the estimate is optimistically biased. Reasons for exit must be recorded and analysed.</span></li>
+        <li class="flex items-start gap-3"><i class="fas fa-circle-exclamation text-navy mt-1.5"></i><span><strong class="text-night">Competing risks.</strong> A household that leaves the area or abandons the activity is not in the same situation as one still liable to adopt. Treating such exits as plain censoring overstates the probability of adoption; estimators accounting for competing events correct this bias <a href="#ref-fine" class="text-navy hover:underline">(Fine &amp; Gray, 1999)</a>.</span></li>
+        <li class="flex items-start gap-3"><i class="fas fa-circle-exclamation text-navy mt-1.5"></i><span><strong class="text-night">Within-village correlation.</strong> Households in the same locality share unobserved determinants. Standard errors must account for this, failing which precision is overstated.</span></li>
+      </ul>
+
+      <h2 class="font-display font-bold text-night text-2xl md:text-3xl mb-5">6. Integration into the collection tool</h2>
+
+      <p class="leading-8 text-night/80 mb-5">The practical condition is simple but often missing: the collection form must record event <em>dates</em>, not a binary status at the visit date. This modification, minor in tooling terms, conditions the entire analysis. Each timestamped visit then feeds a curve that updates as data arrive <a href="#ref-clark" class="text-navy hover:underline">(Clark et al., 2003)</a>.</p>
+
+      <p class="leading-8 text-night/80 mb-5">The dashboard thereby moves from a state indicator — is the target met — to a pace indicator, which flags a slowdown before the final rate is compromised.</p>
+
+      <div class="bg-gradient-to-br from-petrol to-night rounded-2xl p-6 md:p-8 mb-10">
+        <h2 class="font-display font-semibold text-[#ffffff] text-xl mb-4"><i class="fas fa-list-check text-lagoon mr-2"></i>Key points</h2>
+        <ul class="space-y-2.5 text-[#ffffff]/80 leading-7 text-sm md:text-base">
+          <li class="flex items-start gap-3"><i class="fas fa-check text-lagoon mt-1.5"></i>A final rate aggregates two very different dynamics: fast then flat, or slow and steady</li>
+          <li class="flex items-start gap-3"><i class="fas fa-check text-lagoon mt-1.5"></i>Exits from monitoring are minimum-duration information, not non-adoptions</li>
+          <li class="flex items-start gap-3"><i class="fas fa-check text-lagoon mt-1.5"></i>Median time is the readable quantity; the mean is generally not computable</li>
+          <li class="flex items-start gap-3"><i class="fas fa-check text-lagoon mt-1.5"></i>The proportional hazards model describes an association, not a causal effect</li>
+          <li class="flex items-start gap-3"><i class="fas fa-check text-lagoon mt-1.5"></i>The form must record event dates, not a status at the visit date</li>
+        </ul>
+      </div>
+
+      <p class="leading-8 text-night/80 mb-5">In programme monitoring, the question of “how many” frequently conceals a more directly actionable question of “when”. Measuring pace allows intervention mid-process; measuring a state only allows reporting after the fact.</p>
+
+      <div class="bg-white border border-night/10 shadow-sm rounded-2xl p-6 md:p-8 mb-10">
+        <h2 class="font-display font-semibold text-night text-xl mb-5"><i class="fas fa-book text-navy mr-2"></i>References</h2>
+        <ol class="space-y-4 text-night/75 text-sm leading-6 ref">
+          <li id="ref-bland">Bland, J. M., &amp; Altman, D. G. (2004). The logrank test. <em>BMJ</em>, 328(7447), 1073. <a href="https://doi.org/10.1136/bmj.328.7447.1073" target="_blank" class="text-navy hover:underline break-all">doi.org/10.1136/bmj.328.7447.1073</a></li>
+          <li id="ref-clark">Clark, T. G., Bradburn, M. J., Love, S. B., &amp; Altman, D. G. (2003). Survival Analysis Part I: Basic concepts and first analyses. <em>British Journal of Cancer</em>, 89(2), 232–238. <a href="https://doi.org/10.1038/sj.bjc.6601118" target="_blank" class="text-navy hover:underline break-all">doi.org/10.1038/sj.bjc.6601118</a></li>
+          <li id="ref-cox">Cox, D. R. (1972). Regression Models and Life-Tables. <em>Journal of the Royal Statistical Society: Series B</em>, 34(2), 187–202. <a href="https://doi.org/10.1111/j.2517-6161.1972.tb00899.x" target="_blank" class="text-navy hover:underline break-all">doi.org/10.1111/j.2517-6161.1972.tb00899.x</a></li>
+          <li id="ref-fine">Fine, J. P., &amp; Gray, R. J. (1999). A Proportional Hazards Model for the Subdistribution of a Competing Risk. <em>Journal of the American Statistical Association</em>, 94(446), 496–509. <a href="https://doi.org/10.1080/01621459.1999.10474144" target="_blank" class="text-navy hover:underline break-all">doi.org/10.1080/01621459.1999.10474144</a></li>
+          <li id="ref-grambsch">Grambsch, P. M., &amp; Therneau, T. M. (1994). Proportional hazards tests and diagnostics based on weighted residuals. <em>Biometrika</em>, 81(3), 515–526. <a href="https://doi.org/10.1093/biomet/81.3.515" target="_blank" class="text-navy hover:underline break-all">doi.org/10.1093/biomet/81.3.515</a></li>
+          <li id="ref-km">Kaplan, E. L., &amp; Meier, P. (1958). Nonparametric Estimation from Incomplete Observations. <em>Journal of the American Statistical Association</em>, 53(282), 457–481. <a href="https://doi.org/10.1080/01621459.1958.10501452" target="_blank" class="text-navy hover:underline break-all">doi.org/10.1080/01621459.1958.10501452</a></li>
+        </ol>
+      </div>
+
+      <div class="bg-white border border-night/10 shadow-sm rounded-2xl p-6 md:p-7 flex flex-col sm:flex-row items-center gap-5 mb-6">
+        <img src="../Photomerveille.jpg?v=2" alt="Merveille Aganze Sami" class="w-20 h-20 rounded-full object-cover ring-2 ring-navy/30" />
+        <div class="text-center sm:text-left">
+          <p class="font-display font-semibold text-night">Merveille Aganze Sami</p>
+          <p class="text-night/70 text-sm leading-6 mt-1">MEL &amp; Database Management Advisor. 9+ years of experience in monitoring &amp; evaluation, GIS and digitalization with international organizations (GIZ, Enabel) in DR Congo.</p>
+          <div class="flex justify-center sm:justify-start gap-4 mt-3 text-sm">
+            <a href="https://www.linkedin.com/in/mervag27/?skipRedirect=true" target="_blank" class="text-navy font-medium hover:text-night transition"><i class="fab fa-linkedin mr-1.5"></i>LinkedIn</a>
+            <a href="contact.html" class="text-navy font-medium hover:text-night transition"><i class="fas fa-envelope mr-1.5"></i>Contact me</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="flex flex-col sm:flex-row items-center justify-between gap-4 bg-sky/60 rounded-2xl p-6">
+        <p class="text-night/80 font-medium text-center sm:text-left">Adoption monitoring to structure?</p>
+        <a href="contact.html" class="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-navy to-lagoon text-[#ffffff] font-semibold px-6 py-2.5 shadow-md hover:-translate-y-0.5 transition whitespace-nowrap">Get in touch <i class="fas fa-arrow-right"></i></a>
+      </div>
+    </article>
+  </main>
+
+  <footer class="mt-16 bg-gradient-to-br from-petrol to-night text-[#ffffff]">
+    <div class="max-w-6xl mx-auto px-5 sm:px-8 pt-12 md:pt-16 pb-8">
+      <div class="grid gap-10 md:grid-cols-[1.2fr_0.7fr_1.1fr]">
+        <div>
+          <p class="font-display font-bold text-xl mb-3">Merveille <span class="bg-gradient-to-r from-navy to-lagoon bg-clip-text text-transparent">AGANZE SAMI</span></p>
+          <p class="text-[#ffffff]/60 text-sm leading-7 max-w-xs">MEL &amp; Database Management Advisor. Data, GIS and digitalization at the service of your decisions.</p>
+          <div class="flex items-center gap-3 mt-6">
+            <a href="https://www.linkedin.com/in/mervag27/?skipRedirect=true" target="_blank" class="inline-flex items-center justify-center w-10 h-10 rounded-full bg-[#ffffff]/10 hover:bg-navy transition" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+            <a href="https://github.com/MerveAS" target="_blank" class="inline-flex items-center justify-center w-10 h-10 rounded-full bg-[#ffffff]/10 hover:bg-navy transition" aria-label="GitHub"><i class="fab fa-github"></i></a>
+          </div>
+        </div>
+        <div>
+          <h3 class="font-display font-semibold text-xs uppercase tracking-[0.2em] text-[#ffffff]/50 mb-4">Navigation</h3>
+          <ul class="space-y-2.5 text-sm">
+            <li><a href="index.html" class="text-[#ffffff]/70 hover:text-lagoon transition">Home</a></li>
+            <li><a href="blog.html" class="text-[#ffffff]/70 hover:text-lagoon transition">Blog</a></li>
+            <li><a href="expertise.html" class="text-[#ffffff]/70 hover:text-lagoon transition">Expertise</a></li>
+            <li><a href="projects.html" class="text-[#ffffff]/70 hover:text-lagoon transition">Projects</a></li>
+            <li><a href="contact.html" class="text-[#ffffff]/70 hover:text-lagoon transition">Contact</a></li>
+          </ul>
+        </div>
+        <div>
+          <h3 class="font-display font-semibold text-xs uppercase tracking-[0.2em] text-[#ffffff]/50 mb-4">Contact</h3>
+          <ul class="space-y-3 text-sm text-[#ffffff]/70">
+            <li class="flex items-center gap-3"><span class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-[#ffffff]/10 text-lagoon text-xs"><i class="fas fa-phone"></i></span>+243 850 012 270</li>
+            <li class="flex items-center gap-3"><span class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-[#ffffff]/10 text-lagoon text-xs"><i class="fas fa-envelope"></i></span><a href="mailto:merveille.aganzesami@fitigroup.org" class="hover:text-lagoon transition break-all">merveille.aganzesami@fitigroup.org</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="mt-10 pt-6 border-t border-[#ffffff]/10 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-[#ffffff]/50">
+        <p>© 2026 Merveille AGANZE SAMI — All rights reserved · <span class="text-[#ffffff]/30">v2.2</span></p>
+        <a href="#" onclick="window.scrollTo({top:0,behavior:'smooth'});return false;" class="inline-flex items-center gap-2 hover:text-lagoon transition">Back to top <i class="fas fa-arrow-up"></i></a>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>

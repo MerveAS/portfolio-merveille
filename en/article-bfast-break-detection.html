@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Break detection in image time series: dating the shift rather than noting it | Merveille Aganze Sami</title>
+  <meta name="description" content="Comparing two dates conflates seasonal variation with real change. Analysing a pixel's full series identifies when the signal's behaviour changed, with a date and a magnitude." />
+  <meta property="og:title" content="Break detection in image time series: dating the shift rather than noting it" />
+  <meta property="og:description" content="Comparing two dates conflates seasonal variation with real change. Analysing a pixel's full series identifies when the signal's behaviour changed, with a date and a magnitude." />
+  <meta property="og:image" content="../visuels/visuel_2026-06-22_bfast.png" />
+  <meta property="og:type" content="article" />
+  <link rel="alternate" hreflang="fr" href="https://merveille.fitigroup.org/article-detection-ruptures-bfast.html" />
+  <link rel="alternate" hreflang="en" href="https://merveille.fitigroup.org/en/article-bfast-break-detection.html" />
+  <link rel="icon" href="../favicon.svg?v=2" type="image/svg+xml" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = { theme: { extend: {
+      colors: { night:'#222B38', navy:'#EE7A5C', steel:'#8A93A3', petrol:'#26303E', lagoon:'#F2A48F', sky:'#F7DCD1', pale:'#F7F5F2' },
+      fontFamily: { sans:['DM Sans','Arial','sans-serif'], display:['Plus Jakarta Sans','Arial','sans-serif'] } } } }
+  </script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    html { scroll-behavior: smooth; }
+    .ref { font-variant-numeric: tabular-nums; }
+    @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col bg-gradient-to-b from-pale via-pale to-sky text-night font-sans antialiased">
+
+  <header class="sticky top-0 z-50 bg-pale/95 backdrop-blur border-b border-navy/20">
+    <div class="max-w-6xl mx-auto px-5 sm:px-8 min-h-16 md:min-h-20 py-2 flex items-center justify-between gap-4">
+      <a href="index.html" class="font-display font-bold text-night text-base sm:text-lg md:text-xl tracking-tight">
+        Merveille <span class="text-navy hidden sm:inline">AGANZE SAMI</span>
+      </a>
+      <nav class="flex flex-wrap justify-end items-center gap-x-4 gap-y-1 sm:gap-x-6 md:gap-x-8 text-xs sm:text-sm md:text-[15px]">
+        <a href="index.html" class="text-night/70 hover:text-navy transition">Home</a>
+        <a href="blog.html" class="text-navy font-semibold">Blog</a>
+        <a href="expertise.html" class="text-night/70 hover:text-navy transition">Expertise</a>
+        <a href="projects.html" class="text-night/70 hover:text-navy transition">Projects</a>
+        <a href="../article-detection-ruptures-bfast.html" class="text-[11px] font-semibold border border-navy/40 rounded-full px-3 py-1 text-night/70 hover:text-navy hover:border-navy/60 transition" title="Version française">FR</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="flex-1">
+    <section class="max-w-6xl mx-auto px-5 sm:px-8 pt-10 md:pt-14">
+      <div class="bg-gradient-to-br from-petrol to-night rounded-[2rem] md:rounded-[2.5rem] px-6 sm:px-10 md:px-14 py-12 md:py-14 relative overflow-hidden">
+        <div class="absolute -bottom-24 -right-16 w-80 h-80 bg-navy/20 rounded-full blur-2xl"></div>
+        <div class="relative max-w-3xl">
+          <a href="blog.html" class="inline-flex items-center gap-2 text-[#ffffff]/60 text-sm hover:text-lagoon transition mb-6"><i class="fas fa-arrow-left"></i> Back to blog</a>
+          <div class="flex flex-wrap items-center gap-2 mb-5">
+            <span class="text-[11px] font-semibold uppercase tracking-wider bg-gradient-to-r from-navy to-lagoon text-[#ffffff] rounded-full px-3 py-1">Article</span>
+            <span class="text-[11px] font-medium text-[#ffffff]/50"><i class="fas fa-calendar mr-1.5"></i>22 June 2026</span>
+            <span class="text-[11px] font-medium text-[#ffffff]/50"><i class="fas fa-clock mr-1.5"></i>10 min read</span>
+          </div>
+          <h1 class="font-display font-bold text-[#ffffff] text-3xl sm:text-4xl md:text-5xl leading-tight mb-5">Break detection:<br /><span class="bg-gradient-to-r from-navy to-lagoon bg-clip-text text-transparent">dating the shift, not noting it</span></h1>
+          <p class="text-[#ffffff]/60 text-base mb-6">Per-pixel time series decomposition, break date estimation and near real-time monitoring</p>
+          <div class="flex items-center gap-3">
+            <img src="../Photomerveille.jpg?v=2" alt="Merveille Aganze Sami" class="w-10 h-10 rounded-full object-cover ring-2 ring-[#ffffff]/30" />
+            <div class="text-sm">
+              <p class="text-[#ffffff] font-semibold">Merveille Aganze Sami</p>
+              <p class="text-[#ffffff]/50">MEL &amp; Database Management Advisor</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <article class="max-w-3xl mx-auto px-5 sm:px-8 py-12 md:py-16">
+
+      <figure class="mb-12">
+        <img src="../visuels/visuel_2026-06-22_bfast.png" alt="Decomposition of a vegetation index series into observed signal, trend and seasonality, with a dated break" class="w-full rounded-2xl shadow-xl ring-1 ring-night/10" />
+        <figcaption class="text-night/60 text-sm mt-3 text-center"><strong class="text-night/70">Figure 1.</strong> Illustration: observed series, trend component and seasonal component. The break is estimated on the trend, once the regular cycle has been removed.</figcaption>
+      </figure>
+
+      <p class="text-lg md:text-xl leading-9 text-night/80 mb-8">Open satellite archives now provide several observations per month over the same plot, with decades of historical depth. This density of information contrasts with common environmental monitoring practice, which often rests on comparing two images — a baseline situation and a current one.</p>
+
+      <p class="leading-8 text-night/80 mb-5">This two-date comparison has two symmetrical weaknesses. It may flag change where there is only a difference in phenology or acquisition conditions. And it may miss gradual degradation whose amplitude between two dates stays below ordinary seasonal variability. In both cases, information about <em>when</em> the change occurred is lost.</p>
+
+      <h2 class="font-display font-bold text-night text-2xl md:text-3xl mb-5">1. Reading the series rather than two snapshots</h2>
+
+      <p class="leading-8 text-night/80 mb-5">The approach treats each pixel as a time series in its own right and separates its components: a trend, a seasonal cycle and a remainder. This decomposition, presented in the article on <a href="article-stl-decomposition.html" class="text-navy hover:underline font-medium">seasonal decomposition</a>, is the prerequisite. Break detection then applies to the isolated components rather than to the raw signal <a href="#ref-verbesselt2010a" class="text-navy hover:underline">(Verbesselt et al., 2010a)</a>.</p>
+
+      <p class="leading-8 text-night/80 mb-5">The statistical framework used is that of structural change detection in a regression model: identifying the points at which the model parameters cease to be stable, and estimating their position and the associated uncertainty <a href="#ref-bai" class="text-navy hover:underline">(Bai &amp; Perron, 2003)</a>.</p>
+
+      <div class="bg-sky/60 border-l-4 border-navy rounded-r-2xl p-5 md:p-6 mb-10">
+        <p class="leading-7 text-night/80 text-sm md:text-base"><i class="fas fa-circle-info text-navy mr-2"></i><strong class="text-night">Two kinds of break.</strong> A break in the trend component reflects a change in level or slope — clearing, wood extraction, conversion to cropland. A break in the seasonal component reflects a change in the cycle itself — a shift in the growing period, an altered water regime. These two signals do not carry the same ecological meaning and deserve to be distinguished when reporting <a href="#ref-verbesselt2010b" class="text-navy hover:underline">(Verbesselt et al., 2010b)</a>.</p>
+      </div>
+
+      <h2 class="font-display font-bold text-night text-2xl md:text-3xl mb-5">2. Parameters to decide</h2>
+
+      <ol class="space-y-4 text-night/80 leading-7 mb-10 list-none">
+        <li class="flex items-start gap-4"><span class="flex-none inline-flex items-center justify-center w-8 h-8 rounded-full bg-gradient-to-br from-navy to-lagoon text-[#ffffff] text-sm font-bold">1</span><span><strong class="text-night">Seasonal frequency.</strong> Number of observations per annual cycle. It must match the actual structure of acquisitions after masking, not the sensor's theoretical revisit rate.</span></li>
+        <li class="flex items-start gap-4"><span class="flex-none inline-flex items-center justify-center w-8 h-8 rounded-full bg-gradient-to-br from-navy to-lagoon text-[#ffffff] text-sm font-bold">2</span><span><strong class="text-night">Minimum segment length.</strong> This parameter sets the duration below which a variation is not treated as a break. It directly trades sensitivity against robustness: a low value detects more breaks, an increasing share of which are false positives.</span></li>
+        <li class="flex items-start gap-4"><span class="flex-none inline-flex items-center justify-center w-8 h-8 rounded-full bg-gradient-to-br from-navy to-lagoon text-[#ffffff] text-sm font-bold">3</span><span><strong class="text-night">Maximum number of breaks.</strong> This bounds model complexity. A high value allows a succession of events to be tracked; in return it increases the risk of segmenting noise.</span></li>
+        <li class="flex items-start gap-4"><span class="flex-none inline-flex items-center justify-center w-8 h-8 rounded-full bg-gradient-to-br from-navy to-lagoon text-[#ffffff] text-sm font-bold">4</span><span><strong class="text-night">Order of the seasonal term.</strong> This determines how finely the cycle is modelled. Too high an order absorbs part of the change signal into the seasonal component.</span></li>
+      </ol>
+
+      <h2 class="font-display font-bold text-night text-2xl md:text-3xl mb-5">3. The continuous monitoring variant</h2>
+
+      <p class="leading-8 text-night/80 mb-5">A distinct formulation addresses a different operational need: detecting a break as it happens rather than retrospectively. It rests on defining a historical period judged stable, on which a model is fitted, then monitoring new observations: when these depart durably from what the model predicts, an alert is issued <a href="#ref-verbesselt2012" class="text-navy hover:underline">(Verbesselt et al., 2012)</a>.</p>
+
+      <p class="leading-8 text-night/80 mb-5">This approach turns monitoring into an alert system. It imposes a demanding condition, however: the historical period must genuinely be free of breaks. Degradation already under way within the history will be absorbed into the reference model and never flagged.</p>
+
+      <h2 class="font-display font-bold text-night text-2xl md:text-3xl mb-5">4. Reducing false alerts</h2>
+
+      <ul class="space-y-3.5 text-night/80 leading-7 mb-10">
+        <li class="flex items-start gap-3"><i class="fas fa-circle-exclamation text-navy mt-1.5"></i><span><strong class="text-night">Interannual climate variability.</strong> A particularly dry season produces a departure from the model that is not degradation. Comparing a pixel's behaviour with that of its immediate neighbourhood, rather than with its own history alone, appreciably reduces this type of false positive <a href="#ref-hamunyela" class="text-navy hover:underline">(Hamunyela et al., 2016)</a>.</span></li>
+        <li class="flex items-start gap-3"><i class="fas fa-circle-exclamation text-navy mt-1.5"></i><span><strong class="text-night">Observation gaps.</strong> Prolonged cloud cover reduces the number of available observations and delays detection. The number of valid observations per pixel should be mapped alongside the results.</span></li>
+        <li class="flex items-start gap-3"><i class="fas fa-circle-exclamation text-navy mt-1.5"></i><span><strong class="text-night">Sensor change.</strong> An unharmonised instrumental transition will be read as a break, on an identical date across the whole territory — a recognisable signature that should prompt a review of pre-processing.</span></li>
+        <li class="flex items-start gap-3"><i class="fas fa-circle-exclamation text-navy mt-1.5"></i><span><strong class="text-night">Sample-based validation.</strong> A break map must be validated on an independent reference sample, with omission and commission rates estimated. Without this step, neither the affected area nor the average date is interpretable.</span></li>
+        <li class="flex items-start gap-3"><i class="fas fa-circle-exclamation text-navy mt-1.5"></i><span><strong class="text-night">A detected break is not an identified cause.</strong> The method dates a change in the signal's behaviour; it does not indicate its cause. Attribution to a specific activity is a separate verification, on very-high-resolution imagery or in the field.</span></li>
+      </ul>
+
+      <h2 class="font-display font-bold text-night text-2xl md:text-3xl mb-5">5. What the method adds to monitoring</h2>
+
+      <p class="leading-8 text-night/80 mb-5">The main contribution is dating. Knowing when a shift occurred allows it to be related to documented events — the arrival of an operator, the opening of a track, a climatic episode, a regulatory change — and therefore to formulate testable attribution hypotheses. A change map without dates does not allow this.</p>
+
+      <p class="leading-8 text-night/80 mb-5">The second contribution concerns magnitude, which distinguishes partial degradation from complete conversion. Combined with the date, it produces an indicator usable over time: area affected per period, with a level of impact, rather than a bare statement of difference between two years.</p>
+
+      <div class="bg-gradient-to-br from-petrol to-night rounded-2xl p-6 md:p-8 mb-10">
+        <h2 class="font-display font-semibold text-[#ffffff] text-xl mb-4"><i class="fas fa-list-check text-lagoon mr-2"></i>Key points</h2>
+        <ul class="space-y-2.5 text-[#ffffff]/80 leading-7 text-sm md:text-base">
+          <li class="flex items-start gap-3"><i class="fas fa-check text-lagoon mt-1.5"></i>Comparing two dates conflates seasonal variation with structural change</li>
+          <li class="flex items-start gap-3"><i class="fas fa-check text-lagoon mt-1.5"></i>The break is estimated on the decomposed components, not on the raw signal</li>
+          <li class="flex items-start gap-3"><i class="fas fa-check text-lagoon mt-1.5"></i>Minimum segment length and maximum number of breaks trade sensitivity against robustness</li>
+          <li class="flex items-start gap-3"><i class="fas fa-check text-lagoon mt-1.5"></i>The monitoring variant assumes a genuinely stable historical period</li>
+          <li class="flex items-start gap-3"><i class="fas fa-check text-lagoon mt-1.5"></i>A break map must be validated on an independent sample before any decision use</li>
+        </ul>
+      </div>
+
+      <p class="leading-8 text-night/80 mb-5">The value of a satellite archive lies not in the number of images it holds, but in the ability to exploit the temporal continuity linking them. It is that continuity which allows a change to be dated rather than merely noted.</p>
+
+      <div class="bg-white border border-night/10 shadow-sm rounded-2xl p-6 md:p-8 mb-10">
+        <h2 class="font-display font-semibold text-night text-xl mb-5"><i class="fas fa-book text-navy mr-2"></i>References</h2>
+        <ol class="space-y-4 text-night/75 text-sm leading-6 ref">
+          <li id="ref-bai">Bai, J., &amp; Perron, P. (2003). Computation and analysis of multiple structural change models. <em>Journal of Applied Econometrics</em>, 18(1), 1–22. <a href="https://doi.org/10.1002/jae.659" target="_blank" class="text-navy hover:underline break-all">doi.org/10.1002/jae.659</a></li>
+          <li id="ref-hamunyela">Hamunyela, E., Verbesselt, J., &amp; Herold, M. (2016). Using spatial context to improve early detection of deforestation from Landsat time series. <em>Remote Sensing of Environment</em>, 172, 126–138. <a href="https://doi.org/10.1016/j.rse.2015.11.006" target="_blank" class="text-navy hover:underline break-all">doi.org/10.1016/j.rse.2015.11.006</a></li>
+          <li id="ref-verbesselt2010a">Verbesselt, J., Hyndman, R., Newnham, G., &amp; Culvenor, D. (2010a). Detecting trend and seasonal changes in satellite image time series. <em>Remote Sensing of Environment</em>, 114(1), 106–115. <a href="https://doi.org/10.1016/j.rse.2009.08.014" target="_blank" class="text-navy hover:underline break-all">doi.org/10.1016/j.rse.2009.08.014</a></li>
+          <li id="ref-verbesselt2010b">Verbesselt, J., Hyndman, R., Zeileis, A., &amp; Culvenor, D. (2010b). Phenological change detection while accounting for abrupt and gradual trends in satellite image time series. <em>Remote Sensing of Environment</em>, 114(12), 2970–2980. <a href="https://doi.org/10.1016/j.rse.2010.08.003" target="_blank" class="text-navy hover:underline break-all">doi.org/10.1016/j.rse.2010.08.003</a></li>
+          <li id="ref-verbesselt2012">Verbesselt, J., Zeileis, A., &amp; Herold, M. (2012). Near real-time disturbance detection using satellite image time series. <em>Remote Sensing of Environment</em>, 123, 98–108. <a href="https://doi.org/10.1016/j.rse.2012.02.022" target="_blank" class="text-navy hover:underline break-all">doi.org/10.1016/j.rse.2012.02.022</a></li>
+        </ol>
+      </div>
+
+      <div class="bg-white border border-night/10 shadow-sm rounded-2xl p-6 md:p-7 flex flex-col sm:flex-row items-center gap-5 mb-6">
+        <img src="../Photomerveille.jpg?v=2" alt="Merveille Aganze Sami" class="w-20 h-20 rounded-full object-cover ring-2 ring-navy/30" />
+        <div class="text-center sm:text-left">
+          <p class="font-display font-semibold text-night">Merveille Aganze Sami</p>
+          <p class="text-night/70 text-sm leading-6 mt-1">MEL &amp; Database Management Advisor. 9+ years of experience in monitoring &amp; evaluation, GIS and digitalization with international organizations (GIZ, Enabel) in DR Congo.</p>
+          <div class="flex justify-center sm:justify-start gap-4 mt-3 text-sm">
+            <a href="https://www.linkedin.com/in/mervag27/?skipRedirect=true" target="_blank" class="text-navy font-medium hover:text-night transition"><i class="fab fa-linkedin mr-1.5"></i>LinkedIn</a>
+            <a href="contact.html" class="text-navy font-medium hover:text-night transition"><i class="fas fa-envelope mr-1.5"></i>Contact me</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="flex flex-col sm:flex-row items-center justify-between gap-4 bg-sky/60 rounded-2xl p-6">
+        <p class="text-night/80 font-medium text-center sm:text-left">Degradation monitoring to equip?</p>
+        <a href="contact.html" class="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-navy to-lagoon text-[#ffffff] font-semibold px-6 py-2.5 shadow-md hover:-translate-y-0.5 transition whitespace-nowrap">Get in touch <i class="fas fa-arrow-right"></i></a>
+      </div>
+    </article>
+  </main>
+
+  <footer class="mt-16 bg-gradient-to-br from-petrol to-night text-[#ffffff]">
+    <div class="max-w-6xl mx-auto px-5 sm:px-8 pt-12 md:pt-16 pb-8">
+      <div class="grid gap-10 md:grid-cols-[1.2fr_0.7fr_1.1fr]">
+        <div>
+          <p class="font-display font-bold text-xl mb-3">Merveille <span class="bg-gradient-to-r from-navy to-lagoon bg-clip-text text-transparent">AGANZE SAMI</span></p>
+          <p class="text-[#ffffff]/60 text-sm leading-7 max-w-xs">MEL &amp; Database Management Advisor. Data, GIS and digitalization at the service of your decisions.</p>
+          <div class="flex items-center gap-3 mt-6">
+            <a href="https://www.linkedin.com/in/mervag27/?skipRedirect=true" target="_blank" class="inline-flex items-center justify-center w-10 h-10 rounded-full bg-[#ffffff]/10 hover:bg-navy transition" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+            <a href="https://github.com/MerveAS" target="_blank" class="inline-flex items-center justify-center w-10 h-10 rounded-full bg-[#ffffff]/10 hover:bg-navy transition" aria-label="GitHub"><i class="fab fa-github"></i></a>
+          </div>
+        </div>
+        <div>
+          <h3 class="font-display font-semibold text-xs uppercase tracking-[0.2em] text-[#ffffff]/50 mb-4">Navigation</h3>
+          <ul class="space-y-2.5 text-sm">
+            <li><a href="index.html" class="text-[#ffffff]/70 hover:text-lagoon transition">Home</a></li>
+            <li><a href="blog.html" class="text-[#ffffff]/70 hover:text-lagoon transition">Blog</a></li>
+            <li><a href="expertise.html" class="text-[#ffffff]/70 hover:text-lagoon transition">Expertise</a></li>
+            <li><a href="projects.html" class="text-[#ffffff]/70 hover:text-lagoon transition">Projects</a></li>
+            <li><a href="contact.html" class="text-[#ffffff]/70 hover:text-lagoon transition">Contact</a></li>
+          </ul>
+        </div>
+        <div>
+          <h3 class="font-display font-semibold text-xs uppercase tracking-[0.2em] text-[#ffffff]/50 mb-4">Contact</h3>
+          <ul class="space-y-3 text-sm text-[#ffffff]/70">
+            <li class="flex items-center gap-3"><span class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-[#ffffff]/10 text-lagoon text-xs"><i class="fas fa-phone"></i></span>+243 850 012 270</li>
+            <li class="flex items-center gap-3"><span class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-[#ffffff]/10 text-lagoon text-xs"><i class="fas fa-envelope"></i></span><a href="mailto:merveille.aganzesami@fitigroup.org" class="hover:text-lagoon transition break-all">merveille.aganzesami@fitigroup.org</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="mt-10 pt-6 border-t border-[#ffffff]/10 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-[#ffffff]/50">
+        <p>© 2026 Merveille AGANZE SAMI — All rights reserved · <span class="text-[#ffffff]/30">v2.2</span></p>
+        <a href="#" onclick="window.scrollTo({top:0,behavior:'smooth'});return false;" class="inline-flex items-center gap-2 hover:text-lagoon transition">Back to top <i class="fas fa-arrow-up"></i></a>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>
