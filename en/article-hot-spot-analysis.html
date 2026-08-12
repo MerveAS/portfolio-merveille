@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Hot spot analysis: distinguishing a structural cluster from an isolated value | Merveille Aganze Sami</title>
+  <meta name="description" content="Comparing each area with a threshold treats territories as independent. The Getis-Ord statistic tests whether a cluster of extreme values exceeds what chance would explain." />
+  <meta property="og:title" content="Hot spot analysis: distinguishing a structural cluster from an isolated value" />
+  <meta property="og:description" content="Comparing each area with a threshold treats territories as independent. The Getis-Ord statistic tests whether a cluster of extreme values exceeds what chance would explain." />
+  <meta property="og:image" content="../visuels/visuel_2026-07-05_hotspot_gi.png" />
+  <meta property="og:type" content="article" />
+  <link rel="alternate" hreflang="fr" href="https://merveille.fitigroup.org/article-hot-spots-getis-ord.html" />
+  <link rel="alternate" hreflang="en" href="https://merveille.fitigroup.org/en/article-hot-spot-analysis.html" />
+  <link rel="icon" href="../favicon.svg?v=2" type="image/svg+xml" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = { theme: { extend: {
+      colors: { night:'#222B38', navy:'#EE7A5C', steel:'#8A93A3', petrol:'#26303E', lagoon:'#F2A48F', sky:'#F7DCD1', pale:'#F7F5F2' },
+      fontFamily: { sans:['DM Sans','Arial','sans-serif'], display:['Plus Jakarta Sans','Arial','sans-serif'] } } } }
+  </script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    html { scroll-behavior: smooth; }
+    .ref { font-variant-numeric: tabular-nums; }
+    @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col bg-gradient-to-b from-pale via-pale to-sky text-night font-sans antialiased">
+
+  <header class="sticky top-0 z-50 bg-pale/95 backdrop-blur border-b border-navy/20">
+    <div class="max-w-6xl mx-auto px-5 sm:px-8 min-h-16 md:min-h-20 py-2 flex items-center justify-between gap-4">
+      <a href="index.html" class="font-display font-bold text-night text-base sm:text-lg md:text-xl tracking-tight">
+        Merveille <span class="text-navy hidden sm:inline">AGANZE SAMI</span>
+      </a>
+      <nav class="flex flex-wrap justify-end items-center gap-x-4 gap-y-1 sm:gap-x-6 md:gap-x-8 text-xs sm:text-sm md:text-[15px]">
+        <a href="index.html" class="text-night/70 hover:text-navy transition">Home</a>
+        <a href="blog.html" class="text-navy font-semibold">Blog</a>
+        <a href="expertise.html" class="text-night/70 hover:text-navy transition">Expertise</a>
+        <a href="projects.html" class="text-night/70 hover:text-navy transition">Projects</a>
+        <a href="../article-hot-spots-getis-ord.html" class="text-[11px] font-semibold border border-navy/40 rounded-full px-3 py-1 text-night/70 hover:text-navy hover:border-navy/60 transition" title="Version française">FR</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="flex-1">
+    <section class="max-w-6xl mx-auto px-5 sm:px-8 pt-10 md:pt-14">
+      <div class="bg-gradient-to-br from-petrol to-night rounded-[2rem] md:rounded-[2.5rem] px-6 sm:px-10 md:px-14 py-12 md:py-14 relative overflow-hidden">
+        <div class="absolute -bottom-24 -right-16 w-80 h-80 bg-navy/20 rounded-full blur-2xl"></div>
+        <div class="relative max-w-3xl">
+          <a href="blog.html" class="inline-flex items-center gap-2 text-[#ffffff]/60 text-sm hover:text-lagoon transition mb-6"><i class="fas fa-arrow-left"></i> Back to blog</a>
+          <div class="flex flex-wrap items-center gap-2 mb-5">
+            <span class="text-[11px] font-semibold uppercase tracking-wider bg-gradient-to-r from-navy to-lagoon text-[#ffffff] rounded-full px-3 py-1">Article</span>
+            <span class="text-[11px] font-medium text-[#ffffff]/50"><i class="fas fa-calendar mr-1.5"></i>5 July 2026</span>
+            <span class="text-[11px] font-medium text-[#ffffff]/50"><i class="fas fa-clock mr-1.5"></i>10 min read</span>
+          </div>
+          <h1 class="font-display font-bold text-[#ffffff] text-3xl sm:text-4xl md:text-5xl leading-tight mb-5">Hot spots:<br /><span class="bg-gradient-to-r from-navy to-lagoon bg-clip-text text-transparent">a structural cluster or an isolated value?</span></h1>
+          <p class="text-[#ffffff]/60 text-base mb-6">The Getis-Ord statistic, neighbourhood matrix choices and multiple-testing correction for territorial prioritisation</p>
+          <div class="flex items-center gap-3">
+            <img src="../Photomerveille.jpg?v=2" alt="Merveille Aganze Sami" class="w-10 h-10 rounded-full object-cover ring-2 ring-[#ffffff]/30" />
+            <div class="text-sm">
+              <p class="text-[#ffffff] font-semibold">Merveille Aganze Sami</p>
+              <p class="text-[#ffffff]/50">MEL &amp; Database Management Advisor</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <article class="max-w-3xl mx-auto px-5 sm:px-8 py-12 md:py-16">
+
+      <figure class="mb-12">
+        <img src="../visuels/visuel_2026-07-05_hotspot_gi.png" alt="Map of hot and cold spots from the Getis-Ord statistic, with three confidence levels" class="w-full rounded-2xl shadow-xl ring-1 ring-night/10" />
+        <figcaption class="text-night/60 text-sm mt-3 text-center"><strong class="text-night/70">Figure 1.</strong> Illustration: units classified by the local statistic, with three confidence levels. The reading concerns the structure of clusters, not the raw value of each unit.</figcaption>
+      </figure>
+
+      <p class="text-lg md:text-xl leading-9 text-night/80 mb-8">Territorial prioritisation commonly relies on a unit-by-unit comparison: each area is measured against a threshold, classified above or below, and the list of struggling areas is drawn up. This procedure implicitly treats units as independent of one another.</p>
+
+      <p class="leading-8 text-night/80 mb-5">That assumption raises an interpretation difficulty. An area with a low indicator whose neighbours show comparable values describes a different situation from an isolated area surrounded by high values. The first suggests a regional determinant — an access barrier, an agro-ecological context, a failing structural service; the second more likely reflects a local cause or sampling variability. The two call for distinct responses.</p>
+
+      <h2 class="font-display font-bold text-night text-2xl md:text-3xl mb-5">1. What the local statistic measures</h2>
+
+      <p class="leading-8 text-night/80 mb-5">The Getis-Ord statistic compares, for each unit, the sum of values observed in its neighbourhood — including the unit itself in the starred version — with the sum that would be expected if values were distributed without spatial structure. The gap is standardised into a z-score whose sign indicates a cluster of high or low values and whose magnitude indicates the degree of departure from the no-structure hypothesis <a href="#ref-getis-ord" class="text-navy hover:underline">(Getis &amp; Ord, 1992)</a>. The distributional properties of this family of local statistics were subsequently clarified <a href="#ref-ord-getis" class="text-navy hover:underline">(Ord &amp; Getis, 1995)</a>.</p>
+
+      <div class="bg-sky/60 border-l-4 border-navy rounded-r-2xl p-5 md:p-6 mb-10">
+        <p class="leading-7 text-night/80 text-sm md:text-base"><i class="fas fa-circle-info text-navy mr-2"></i><strong class="text-night">One statistic among others.</strong> This approach identifies clusters of same-signed values. Local indicators of spatial association of the LISA family answer a neighbouring but distinct question: they also detect negative associations, that is, units whose value contrasts with that of their neighbourhood <a href="#ref-anselin" class="text-navy hover:underline">(Anselin, 1995)</a>. The two families are complementary — this topic is developed in the article on <a href="article-spatial-autocorrelation.html" class="text-navy hover:underline font-medium">spatial autocorrelation</a>.</p>
+      </div>
+
+      <h2 class="font-display font-bold text-night text-2xl md:text-3xl mb-5">2. The neighbourhood matrix is the main decision</h2>
+
+      <p class="leading-8 text-night/80 mb-5">The result depends directly on the definition of neighbourhood adopted. Four options are in common use, and the choice should be justified by the nature of the phenomenon rather than by the software default.</p>
+
+      <ul class="space-y-3 text-night/80 leading-7 mb-10">
+        <li class="flex items-start gap-3"><i class="fas fa-circle-check text-navy mt-1.5"></i><span><strong class="text-night">Contiguity.</strong> Two units are neighbours if they share a boundary. Suited to a regular administrative mesh, this criterion becomes problematic where units are of very unequal size.</span></li>
+        <li class="flex items-start gap-3"><i class="fas fa-circle-check text-navy mt-1.5"></i><span><strong class="text-night">Distance threshold.</strong> All units within a given distance are neighbours. The threshold should correspond to a scale meaningful for the phenomenon — catchment reach, mobility radius.</span></li>
+        <li class="flex items-start gap-3"><i class="fas fa-circle-check text-navy mt-1.5"></i><span><strong class="text-night">k nearest neighbours.</strong> Each unit has the same number of neighbours, which homogenises treatment where density varies strongly, at the cost of a varying effective distance.</span></li>
+        <li class="flex items-start gap-3"><i class="fas fa-circle-check text-navy mt-1.5"></i><span><strong class="text-night">Continuous weighting.</strong> Influence decays with distance rather than vanishing at a threshold. More realistic for diffusive phenomena, this option requires setting the form of decay.</span></li>
+      </ul>
+
+      <p class="leading-8 text-night/80 mb-5">Good practice is to test the sensitivity of the result to this choice: if identified hot spots shift substantially from one definition to another, the conclusion is not robust and should be presented as such.</p>
+
+      <h2 class="font-display font-bold text-night text-2xl md:text-3xl mb-5">3. The multiple testing problem</h2>
+
+      <p class="leading-8 text-night/80 mb-5">A local statistic is computed for every unit in the territory. Across several hundred units, a number of significant results appear through the sheer multiplicity of tests. Retaining a conventional threshold without correction therefore identifies clusters that are not clusters.</p>
+
+      <p class="leading-8 text-night/80 mb-5">Two difficulties compound here: the multiplicity of tests and their dependence, since neighbourhoods overlap. A false discovery rate correction <a href="#ref-benjamini" class="text-navy hover:underline">(Benjamini &amp; Hochberg, 1995)</a> is better suited than a highly conservative correction, and its application to the specific case of local spatial association statistics has been documented <a href="#ref-castro" class="text-navy hover:underline">(Caldas de Castro &amp; Singer, 2006)</a>. An alternative is to establish the reference distribution by permutation rather than through a theoretical approximation.</p>
+
+      <h2 class="font-display font-bold text-night text-2xl md:text-3xl mb-5">4. What can distort the reading</h2>
+
+      <ul class="space-y-3.5 text-night/80 leading-7 mb-10">
+        <li class="flex items-start gap-3"><i class="fas fa-circle-exclamation text-navy mt-1.5"></i><span><strong class="text-night">Zoning effect.</strong> The result depends on the level of aggregation and on how units are drawn. The same phenomenon analysed at health-zone or health-area level can produce different hot spot maps. This dependence is a general property of spatially aggregated data <a href="#ref-fotheringham" class="text-navy hover:underline">(Fotheringham &amp; Wong, 1991)</a>.</span></li>
+        <li class="flex items-start gap-3"><i class="fas fa-circle-exclamation text-navy mt-1.5"></i><span><strong class="text-night">Counts versus rates.</strong> A statistic computed on counts largely reflects population distribution. The analysis must use a rate or proportion where the question concerns relative intensity.</span></li>
+        <li class="flex items-start gap-3"><i class="fas fa-circle-exclamation text-navy mt-1.5"></i><span><strong class="text-night">Unstable variance on small populations.</strong> A rate computed on a small denominator has high variability, producing extreme values unrelated to any real phenomenon. Prior smoothing or a method accounting for the denominator is then required.</span></li>
+        <li class="flex items-start gap-3"><i class="fas fa-circle-exclamation text-navy mt-1.5"></i><span><strong class="text-night">Confusing significance with magnitude.</strong> A significant value indicates a cluster that is improbable under the no-structure hypothesis, not a high level of need. Prioritisation must combine spatial significance with the level of the indicator.</span></li>
+      </ul>
+
+      <h2 class="font-display font-bold text-night text-2xl md:text-3xl mb-5">5. Use for prioritisation</h2>
+
+      <p class="leading-8 text-night/80 mb-5">Combined with the raw indicator value, the local statistic yields a four-position reading grid: an unfavourable value within a significant cluster, justifying a coordinated response at group scale; an isolated unfavourable value, calling for local diagnosis; a favourable value within a cluster, which may serve as a reference; and an isolated favourable value, whose atypical character warrants examination.</p>
+
+      <p class="leading-8 text-night/80 mb-5">This grid makes the targeting decision explainable. It indicates not only where to intervene but at what scale — a trade-off that usually remains implicit in a simple ranked list of areas.</p>
+
+      <div class="bg-gradient-to-br from-petrol to-night rounded-2xl p-6 md:p-8 mb-10">
+        <h2 class="font-display font-semibold text-[#ffffff] text-xl mb-4"><i class="fas fa-list-check text-lagoon mr-2"></i>Key points</h2>
+        <ul class="space-y-2.5 text-[#ffffff]/80 leading-7 text-sm md:text-base">
+          <li class="flex items-start gap-3"><i class="fas fa-check text-lagoon mt-1.5"></i>An isolated low value and a clustered low value do not describe the same situation</li>
+          <li class="flex items-start gap-3"><i class="fas fa-check text-lagoon mt-1.5"></i>The statistic compares the observed neighbourhood with what a structureless distribution would yield</li>
+          <li class="flex items-start gap-3"><i class="fas fa-check text-lagoon mt-1.5"></i>The definition of neighbourhood determines the result and must be justified then tested</li>
+          <li class="flex items-start gap-3"><i class="fas fa-check text-lagoon mt-1.5"></i>Without multiple-testing correction, clusters appear through chance alone</li>
+          <li class="flex items-start gap-3"><i class="fas fa-check text-lagoon mt-1.5"></i>Prioritisation combines spatial significance with the indicator level, never one without the other</li>
+        </ul>
+      </div>
+
+      <p class="leading-8 text-night/80 mb-5">Spatial significance does not replace the value of the indicator; it qualifies its scope. It indicates whether a local finding reflects a wider phenomenon or a particular situation, and that distinction determines the scale of the response.</p>
+
+      <div class="bg-white border border-night/10 shadow-sm rounded-2xl p-6 md:p-8 mb-10">
+        <h2 class="font-display font-semibold text-night text-xl mb-5"><i class="fas fa-book text-navy mr-2"></i>References</h2>
+        <ol class="space-y-4 text-night/75 text-sm leading-6 ref">
+          <li id="ref-anselin">Anselin, L. (1995). Local Indicators of Spatial Association—LISA. <em>Geographical Analysis</em>, 27(2), 93–115. <a href="https://doi.org/10.1111/j.1538-4632.1995.tb00338.x" target="_blank" class="text-navy hover:underline break-all">doi.org/10.1111/j.1538-4632.1995.tb00338.x</a></li>
+          <li id="ref-benjamini">Benjamini, Y., &amp; Hochberg, Y. (1995). Controlling the False Discovery Rate: A Practical and Powerful Approach to Multiple Testing. <em>Journal of the Royal Statistical Society: Series B</em>, 57(1), 289–300. <a href="https://doi.org/10.1111/j.2517-6161.1995.tb02031.x" target="_blank" class="text-navy hover:underline break-all">doi.org/10.1111/j.2517-6161.1995.tb02031.x</a></li>
+          <li id="ref-castro">Caldas de Castro, M., &amp; Singer, B. H. (2006). Controlling the False Discovery Rate: A New Application to Account for Multiple and Dependent Tests in Local Statistics of Spatial Association. <em>Geographical Analysis</em>, 38(2), 180–208. <a href="https://doi.org/10.1111/j.0016-7363.2006.00682.x" target="_blank" class="text-navy hover:underline break-all">doi.org/10.1111/j.0016-7363.2006.00682.x</a></li>
+          <li id="ref-fotheringham">Fotheringham, A. S., &amp; Wong, D. W. S. (1991). The modifiable areal unit problem in multivariate statistical analysis. <em>Environment and Planning A</em>, 23(7), 1025–1044. <a href="https://doi.org/10.1068/a231025" target="_blank" class="text-navy hover:underline break-all">doi.org/10.1068/a231025</a></li>
+          <li id="ref-getis-ord">Getis, A., &amp; Ord, J. K. (1992). The Analysis of Spatial Association by Use of Distance Statistics. <em>Geographical Analysis</em>, 24(3), 189–206. <a href="https://doi.org/10.1111/j.1538-4632.1992.tb00261.x" target="_blank" class="text-navy hover:underline break-all">doi.org/10.1111/j.1538-4632.1992.tb00261.x</a></li>
+          <li id="ref-ord-getis">Ord, J. K., &amp; Getis, A. (1995). Local Spatial Autocorrelation Statistics: Distributional Issues and an Application. <em>Geographical Analysis</em>, 27(4), 286–306. <a href="https://doi.org/10.1111/j.1538-4632.1995.tb00912.x" target="_blank" class="text-navy hover:underline break-all">doi.org/10.1111/j.1538-4632.1995.tb00912.x</a></li>
+        </ol>
+      </div>
+
+      <div class="bg-white border border-night/10 shadow-sm rounded-2xl p-6 md:p-7 flex flex-col sm:flex-row items-center gap-5 mb-6">
+        <img src="../Photomerveille.jpg?v=2" alt="Merveille Aganze Sami" class="w-20 h-20 rounded-full object-cover ring-2 ring-navy/30" />
+        <div class="text-center sm:text-left">
+          <p class="font-display font-semibold text-night">Merveille Aganze Sami</p>
+          <p class="text-night/70 text-sm leading-6 mt-1">MEL &amp; Database Management Advisor. 9+ years of experience in monitoring &amp; evaluation, GIS and digitalization with international organizations (GIZ, Enabel) in DR Congo.</p>
+          <div class="flex justify-center sm:justify-start gap-4 mt-3 text-sm">
+            <a href="https://www.linkedin.com/in/mervag27/?skipRedirect=true" target="_blank" class="text-navy font-medium hover:text-night transition"><i class="fab fa-linkedin mr-1.5"></i>LinkedIn</a>
+            <a href="contact.html" class="text-navy font-medium hover:text-night transition"><i class="fas fa-envelope mr-1.5"></i>Contact me</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="flex flex-col sm:flex-row items-center justify-between gap-4 bg-sky/60 rounded-2xl p-6">
+        <p class="text-night/80 font-medium text-center sm:text-left">Territorial prioritisation to ground in evidence?</p>
+        <a href="contact.html" class="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-navy to-lagoon text-[#ffffff] font-semibold px-6 py-2.5 shadow-md hover:-translate-y-0.5 transition whitespace-nowrap">Get in touch <i class="fas fa-arrow-right"></i></a>
+      </div>
+    </article>
+  </main>
+
+  <footer class="mt-16 bg-gradient-to-br from-petrol to-night text-[#ffffff]">
+    <div class="max-w-6xl mx-auto px-5 sm:px-8 pt-12 md:pt-16 pb-8">
+      <div class="grid gap-10 md:grid-cols-[1.2fr_0.7fr_1.1fr]">
+        <div>
+          <p class="font-display font-bold text-xl mb-3">Merveille <span class="bg-gradient-to-r from-navy to-lagoon bg-clip-text text-transparent">AGANZE SAMI</span></p>
+          <p class="text-[#ffffff]/60 text-sm leading-7 max-w-xs">MEL &amp; Database Management Advisor. Data, GIS and digitalization at the service of your decisions.</p>
+          <div class="flex items-center gap-3 mt-6">
+            <a href="https://www.linkedin.com/in/mervag27/?skipRedirect=true" target="_blank" class="inline-flex items-center justify-center w-10 h-10 rounded-full bg-[#ffffff]/10 hover:bg-navy transition" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+            <a href="https://github.com/MerveAS" target="_blank" class="inline-flex items-center justify-center w-10 h-10 rounded-full bg-[#ffffff]/10 hover:bg-navy transition" aria-label="GitHub"><i class="fab fa-github"></i></a>
+          </div>
+        </div>
+        <div>
+          <h3 class="font-display font-semibold text-xs uppercase tracking-[0.2em] text-[#ffffff]/50 mb-4">Navigation</h3>
+          <ul class="space-y-2.5 text-sm">
+            <li><a href="index.html" class="text-[#ffffff]/70 hover:text-lagoon transition">Home</a></li>
+            <li><a href="blog.html" class="text-[#ffffff]/70 hover:text-lagoon transition">Blog</a></li>
+            <li><a href="expertise.html" class="text-[#ffffff]/70 hover:text-lagoon transition">Expertise</a></li>
+            <li><a href="projects.html" class="text-[#ffffff]/70 hover:text-lagoon transition">Projects</a></li>
+            <li><a href="contact.html" class="text-[#ffffff]/70 hover:text-lagoon transition">Contact</a></li>
+          </ul>
+        </div>
+        <div>
+          <h3 class="font-display font-semibold text-xs uppercase tracking-[0.2em] text-[#ffffff]/50 mb-4">Contact</h3>
+          <ul class="space-y-3 text-sm text-[#ffffff]/70">
+            <li class="flex items-center gap-3"><span class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-[#ffffff]/10 text-lagoon text-xs"><i class="fas fa-phone"></i></span>+243 850 012 270</li>
+            <li class="flex items-center gap-3"><span class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-[#ffffff]/10 text-lagoon text-xs"><i class="fas fa-envelope"></i></span><a href="mailto:merveille.aganzesami@fitigroup.org" class="hover:text-lagoon transition break-all">merveille.aganzesami@fitigroup.org</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="mt-10 pt-6 border-t border-[#ffffff]/10 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-[#ffffff]/50">
+        <p>© 2026 Merveille AGANZE SAMI — All rights reserved · <span class="text-[#ffffff]/30">v2.2</span></p>
+        <a href="#" onclick="window.scrollTo({top:0,behavior:'smooth'});return false;" class="inline-flex items-center gap-2 hover:text-lagoon transition">Back to top <i class="fas fa-arrow-up"></i></a>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>

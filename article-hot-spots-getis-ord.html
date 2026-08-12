@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Analyse de points chauds : distinguer un foyer structurel d'une valeur isolée | Merveille Aganze Sami</title>
+  <meta name="description" content="Comparer chaque zone à un seuil traite les territoires comme indépendants. La statistique de Getis-Ord teste si un regroupement de valeurs extrêmes excède ce qu'expliquerait le hasard." />
+  <meta property="og:title" content="Analyse de points chauds : distinguer un foyer structurel d'une valeur isolée" />
+  <meta property="og:description" content="Comparer chaque zone à un seuil traite les territoires comme indépendants. La statistique de Getis-Ord teste si un regroupement de valeurs extrêmes excède ce qu'expliquerait le hasard." />
+  <meta property="og:image" content="visuels/visuel_2026-07-05_hotspot_gi.png" />
+  <meta property="og:type" content="article" />
+  <link rel="alternate" hreflang="fr" href="https://merveille.fitigroup.org/article-hot-spots-getis-ord.html" />
+  <link rel="alternate" hreflang="en" href="https://merveille.fitigroup.org/en/article-hot-spot-analysis.html" />
+  <link rel="icon" href="favicon.svg?v=2" type="image/svg+xml" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = { theme: { extend: {
+      colors: { night:'#222B38', navy:'#EE7A5C', steel:'#8A93A3', petrol:'#26303E', lagoon:'#F2A48F', sky:'#F7DCD1', pale:'#F7F5F2' },
+      fontFamily: { sans:['DM Sans','Arial','sans-serif'], display:['Plus Jakarta Sans','Arial','sans-serif'] } } } }
+  </script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    html { scroll-behavior: smooth; }
+    .ref { font-variant-numeric: tabular-nums; }
+    @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col bg-gradient-to-b from-pale via-pale to-sky text-night font-sans antialiased">
+
+  <header class="sticky top-0 z-50 bg-pale/95 backdrop-blur border-b border-navy/20">
+    <div class="max-w-6xl mx-auto px-5 sm:px-8 min-h-16 md:min-h-20 py-2 flex items-center justify-between gap-4">
+      <a href="index.html" class="font-display font-bold text-night text-base sm:text-lg md:text-xl tracking-tight">
+        Merveille <span class="text-navy hidden sm:inline">AGANZE SAMI</span>
+      </a>
+      <nav class="flex flex-wrap justify-end items-center gap-x-4 gap-y-1 sm:gap-x-6 md:gap-x-8 text-xs sm:text-sm md:text-[15px]">
+        <a href="index.html" class="text-night/70 hover:text-navy transition">Accueil</a>
+        <a href="blog.html" class="text-navy font-semibold">Blog</a>
+        <a href="expertises.html" class="text-night/70 hover:text-navy transition">Expertises</a>
+        <a href="projets.html" class="text-night/70 hover:text-navy transition">Projets</a>
+        <a href="en/article-hot-spot-analysis.html" class="text-[11px] font-semibold border border-navy/40 rounded-full px-3 py-1 text-night/70 hover:text-navy hover:border-navy/60 transition" title="English version">EN</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="flex-1">
+    <section class="max-w-6xl mx-auto px-5 sm:px-8 pt-10 md:pt-14">
+      <div class="bg-gradient-to-br from-petrol to-night rounded-[2rem] md:rounded-[2.5rem] px-6 sm:px-10 md:px-14 py-12 md:py-14 relative overflow-hidden">
+        <div class="absolute -bottom-24 -right-16 w-80 h-80 bg-navy/20 rounded-full blur-2xl"></div>
+        <div class="relative max-w-3xl">
+          <a href="blog.html" class="inline-flex items-center gap-2 text-[#ffffff]/60 text-sm hover:text-lagoon transition mb-6"><i class="fas fa-arrow-left"></i> Retour au blog</a>
+          <div class="flex flex-wrap items-center gap-2 mb-5">
+            <span class="text-[11px] font-semibold uppercase tracking-wider bg-gradient-to-r from-navy to-lagoon text-[#ffffff] rounded-full px-3 py-1">Article</span>
+            <span class="text-[11px] font-medium text-[#ffffff]/50"><i class="fas fa-calendar mr-1.5"></i>5 juillet 2026</span>
+            <span class="text-[11px] font-medium text-[#ffffff]/50"><i class="fas fa-clock mr-1.5"></i>10 min de lecture</span>
+          </div>
+          <h1 class="font-display font-bold text-[#ffffff] text-3xl sm:text-4xl md:text-5xl leading-tight mb-5">Points chauds :<br /><span class="bg-gradient-to-r from-navy to-lagoon bg-clip-text text-transparent">un foyer structurel ou une valeur isolée ?</span></h1>
+          <p class="text-[#ffffff]/60 text-base mb-6">Statistique de Getis-Ord, choix de la matrice de voisinage et correction des tests multiples pour la priorisation territoriale</p>
+          <div class="flex items-center gap-3">
+            <img src="Photomerveille.jpg?v=2" alt="Merveille Aganze Sami" class="w-10 h-10 rounded-full object-cover ring-2 ring-[#ffffff]/30" />
+            <div class="text-sm">
+              <p class="text-[#ffffff] font-semibold">Merveille Aganze Sami</p>
+              <p class="text-[#ffffff]/50">Conseillère MEL &amp; Gestion de Bases de Données</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <article class="max-w-3xl mx-auto px-5 sm:px-8 py-12 md:py-16">
+
+      <figure class="mb-12">
+        <img src="visuels/visuel_2026-07-05_hotspot_gi.png" alt="Carte de points chauds et froids selon la statistique de Getis-Ord, avec trois seuils de confiance" class="w-full rounded-2xl shadow-xl ring-1 ring-night/10" />
+        <figcaption class="text-night/60 text-sm mt-3 text-center"><strong class="text-night/70">Figure 1.</strong> Illustration : classement des unités selon la statistique locale, avec trois niveaux de confiance. La lecture porte sur la structure des regroupements, non sur la valeur brute de chaque unité.</figcaption>
+      </figure>
+
+      <p class="text-lg md:text-xl leading-9 text-night/80 mb-8">La priorisation territoriale s'appuie couramment sur une comparaison unité par unité : chaque zone est confrontée à un seuil, classée au-dessus ou en dessous, et la liste des zones en difficulté est établie. Cette procédure traite implicitement les unités comme indépendantes les unes des autres.</p>
+
+      <p class="leading-8 text-night/80 mb-5">Cette hypothèse pose une difficulté d'interprétation. Une zone dont l'indicateur est faible et dont les voisines présentent des valeurs comparables décrit une situation différente d'une zone isolée entourée de valeurs élevées. La première suggère un déterminant régional — barrière d'accès, contexte agro-écologique, défaillance d'un dispositif structurant ; la seconde relève plus probablement d'une cause locale ou d'une variabilité d'échantillonnage. Les deux appellent des réponses distinctes.</p>
+
+      <h2 class="font-display font-bold text-night text-2xl md:text-3xl mb-5">1. Ce que mesure la statistique locale</h2>
+
+      <p class="leading-8 text-night/80 mb-5">La statistique de Getis-Ord compare, pour chaque unité, la somme des valeurs observées dans son voisinage — l'unité incluse dans sa version étoilée — à la somme que l'on attendrait si les valeurs étaient réparties sans structure spatiale. L'écart est normalisé en une valeur centrée réduite, dont le signe indique un regroupement de valeurs élevées ou faibles et l'amplitude le degré d'écart à l'hypothèse d'absence de structure <a href="#ref-getis-ord" class="text-navy hover:underline">(Getis &amp; Ord, 1992)</a>. Les propriétés distributionnelles de cette famille de statistiques locales ont été précisées ultérieurement <a href="#ref-ord-getis" class="text-navy hover:underline">(Ord &amp; Getis, 1995)</a>.</p>
+
+      <div class="bg-sky/60 border-l-4 border-navy rounded-r-2xl p-5 md:p-6 mb-10">
+        <p class="leading-7 text-night/80 text-sm md:text-base"><i class="fas fa-circle-info text-navy mr-2"></i><strong class="text-night">Une statistique parmi d'autres.</strong> Cette approche identifie des regroupements de valeurs de même signe. Les indicateurs locaux d'association spatiale de type LISA répondent à une question voisine mais distincte : ils détectent également les associations négatives, c'est-à-dire les unités dont la valeur contraste avec celle de leur voisinage <a href="#ref-anselin" class="text-navy hover:underline">(Anselin, 1995)</a>. Les deux familles sont complémentaires — ce sujet est développé dans l'article consacré à l'<a href="article-autocorrelation-spatiale.html" class="text-navy hover:underline font-medium">autocorrélation spatiale</a>.</p>
+      </div>
+
+      <h2 class="font-display font-bold text-night text-2xl md:text-3xl mb-5">2. La matrice de voisinage est la décision principale</h2>
+
+      <p class="leading-8 text-night/80 mb-5">Le résultat dépend directement de la définition retenue du voisinage. Quatre options sont d'usage courant, et le choix doit être justifié par la nature du phénomène plutôt que par le réglage par défaut du logiciel.</p>
+
+      <ul class="space-y-3 text-night/80 leading-7 mb-10">
+        <li class="flex items-start gap-3"><i class="fas fa-circle-check text-navy mt-1.5"></i><span><strong class="text-night">Contiguïté.</strong> Deux unités sont voisines si elles partagent une limite. Adapté à un maillage administratif régulier, ce critère devient problématique lorsque les unités sont de tailles très inégales.</span></li>
+        <li class="flex items-start gap-3"><i class="fas fa-circle-check text-navy mt-1.5"></i><span><strong class="text-night">Distance seuil.</strong> Toutes les unités situées à moins d'une distance donnée sont voisines. Le seuil doit correspondre à une échelle ayant un sens pour le phénomène — portée d'un bassin de desserte, rayon de mobilité.</span></li>
+        <li class="flex items-start gap-3"><i class="fas fa-circle-check text-navy mt-1.5"></i><span><strong class="text-night">k plus proches voisins.</strong> Chaque unité dispose du même nombre de voisins, ce qui homogénéise le traitement lorsque la densité varie fortement, au prix d'une distance effective variable.</span></li>
+        <li class="flex items-start gap-3"><i class="fas fa-circle-check text-navy mt-1.5"></i><span><strong class="text-night">Pondération continue.</strong> L'influence décroît avec la distance plutôt que de s'annuler à un seuil. Plus réaliste pour des phénomènes diffusifs, cette option requiert de fixer la forme de décroissance.</span></li>
+      </ul>
+
+      <p class="leading-8 text-night/80 mb-5">La bonne pratique consiste à tester la sensibilité du résultat à ce choix : si les points chauds identifiés se déplacent substantiellement d'une définition à l'autre, la conclusion n'est pas robuste et doit être présentée comme telle.</p>
+
+      <h2 class="font-display font-bold text-night text-2xl md:text-3xl mb-5">3. Le problème des tests multiples</h2>
+
+      <p class="leading-8 text-night/80 mb-5">Une statistique locale est calculée pour chaque unité du territoire. Sur plusieurs centaines d'unités, un certain nombre de résultats significatifs apparaissent par le seul effet de la multiplicité des tests. Retenir un seuil conventionnel sans correction conduit donc à identifier des regroupements qui n'en sont pas.</p>
+
+      <p class="leading-8 text-night/80 mb-5">Deux difficultés se cumulent ici : la multiplicité des tests et leur dépendance, les voisinages se chevauchant. Une correction du taux de fausses découvertes <a href="#ref-benjamini" class="text-navy hover:underline">(Benjamini &amp; Hochberg, 1995)</a> constitue une réponse mieux adaptée qu'une correction très conservatrice, et son application au cas particulier des statistiques locales d'association spatiale a été documentée <a href="#ref-castro" class="text-navy hover:underline">(Caldas de Castro &amp; Singer, 2006)</a>. Une alternative consiste à établir la distribution de référence par permutations plutôt que par une approximation théorique.</p>
+
+      <h2 class="font-display font-bold text-night text-2xl md:text-3xl mb-5">4. Ce qui peut fausser la lecture</h2>
+
+      <ul class="space-y-3.5 text-night/80 leading-7 mb-10">
+        <li class="flex items-start gap-3"><i class="fas fa-circle-exclamation text-navy mt-1.5"></i><span><strong class="text-night">Effet du découpage.</strong> Le résultat dépend du niveau d'agrégation et du tracé des unités. Un même phénomène analysé au niveau du territoire de santé ou de l'aire de santé peut produire des cartes de points chauds différentes. Cette dépendance est une propriété générale des données agrégées spatialement <a href="#ref-fotheringham" class="text-navy hover:underline">(Fotheringham &amp; Wong, 1991)</a>.</span></li>
+        <li class="flex items-start gap-3"><i class="fas fa-circle-exclamation text-navy mt-1.5"></i><span><strong class="text-night">Effectifs bruts et taux.</strong> Une statistique calculée sur des effectifs reflète largement la répartition de la population. L'analyse doit porter sur un taux ou une proportion lorsque la question concerne une intensité relative.</span></li>
+        <li class="flex items-start gap-3"><i class="fas fa-circle-exclamation text-navy mt-1.5"></i><span><strong class="text-night">Variance instable sur petites populations.</strong> Un taux calculé sur un dénominateur faible présente une variabilité élevée, ce qui produit des valeurs extrêmes indépendantes de tout phénomène réel. Un lissage préalable ou une méthode tenant compte du dénominateur est alors nécessaire.</span></li>
+        <li class="flex items-start gap-3"><i class="fas fa-circle-exclamation text-navy mt-1.5"></i><span><strong class="text-night">Confusion entre significativité et intensité.</strong> Une valeur significative indique un regroupement improbable sous l'hypothèse d'absence de structure, non un besoin élevé. La priorisation doit croiser significativité spatiale et niveau de l'indicateur.</span></li>
+      </ul>
+
+      <h2 class="font-display font-bold text-night text-2xl md:text-3xl mb-5">5. Usage pour la priorisation</h2>
+
+      <p class="leading-8 text-night/80 mb-5">Croisée avec la valeur brute de l'indicateur, la statistique locale fournit une grille de lecture à quatre positions : valeur défavorable au sein d'un regroupement significatif, qui justifie une réponse coordonnée à l'échelle du groupe ; valeur défavorable isolée, qui appelle un diagnostic local ; valeur favorable au sein d'un regroupement, qui peut servir de référence ; valeur favorable isolée, dont le caractère atypique mérite examen.</p>
+
+      <p class="leading-8 text-night/80 mb-5">Cette grille rend la décision de ciblage explicable. Elle indique non seulement où intervenir, mais à quelle échelle — arbitrage qui reste le plus souvent implicite dans une simple liste ordonnée de zones.</p>
+
+      <div class="bg-gradient-to-br from-petrol to-night rounded-2xl p-6 md:p-8 mb-10">
+        <h2 class="font-display font-semibold text-[#ffffff] text-xl mb-4"><i class="fas fa-list-check text-lagoon mr-2"></i>Points essentiels</h2>
+        <ul class="space-y-2.5 text-[#ffffff]/80 leading-7 text-sm md:text-base">
+          <li class="flex items-start gap-3"><i class="fas fa-check text-lagoon mt-1.5"></i>Une valeur faible isolée et une valeur faible groupée ne décrivent pas la même situation</li>
+          <li class="flex items-start gap-3"><i class="fas fa-check text-lagoon mt-1.5"></i>La statistique compare le voisinage observé à ce qu'attendrait une répartition sans structure</li>
+          <li class="flex items-start gap-3"><i class="fas fa-check text-lagoon mt-1.5"></i>La définition du voisinage détermine le résultat et doit être justifiée puis testée</li>
+          <li class="flex items-start gap-3"><i class="fas fa-check text-lagoon mt-1.5"></i>Sans correction des tests multiples, des regroupements apparaissent par le seul jeu du hasard</li>
+          <li class="flex items-start gap-3"><i class="fas fa-check text-lagoon mt-1.5"></i>La priorisation croise significativité spatiale et niveau de l'indicateur, jamais l'une sans l'autre</li>
+        </ul>
+      </div>
+
+      <p class="leading-8 text-night/80 mb-5">La significativité spatiale ne remplace pas la valeur de l'indicateur ; elle en précise la portée. Elle indique si un constat local relève d'un phénomène étendu ou d'une situation particulière, et cette distinction détermine l'échelle de la réponse.</p>
+
+      <div class="bg-white border border-night/10 shadow-sm rounded-2xl p-6 md:p-8 mb-10">
+        <h2 class="font-display font-semibold text-night text-xl mb-5"><i class="fas fa-book text-navy mr-2"></i>Références</h2>
+        <ol class="space-y-4 text-night/75 text-sm leading-6 ref">
+          <li id="ref-anselin">Anselin, L. (1995). Local Indicators of Spatial Association—LISA. <em>Geographical Analysis</em>, 27(2), 93–115. <a href="https://doi.org/10.1111/j.1538-4632.1995.tb00338.x" target="_blank" class="text-navy hover:underline break-all">doi.org/10.1111/j.1538-4632.1995.tb00338.x</a></li>
+          <li id="ref-benjamini">Benjamini, Y., &amp; Hochberg, Y. (1995). Controlling the False Discovery Rate: A Practical and Powerful Approach to Multiple Testing. <em>Journal of the Royal Statistical Society: Series B</em>, 57(1), 289–300. <a href="https://doi.org/10.1111/j.2517-6161.1995.tb02031.x" target="_blank" class="text-navy hover:underline break-all">doi.org/10.1111/j.2517-6161.1995.tb02031.x</a></li>
+          <li id="ref-castro">Caldas de Castro, M., &amp; Singer, B. H. (2006). Controlling the False Discovery Rate: A New Application to Account for Multiple and Dependent Tests in Local Statistics of Spatial Association. <em>Geographical Analysis</em>, 38(2), 180–208. <a href="https://doi.org/10.1111/j.0016-7363.2006.00682.x" target="_blank" class="text-navy hover:underline break-all">doi.org/10.1111/j.0016-7363.2006.00682.x</a></li>
+          <li id="ref-fotheringham">Fotheringham, A. S., &amp; Wong, D. W. S. (1991). The modifiable areal unit problem in multivariate statistical analysis. <em>Environment and Planning A</em>, 23(7), 1025–1044. <a href="https://doi.org/10.1068/a231025" target="_blank" class="text-navy hover:underline break-all">doi.org/10.1068/a231025</a></li>
+          <li id="ref-getis-ord">Getis, A., &amp; Ord, J. K. (1992). The Analysis of Spatial Association by Use of Distance Statistics. <em>Geographical Analysis</em>, 24(3), 189–206. <a href="https://doi.org/10.1111/j.1538-4632.1992.tb00261.x" target="_blank" class="text-navy hover:underline break-all">doi.org/10.1111/j.1538-4632.1992.tb00261.x</a></li>
+          <li id="ref-ord-getis">Ord, J. K., &amp; Getis, A. (1995). Local Spatial Autocorrelation Statistics: Distributional Issues and an Application. <em>Geographical Analysis</em>, 27(4), 286–306. <a href="https://doi.org/10.1111/j.1538-4632.1995.tb00912.x" target="_blank" class="text-navy hover:underline break-all">doi.org/10.1111/j.1538-4632.1995.tb00912.x</a></li>
+        </ol>
+      </div>
+
+      <div class="bg-white border border-night/10 shadow-sm rounded-2xl p-6 md:p-7 flex flex-col sm:flex-row items-center gap-5 mb-6">
+        <img src="Photomerveille.jpg?v=2" alt="Merveille Aganze Sami" class="w-20 h-20 rounded-full object-cover ring-2 ring-navy/30" />
+        <div class="text-center sm:text-left">
+          <p class="font-display font-semibold text-night">Merveille Aganze Sami</p>
+          <p class="text-night/70 text-sm leading-6 mt-1">Conseillère MEL &amp; Gestion de Bases de Données. Plus de 9 ans d'expérience en suivi-évaluation, SIG et digitalisation auprès d'organisations internationales (GIZ, Enabel) en RD Congo.</p>
+          <div class="flex justify-center sm:justify-start gap-4 mt-3 text-sm">
+            <a href="https://www.linkedin.com/in/mervag27/?skipRedirect=true" target="_blank" class="text-navy font-medium hover:text-night transition"><i class="fab fa-linkedin mr-1.5"></i>LinkedIn</a>
+            <a href="contact.html" class="text-navy font-medium hover:text-night transition"><i class="fas fa-envelope mr-1.5"></i>Me contacter</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="flex flex-col sm:flex-row items-center justify-between gap-4 bg-sky/60 rounded-2xl p-6">
+        <p class="text-night/80 font-medium text-center sm:text-left">Une priorisation territoriale à objectiver ?</p>
+        <a href="contact.html" class="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-navy to-lagoon text-[#ffffff] font-semibold px-6 py-2.5 shadow-md hover:-translate-y-0.5 transition whitespace-nowrap">Prendre contact <i class="fas fa-arrow-right"></i></a>
+      </div>
+    </article>
+  </main>
+
+  <footer class="mt-16 bg-gradient-to-br from-petrol to-night text-[#ffffff]">
+    <div class="max-w-6xl mx-auto px-5 sm:px-8 pt-12 md:pt-16 pb-8">
+      <div class="grid gap-10 md:grid-cols-[1.2fr_0.7fr_1.1fr]">
+        <div>
+          <p class="font-display font-bold text-xl mb-3">Merveille <span class="bg-gradient-to-r from-navy to-lagoon bg-clip-text text-transparent">AGANZE SAMI</span></p>
+          <p class="text-[#ffffff]/60 text-sm leading-7 max-w-xs">Conseillère MEL &amp; Gestion de Bases de Données. Données, SIG et digitalisation au service de vos décisions.</p>
+          <div class="flex items-center gap-3 mt-6">
+            <a href="https://www.linkedin.com/in/mervag27/?skipRedirect=true" target="_blank" class="inline-flex items-center justify-center w-10 h-10 rounded-full bg-[#ffffff]/10 hover:bg-navy transition" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+            <a href="https://github.com/MerveAS" target="_blank" class="inline-flex items-center justify-center w-10 h-10 rounded-full bg-[#ffffff]/10 hover:bg-navy transition" aria-label="GitHub"><i class="fab fa-github"></i></a>
+          </div>
+        </div>
+        <div>
+          <h3 class="font-display font-semibold text-xs uppercase tracking-[0.2em] text-[#ffffff]/50 mb-4">Navigation</h3>
+          <ul class="space-y-2.5 text-sm">
+            <li><a href="index.html" class="text-[#ffffff]/70 hover:text-lagoon transition">Accueil</a></li>
+            <li><a href="blog.html" class="text-[#ffffff]/70 hover:text-lagoon transition">Blog</a></li>
+            <li><a href="expertises.html" class="text-[#ffffff]/70 hover:text-lagoon transition">Expertises</a></li>
+            <li><a href="projets.html" class="text-[#ffffff]/70 hover:text-lagoon transition">Projets</a></li>
+            <li><a href="contact.html" class="text-[#ffffff]/70 hover:text-lagoon transition">Contact</a></li>
+          </ul>
+        </div>
+        <div>
+          <h3 class="font-display font-semibold text-xs uppercase tracking-[0.2em] text-[#ffffff]/50 mb-4">Contact</h3>
+          <ul class="space-y-3 text-sm text-[#ffffff]/70">
+            <li class="flex items-center gap-3"><span class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-[#ffffff]/10 text-lagoon text-xs"><i class="fas fa-phone"></i></span>+243 850 012 270</li>
+            <li class="flex items-center gap-3"><span class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-[#ffffff]/10 text-lagoon text-xs"><i class="fas fa-envelope"></i></span><a href="mailto:merveille.aganzesami@fitigroup.org" class="hover:text-lagoon transition break-all">merveille.aganzesami@fitigroup.org</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="mt-10 pt-6 border-t border-[#ffffff]/10 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-[#ffffff]/50">
+        <p>© 2026 Merveille AGANZE SAMI — Tous droits réservés · <span class="text-[#ffffff]/30">v2.2</span></p>
+        <a href="#" onclick="window.scrollTo({top:0,behavior:'smooth'});return false;" class="inline-flex items-center gap-2 hover:text-lagoon transition">Retour en haut <i class="fas fa-arrow-up"></i></a>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>
